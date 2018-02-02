@@ -1,0 +1,29 @@
+﻿<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div class="event overlay" style="background-image: url(<%= event.bannerURI %>)">
+</div>
+
+<div class="container">
+  <div class="event-description">
+    <h2>What is <%= event.title %>?</h2>
+    <hr>
+    <div class="single-event-description">
+      <% if (event.formattedDate) { %>
+      <p><b>When:</b> <%= event.formattedDate %></p>
+      <% } if (event.location) { %>
+      <p><b>Where:</b> <%= event.location %></p>
+      <% } if (event.formattedText) { %>
+      <p><%- event.formattedText %></p>
+      <% } %>
+    </div>
+  </div>
+
+  <% if(user && (user.permissions.admin || user.permissions.events)){ %>
+  <a href="/e/edit/<%= event.firebaseID %>">Edit the event</a>
+  <% } %>
+</div>
+
+<%- include widgets/footer.ejs %>
+</html>

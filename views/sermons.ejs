@@ -1,0 +1,119 @@
+﻿<!doctype html>
+<html lang="en">
+    <%- include widgets/header.ejs %>
+    <%- include widgets/mainNav.ejs %>
+
+        <div class="overlay" id="sermons">
+            <h1>Sermons</h1>
+        </div>
+
+        <div class="container px-3 my-5">
+            <div id="sermon-list" class="row">
+                <div class="col-lg-4 mb-5">
+                    <input type="text" class="w-100 sticky-top fuzzy-search form-control" placeholder="Search by pastor, passage, or title">
+                </div>
+                <ul class="list col-lg-8">
+                    <% sermons.forEach(function(v){ %>
+                        <div class="w-100 mb-3">
+                            <li>
+                                <div class="card w-100">
+                                    <div class="card-body">
+                                        <h4 class="title"><%= v.title %></h4>
+                                        <h6 class="mb-2 text-muted">
+                                            <span class="speaker"><%= (v.speaker && v.speaker!=='') ? v.speaker : 'UCLA Grace on Campus' %></span> | <span class="passage"><%= (v.passage && v.passage!=='') ? v.passage : 'selected' %></span> | <%= v.datestring %>
+                                        </h6>
+                                        <div class="row mt-4">
+                                            <div class="col-md-10">
+                                                <audio class="w-100" controls>
+                                                    <source src="<%= v.URI %>">
+                                                </audio>
+                                            </div>
+                                            <div class="col-md-2 mobile-padding">
+                                                <h6 style="font-size: .9rem; line-height: 39px;" class="float d-inline">
+                                                    <a href="<%= v.URI %>" download="<%= v.title %>">
+                                                        <i style="font-size: 1rem" class="icon ion-ios-cloud-download-outline"></i>&nbsp;&nbsp;Download</a>
+                                                </h6>
+                                            </div>
+                                        </div>
+
+                                        <% if(user && (user.permissions.admin || user.permissions.sermons)){ %>
+                                            <td>
+                                                <a href="/sermons/edit/<%= v._id %>">edit</a>
+                                            </td>
+                                            <% } %>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                        <% }) %>
+                </ul>
+                <div class="text-right col-12 col-md-4 float-right"><ul class="pagination"></ul></div>
+            </div>
+        </div>
+
+        <div class="container">
+            <% if(user && (user.permissions.admin || user.permissions.sermons)){ %>
+                <form action="/sermons" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label>Speaker</label>
+                        <input type="text" class="form-control" name="speaker">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label>Link to Sermon Audio</label>
+                        <input type="text" class="form-control" name="URI">
+                    </div>
+                    <div class="form-group">
+                        <label>Passage</label>
+                        <input type="text" class="form-control" name="passage">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" name="date">
+                    </div>
+                    <button type="submit" class="btn btn-warning btn-lg">New Sermon</button>
+                </form>
+                <% } %>
+        </div>
+        <%- include widgets/footer.ejs %>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+            <script>
+                var refTagger = {
+                    settings: {
+                        bibleVersion: "ESV",
+                        caseInsensitive: !false,
+                        dropShadow: false,
+                        roundCorners: true,
+                        socialSharing: [],
+                        customStyle: {
+                            heading: {
+                                backgroundColor: "#fff"
+                            },
+                            body: {
+                                moreLink: {
+                                    color: "#ae956b",
+                                    fontFamily: "Akkurat"
+                                }
+                            }
+                        }
+                    }
+                };
+                (function (d, t) {
+                    var g = d.createElement(t),
+                        s = d.getElementsByTagName(t)[0];
+                    g.src = "//api.reftagger.com/v2/RefTagger.js";
+                    s.parentNode.insertBefore(g, s);
+                }(document, "script"));
+                $(document).ready(function () {
+                    var options = {
+                        valueNames: ['title', 'speaker', 'passage'],
+                        page: 7,
+                        pagination: true,
+                    };
+                    var hackerList = new List('sermon-list', options);
+                })
+            </script>
+</html>
