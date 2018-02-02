@@ -1,0 +1,116 @@
+﻿<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div class="overlay" id="events">
+  <h1>Events</h1>
+</div>
+<div class="container py-5 my-5">
+<% if(user && (user.permissions.admin || user.permissions.events)){ %>
+<h1 class="mb-2">Add a new event</h1>
+    <form action="/events" class="my-5 w-100" enctype="multipart/form-data" method="post">
+      <div class="row">
+        <div class="col-lg-3 mb-2 text-left form-group">
+          <label for="date">Title</label>
+          <input type="text" name="title" class="w-100 form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Title" required>
+        </div>
+        <div class="col-lg-3 mb-2 text-left form-group">
+          <label for="date">Location</label>
+          <input type="text" name="location" class="w-100 form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Location" required>
+        </div>
+        <div class="col-lg-3 mb-2 text-left form-group">
+            <label for="date">Start Date</label>
+            <input type="datetime-local" name="startDate" class="form-control date" required>
+        </div>
+        <div class="col-lg-3 mb-2 text-left form-group">
+            <label for="date">End Date</label>
+            <input type="datetime-local" name="endDate" class="form-control date" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 mb-2 text-left form-group">
+            <label for="summary">Summary</label>
+            <textarea rows="5" style="height: auto; line-height:1.1rem" class="form-control" placeholder="Summary" name="summary" required></textarea>
+        </div>
+        <div class="col-lg-6 mb-2 text-left form-group">
+          <label for="background">Banner Image</label>
+          <label class="d-block mt-1 mb-2 mr-sm-4 mb-sm-0 custom-file">Banner Image
+            <input type="file" name="background" class="custom-file-input" required>
+            <span class="text-left custom-file-control"></span>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mx-auto col-md-4 mt-4 mb-2">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </form>
+  <hr class="my-5" />
+<% } %>
+
+<% var i = 0 %>
+  <% events.forEach(function(event) { %>
+    <% if (i===0) { %>
+      <% i=1 %>
+      <div class="card-deck">
+          <div class="card">
+            <img class="card-img-top" src="<%= event.bannerURI %>">
+            <div class="card-body">
+              <h4 class="card-title"><%= event.title %></h4>
+              <p class="card-text"><%- event.summary %></p>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
+              <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
+              <% if(user && (user.permissions.admin || user.permissions.events)) { %>
+                <a href="/e/edit/<%= event.id %>">Edit</a><br/>
+                <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
+              <% } %>
+            </div>
+          </div>
+          <br/>
+    <%  } else if (i===2) { %>
+        <% i=0 %>
+        <div class="card">
+          <img class="card-img-top" src="<%= event.bannerURI %>">
+          <div class="card-body">
+            <h4 class="card-title"><%= event.title %></h4>
+            <p class="card-text"><%- event.summary %></p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
+            <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
+            <% if(user && (user.permissions.admin || user.permissions.events)) { %>
+              <a href="/e/edit/<%= event.id %>">Edit</a><br/>
+              <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
+            <% } %>
+          </div>
+        </div>
+        <br/>
+      </div>
+    <% } else { %>
+      <% i = 2 %>
+      <div class="card">
+        <img class="card-img-top" src="<%= event.bannerURI %>">
+        <div class="card-body">
+          <h4 class="card-title"><%= event.title %></h4>
+          <p class="card-text"><%- event.summary %></p>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
+          <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
+          <% if(user && (user.permissions.admin || user.permissions.events)) { %>
+              <a href="/e/edit/<%= event.id %>">Edit</a><br/>
+              <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
+            <% } %>
+        </div>
+      </div>
+      <br/>
+    <% } %>
+  <% }) %>
+</div>
+
+
+<%- include widgets/footer.ejs %>
+</html>

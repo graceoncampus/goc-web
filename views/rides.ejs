@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<link rel="stylesheet" href="css/loader.css"/>
+<%- include widgets/mainNav.ejs %>
+<div class="overlay" id="rides">
+    <h1>Rides</h1>
+</div>
+<div class="container px-0 px-sm-3 my-5">
+    <div class="col-lg-10 px-0 px-sm-3 mx-auto">
+        <% if (!cars) { %>
+            <p class="px-3 px-sm-0 mb-5">Rides for church this Sunday haven't been posted yet. Please check again later!</p>
+        <% } %>
+        <p class="px-3 px-sm-0 mb-5">If you would like a ride to church, sign up
+            <a href="/rides/signup" target="_blank">here</a>.</p>
+        <% if (cars) { %>
+            <table class="table table-striped">
+                <thead class="sermon">
+                    <tr>
+                        <td>Driver</td>
+                        <td>Riders</td>
+                        <td class="d-none d-sm-table-cell">Comments</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cars.forEach(function(car) { %>
+                        <tr>
+                            <td>
+                                <%= car.driver %>
+                            </td>
+                            <td>
+                                <% car.riders.forEach(function(rider) { %>
+                                    <%= rider %>
+                                        <br/>
+                                        <% }); %>
+                            </td>
+                            <td class="d-none d-sm-table-cell">
+                                <%= car.comment %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+        <% } %>
+        <% if (user && (user.permissions.admin || user.permissions.rides)) { %>
+            <div class="px-3 px-sm-0 mb-5">
+                <hr>
+                <h2>Admin Settings</h2>
+                <form action="/rides/update" method="post">
+                    <div class="form-group">
+                        <label>Sheet URL</label>
+                        <p>Make sure that the sheet has no blank rows!!! And that link sharing is enabled.</p>
+                        <input type="text" class="form-control" name="sheetURL" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Rides Date</label>
+                        <p>The date that the rides are happening.</p>
+                        <input type="date" class="form-control" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Custom Email Message</label>
+                        <input type="text" class="form-control" name="emailMessage" value="Please call or text your riders -- dormies should be outside by 7:45AM. If you can't, tell us and we'll call them for you. If you are not driving your riders back, please tell them to find us IMMEDIATELY after Crossroads.">
+                    </div>
+                    <button type="submit" class="col-md-3 my-3 btn btn-primary btn-lg">Update Rides</button>
+                </form>
+                <form action="/rides/delete" method="post">
+                    <button type="submit" class="col-md-3 mb-5 btn btn-primary btn-lg">Delete Rides</button>
+                </form>
+                <form id="form">
+                    <input type="hidden" name="token" value="GOC2017!" />
+                    <button id="invite" type="submit" class="col-md-3 mb-5 btn btn-primary btn-lg">Send Notifications</button>
+                </form>
+            </div>
+        <% } %>
+    </div>
+</div>
+<%- include widgets/footer.ejs %>
+<script>
+  $('#form').submit(function(e) {
+    e.preventDefault();
+    $('#invite').html('<div class="loader">Loading...</div>')
+    $.post('/ridesNotify', $('#form').serialize(), function() {
+      $('#invite').addClass('success')
+      $('#invite').html('Notified&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+    })
+  })
+</script>
+</html>

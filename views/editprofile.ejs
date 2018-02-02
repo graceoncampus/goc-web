@@ -1,0 +1,41 @@
+﻿<!doctype html>
+<html lang="en">
+	<%- include widgets/header.ejs %>	
+<div class="container">
+<div class="col-sm-6 col-sm-offset-3">
+	<h1><span class="fa fa-sign-in"></span> Edit your profile</h1>
+  <img src="<%= user.image %>">
+  </img>
+	<form action="/profile/edit" enctype="multipart/form-data" method="post"  action="/file-upload">
+    <div class="form-group">
+      <label>
+        First Name: <%= user.firstName %></label>
+      <input type="text" class="form-control" name="firstname">
+		</div>
+    <div class="form-group">
+      <label>
+        Last Name: <%= user.lastName %></label>
+      <input type="text" class="form-control" name="lastname">
+		</div>
+    <label>
+      Profile Picture (png/jpg/jpeg only)
+    </label>
+    <input type="file" name="profilepic" accept="image/*">
+    <div class="form-group">
+      <label>
+        Cell Phone Number: <%= user.phoneNumber %></label>
+      <input type="text" class="form-control" name="phonenumber">
+		</div>
+		<div class="form-group">
+			<label>Display Email: <%= user.email %></label>
+			<input type="text" class="form-control" name="displayemail">
+		</div>
+
+		<button type="submit" class="btn btn-warning btn-lg">Edit Profile</button>
+	</form>
+	<hr>
+	<p>Already have an account? <a href="/login">Login</a></p>
+	<p>Or go <a href="/">home</a>.</p>
+</div>
+</div>
+</html>

@@ -1,0 +1,9 @@
+{
+    "apps" : [
+        {
+            "name"        : "GOC v2",
+            "script"      : "./build/index.js",
+            "watch"       : true
+        }
+    ]
+}

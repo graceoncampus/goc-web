@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+    <%- include widgets/header.ejs %>
+    <link rel="stylesheet" href="/css/loader.css"/>
+<%- include widgets/mainNav.ejs %>
+<div class="container my-5 py-5">
+	<div class="col-lg-10 mx-auto text-center">
+        <div class="col-lg-5 mx-auto">
+            <h1 class="mb-2">Greetings!</h1>
+            <h6 class="mb-5">Creating an account and providing us with some basic info allows you to sign up for rides, classes, and events. Please note that you must create an account with the email address you were invited with.</h6>
+            <div class="alert alert-danger"></div>
+        </div>
+        <form id="form" class="w-100">
+            <div class="row mb-4">
+                <div class="col-lg-6">
+                    <div class="text-left form-group">
+                        <label for="firstname">First Name <span class="text-red">*</span></label>
+                        <input id="firstname" type="text" class="form-control" placeholder="John" name="firstName" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="lastname">Last Name <span class="text-red">*</span></label>
+                        <input id="lastname" type="text" class="form-control" placeholder="the Baptist" name="lastName" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="email">Email <span class="text-red">*</span></label>
+                        <input id="email" type="text" class="form-control" placeholder="youremail@gmail.com" name="email" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="password">Password <span class="text-red">*</span></label>
+                        <input id="password" title="passwords do not match" type="password" class="form-control" placeholder="Password" name="password" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="confirmPassword">Confirm Password <span class="text-red">*</span></label>
+                        <input id="confirmPassword" title="passwords do not match" type="password" class="form-control" placeholder="Password Again" name="confirmPassword" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="gradyear">Graduation Year <span class="text-red">*</span></label>
+                        <input id="gradyear" min="1970" max="2030" type="number" class="form-control" placeholder="2019" name="gradyear" required>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-left form-group">
+                        <label for="date">Birthday</label>
+                        <input type="date" id="date" name="date" placeholder="Select Birthday" class="form-control date">
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="number">Phone Number <span class="text-red">*</span></label>
+                        <input id="number" type="tel" class="form-control" placeholder="Yo digits" name="number" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="major">Major</label>
+                        <input id="major" type="text" class="form-control" placeholder="Science" name="major">
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="address">Address</label>
+                        <input id="address" type="text" class="form-control" placeholder="123 Bruin Lane" name="address">
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="church">Home Church</label>
+                        <input id="church" type="text" class="form-control" placeholder="Church" name="homechurch">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 mx-auto">
+                <button type="submit" id="signup" class="btn btn-primary mb-2">Sign Up</button>
+            </div>
+        </form>
+        
+    </div>
+</div>
+<%- include widgets/footer.ejs %>
+<script>
+$(document).ready(function() {
+    $('.alert').hide(); 
+})
+$('#form').submit( function(e) {
+    $('#signup').html('<div class="loader">Loading...</div>')
+    $('.alert').hide() 
+    $('.alert').html('') 
+    e.preventDefault();
+    if ($("#password").val()!==$("#confirmPassword").val()){
+        $('.alert').html('Passwords do not match') 
+        $('.alert').show() 
+        $('html, body').animate({
+            scrollTop: $(".alert").offset().top
+        }, 750);
+            if (!$('#confirmPassword').hasClass('red')) $('#confirmPassword').addClass('red')
+            $("#password").keyup(function() {
+            if ($("#password").val()===$("#confirmPassword").val()) {
+                if ($('.alert').html() === 'Passwords do not match') $('.alert').hide() 
+                if ($('#confirmPassword').hasClass('red')) $('#confirmPassword').removeClass('red')
+            }
+        })
+        $("#confirmPassword").keyup(function() {
+            if ($("#password").val()===$("#confirmPassword").val()) {
+                if ($('.alert').html() === 'Passwords do not match') $('.alert').hide() 
+                if ($('#confirmPassword').hasClass('red')) $('#confirmPassword').removeClass('red')
+            }
+        })
+    }
+    else {
+        $.post('/signup', $('#form').serialize(), function(data) {
+            if (data || data !=='') {
+                $('#signup').html('Sign Up')
+                $('html, body').animate({
+                    scrollTop: $(".alert").offset().top
+                }, 750);
+                $('.alert').show() 
+                $('.alert').html(data) 
+            }
+            else {
+                $('#signup').addClass('success')
+                $('#signup').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+                window.location.assign("/login")
+            }
+        }, 'json');
+    }
+});
+</script>
+</html>
