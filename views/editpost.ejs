@@ -1,0 +1,26 @@
+﻿<!doctype html>
+<html lang="en">
+	<%- include widgets/header.ejs %>	
+<div class="container">
+	<div class="col-sm-6 col-sm-offset-3">
+
+		<h1><span class="fa fa-sign-in"></span> Signup</h1>
+
+		<form action="/discussion/edit?post=<%=discussionid%><%= (child!==null)? "&child=" + child : "" %>" enctype="multipart/form-data" method="post"  action="/file-upload">
+			<% if (!child) { %>
+				<div class="form-group">
+				<label>Title</label>
+				<input type="text" class="form-control" name="title" value="<%= title %>">
+				</div>
+			<% } %>
+			<div class="form-group">
+				<label>Text</label><br>
+				<textarea rows="4" cols="50" name="text"><%= text %></textarea>
+			</div>
+			<button type="submit" class="btn btn-warning btn-lg">Edit</button>
+		</form>
+
+		<hr>
+	</div>
+</div>
+</html>

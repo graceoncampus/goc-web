@@ -1,0 +1,38 @@
+﻿<!doctype html>
+<html lang="en">
+	<%- include widgets/header.ejs %>
+<div class="container">
+  <div class="col-sm-6 col-sm-offset-3">
+    <h1><span class="fa fa-sign-in"></span> Edit sermon</h1>
+    <form action="/sermons/edit/<%= sermon._id %>" enctype="multipart/form-data" method="post">
+      <div class="form-group">
+        <label>Speaker</label>
+        <input type="text" class="form-control" name="speaker" value="<%= sermon.speaker %>">
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" name="title" value="<%= sermon.title %>">
+      </div>
+      <div class="form-group">
+        <label>Link to Sermon Audio</label>
+        <input type="text" class="form-control" name="URI" value="<%= sermon.URI %>">
+      </div>
+      <div class="form-group">
+        <label>Link to Sermon Transcript</label>
+        <input type="text" class="form-control" name="transcriptURI" value="<%= sermon.transcriptURI %>">
+      </div>
+      <div class="form-group">
+        <label>Passage</label>
+        <input type="text" class="form-control" name="passage" value="<%= sermon.passage %>">
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" name="date">
+      </div>
+      <button type="submit" class="btn btn-warning btn-lg">Edit Sermon</button>
+    </form>
+    <hr>
+  </div>
+
+</div>
+</html>

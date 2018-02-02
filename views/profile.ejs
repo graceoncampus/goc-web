@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+    <%- include widgets/header.ejs %>   
+    <link rel="stylesheet" href="/css/loader.css"/>
+<%- include widgets/mainNav.ejs %>
+    <div class="container my-5 py-5">
+	<div class="col-lg-10 mx-auto text-center">
+        <div class="col-lg-5 mb-5 mx-auto">
+            <h1>Edit Profile</h1>
+            <div class="mb-2 alert alert-danger"></div>
+        </div>
+        <form id="form" class="w-100">
+            <div class="row mb-4">
+                <div class="col-lg-6">
+                    <div class="text-left form-group">
+                        <label for="firstname">First Name <span class="text-red">*</span></label>
+                        <input id="firstname" value="<%= user.firstName %>" type="text" class="form-control" placeholder="John" name="firstName" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="lastname">Last Name <span class="text-red">*</span></label>
+                        <input id="lastname" value="<%= user.lastName %>" type="text" class="form-control" placeholder="the Baptist" name="lastName" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="gradyear">Graduation Year <span class="text-red">*</span></label>
+                        <input id="gradyear" value="<%= user.grad %>" min="1970" max="2030" type="number" class="form-control" placeholder="2019" name="gradyear" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="date">Birthday</label>
+                        <input type="date" value="<%= user.bday %>" id="birthday" name="birthday" placeholder="Select Birthday" class="form-control date">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-left form-group">
+                        <label for="number">Phone Number <span class="text-red">*</span></label>
+                        <input id="number" value="<%= user.phoneNumber %>" type="tel" class="form-control" placeholder="Yo digits" name="phoneNumber" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="major">Major</label>
+                        <input id="major" value="<%= user.major %>" type="text" class="form-control" placeholder="Science" name="major">
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="address">Address</label>
+                        <input id="address" value="<%= user.address %>" type="text" class="form-control" placeholder="123 Bruin Lane" name="address">
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="church">Home Church</label>
+                        <input id="church" value="<%= user.homeChurch %>" type="text" class="form-control" placeholder="Church" name="homechurch">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 mx-auto">
+                <button type="submit" id="update" class="btn btn-primary mb-2">Update</button>
+            </div>
+        </form>
+        
+    </div>
+</div>
+<%- include widgets/footer.ejs %>
+<script>
+    $(document).ready(function() {
+		$('.alert').hide();
+    });
+    $('#form').submit( function(e) {
+        $('#update').html('<div class="loader">Loading...</div>')
+        e.preventDefault();
+        $.post('/profile', $('#form').serialize(), function(data) {
+            if(data!=='success') {
+                $('.alert').show();
+                $('.alert').html(data);
+            }
+            else {
+                $('#update').addClass('success')
+                $('#update').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+            }
+        }, 'json');
+    });
+</script>
+</html>

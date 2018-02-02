@@ -1,0 +1,43 @@
+﻿<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div class="container">
+	<div class="col-sm-6 col-sm-offset-3">
+		<h1><span class="fa fa-sign-in"></span> Edit Class</h1>
+		<div class="form">
+			<form action="/c/edit/<%= Class.firebaseID %>" method="post" enctype="multipart/form-data">
+					<label>Title</label>
+					<input type="text" name="title" value="<%= Class.title %>"><br>
+
+					<label>Instructor's login email</label>
+					<input type="text" name="instructorEmail" value="<%= Class.instructor.email %>"><br>
+
+					<label>Location</label>
+					<input type="text" name="location" value="<%= Class.location %>"><br>
+
+					<label>Capacity</label>
+					<input type="number" name="capacity" value="<%= Class.totalSpots %>"><br>
+
+					<label>Weeks, Days, and Times</label>
+					<input type="text" name="time" value="<%= Class.classTime %>"><br>
+
+					<label>Signup deadline</label>
+					<input type="datetime-local" name="deadline" value="<%= inputDeadline %>"/><br>
+
+					<label>End date/time</label>
+					<input type="datetime-local" name="endDate" value="<%= inputEnd %>"/><br>
+
+					<label>Description of class</label>
+					<textarea name="details"><%= Class.details %></textarea><br>
+
+					<input type="submit">
+				</form>
+
+				<form action="/c/delete/<%= Class.firebaseID %>" method="post">
+					<input type="submit" name="delete" value="Delete">
+				</form>
+		</div>
+	</div>
+</div>
+</html>

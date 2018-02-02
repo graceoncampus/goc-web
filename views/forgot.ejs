@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<link rel="stylesheet" href="/css/loader.css">
+<%- include widgets/mainNav.ejs %>
+<div class="container my-5 py-5">
+	<div class="col-lg-4 col-md-7 mx-auto text-center">
+		<h1 class="mb-2">Forgot Password?</h1>
+        <h6 class="mb-5">Enter your email to receive instructions to reset it.</h6>
+        <div class="alert alert-danger"></div>
+        <form id="form" class="w-100">
+            <div class="text-left form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" class="form-control" placeholder="Email" name="email" required>
+            </div>
+            <button id="signup" type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+<%- include widgets/footer.ejs %>
+<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+<script>
+$(document).ready(function() {
+    $('.alert').hide(); 
+    var config = {
+        apiKey: "AIzaSyC5FN_4EfqAcIoPOOVzTXeze-afOVS_YZo",
+        authDomain: "goc-app-6efe2.firebaseapp.com",
+        databaseURL: "https://goc-app-6efe2.firebaseio.com",
+        projectId: "goc-app-6efe2",
+        storageBucket: "goc-app-6efe2.appspot.com",
+        messagingSenderId: "44635103582"
+    };
+    firebase.initializeApp(config);
+})
+$('#form').submit( function(e) {
+    $('#signup').html('<div class="loader">Verifying...</div>')
+    $('.alert').hide() 
+    $('.alert').html('') 
+    e.preventDefault();
+    var auth = firebase.auth();
+    auth.sendPasswordResetEmail($('#email').val()).then(function() {
+        $('#signup').addClass('success')
+        $('#signup').html('Sent&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+        window.location.assign("/login")
+    }).catch(function(error) {
+        $('#signup').html('Submit')
+        $('html, body').animate({
+            scrollTop: $(".alert").offset().top
+        }, 750);
+        $('.alert').show() 
+        $('.alert').html(error.message)
+    });
+    
+});
+</script>
+</html>
