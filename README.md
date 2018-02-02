@@ -14,6 +14,12 @@ npm i
 ```
 
 ## Developing
+1. Run Mongo
+```shell
+sudo mongod
+```
+2. Start Dev Server
 ```shell
 npm run dev
 ```
+3. Server runs on `localhost:3000`
