@@ -12,10 +12,9 @@ npm i
 ```
 5. :wink:
  move the two config files to `/server/config/`
- move correct env.sh file to root directory
 
 ## Developing
 ```shell
-./env.sh
+./env.sh or env.bat
 npm run dev
 ```
