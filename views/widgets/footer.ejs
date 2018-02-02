@@ -1,0 +1,58 @@
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="mb-4 col-lg-3 col-sm-6 text-muted">
+                <h5>Grace on Campus</h5>
+                <h6><i class="icon ion-clock"></i>&nbsp;&nbsp;&nbsp;Fridays at 7pm</h6>               
+                <h6 class="mb-2"><i class="icon ion-ios-location" style="margin-left:2.5px"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="https://goo.gl/maps/cX1To" target="_blank">Broad Art Center 2160E</a></h6>
+                <h4><a class="mr-2" rel="noopener" href="https://www.facebook.com/GOCatUCLA" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Facebook</span><i class="icon ion-social-facebook"></i></a>
+                <a class="mr-2" rel="noopener" href="https://www.instagram.com/goc_ucla/" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Instagram</span><i class="icon ion-social-instagram"></i></a>
+                <a class="mr-2" rel="noopener" href="https://vimeo.com/user32835937" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Vimeo</span><i class="icon ion-social-vimeo"></i></a>
+                <a class="mr-2" rel="noopener" href="https://graceoncampusucla.wordpress.com/" target="blank"><span class="sr-only">Grace on Campus Christian Fellowship Blog</span><i class="icon ion-social-wordpress"></i></a></h4>
+
+            </div>
+            <div class="mb-4 col-lg-3 col-sm-6 text-muted">
+                <h5>Shepherd</h5>
+                <h6>Chris Gee</h6>
+                <h6><i class="icon ion-ios-telephone"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="tel:+15104614554">(510) 461-4554</a></h6>            
+                <h6>
+                    <i class="icon ion-ios-email" style="margin-left:2.5px"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="mailto:chris.gee7@gmail.com" target="_blank">chris.gee7@gmail.com</a>
+                </h6>
+            </div>
+            <div class="mb-4 col-lg-3 col-sm-6 text-muted">
+                <h5>Student Contact</h5>
+                <h6>Jeffery Yan</h6>                
+                <h6><i class="icon ion-ios-telephone"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="tel:+13102562839">(310) 256-2839</a></h6>            
+                <h6 class="mb-3">
+                    <i class="icon ion-ios-email" style="margin-left:2.5px"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="mailto:gocateam@gmail.com" target="_blank">gocateam@gmail.com</a>
+                </h6>
+            </div>
+            <div class="col-lg-3 col-sm-6 text-muted">
+                <a rel="noopener" target="_blank" href="https://gracechurch.org">
+                    <div class="card w-100">
+                        <div class="card-body text-center">
+                            <img alt="Grace Community Church Logo" style="max-width: 150px" class="img-fluid" src="https://www.gracechurch.org/Content/images/gcc-logo-2014@2x.png" />                                                                                                       
+                        </div>
+                    </div>
+                </a> 
+            </div> 
+        </div>
+    </div>
+</footer>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/popper.min.js" ></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src='/js/analytics.js'></script>
+<script type="text/javascript">
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('send', 'pageview');
+    $(document).ready(function() {
+        var pathname = window.location.pathname;
+        var reg = /\/[^/\\]+/
+        $('nav > div > ul > li > a[href="'+pathname.match(reg)+'"]').parent().addClass('active');
+        $('.hamburger').click(function() {
+          $('.hamburger').toggleClass("is-active");
+        });
+    });
+</script>
