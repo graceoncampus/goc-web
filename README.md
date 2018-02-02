@@ -1,3 +1,5 @@
+# [Grace on Campus Website](https://graceoncampus.org)
+
 ## Installation
 
 1. Install [Node.js](https://nodejs.org/en/download/)
