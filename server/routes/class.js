@@ -4,10 +4,11 @@ import _ from 'lodash';
 import moment from 'moment';
 import marked from 'marked';
 import admin from 'firebase-admin';
+import formidable from 'formidable';
 var firebaseDB = admin.database();
 var classesRef = firebaseDB.ref("classes");
 
-export const getClasses = async (req, res) => { 
+export const getClasses = async (req, res) => {
     const classes = await admin.database().ref('/classes').once('value');
     const finalClasses = []
     const claz = _.values(classes.val())
@@ -48,7 +49,7 @@ export const getEditClassById = (req, res) => {
     //         UserDB.findOne({firebaseID: Class.instructorUID}, function(err, instructor) {
     //             Class.instructor = instructor;
     //             res.render('editclass.ejs', {
-    //                 title: 'Edit Class', 
+    //                 title: 'Edit Class',
     //               Class: Class,
     //               inputDeadline: moment.tz(Class.deadline * 1000, req.cookies.timezone).format("YYYY-MM-DDTHH:mm:ss"),
     //               inputEnd: moment.tz(Class.endDate * 1000, req.cookies.timezone).format("YYYY-MM-DDTHH:mm:ss")
@@ -149,7 +150,7 @@ export const enrollStudent = async(req, res) => {
 };
 export const unenrollStudent = async(req, res) => {
     const uid = req.user.uid;
-    const classKey = req.body.id    
+    const classKey = req.body.id
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots + 1;
     await admin.database().ref(`classes/${classKey}/students`).orderByChild('uid').equalTo(uid).once('child_added', (snapshot) => {
@@ -201,49 +202,39 @@ export const dropUserFromClass = (req, res) => {
     //     }
     // });
 };
-export const postClass = function() {
-    return (req, res) => {
-        if (req.body.title) {
-            // var newClass = new ClassDB();
-            // UserDB.findOne({email: req.body.instructorEmail}, function(err, instructor) {
-            //     newClass.title = req.body.title;
-            //     if (!err && instructor) {
-            //         newClass.instructorUID = instructor.firebaseID;
-            //     }
-            //     newClass.location = req.body.location;
-            //     newClass.classTime = req.body.time;
-            //     newClass.endDate = common.timezonify(req.body.endDate, req.cookies.timezone);
-            //     newClass.details = req.body.details;
-            //     newClass.deadline = common.timezonify(req.body.deadline, req.cookies.timezone);
-            //     newClass.totalSpots = req.body.capacity;
-            //     newClass.openSpots = req.body.capacity;
-            //     newClass.enrolledUsers = [];
 
-            //     var newClassRef = classesRef.push({
-            //       title: newClass.title || "",
-            //       classTime: newClass.classTime || "",
-            //       location: newClass.location || "",
-            //       endDate: newClass.endDate || 0,
-            //       details: newClass.details || "",
-            //       instructorUID: newClass.instructorUID || "",
-            //       enrolledUsers: [],
-            //       totalSpots: newClass.totalSpots || 0,
-            //       openSpots: newClass.openSpots || 0,
-            //       deadline: newClass.deadline || 0
-            //     });
-
-            //     newClass.firebaseID = newClassRef.key;
-
-            //     newClass.save(function () {
-            //         res.redirect('/c/' + newClass.firebaseID);
-            //     });
-            // });
-        }
-        else {
+export const postClass = async(req, res) => {
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields) {
+        const title = fields.title;
+        const location = fields.location;
+        const instructorUID = fields.instructorName;
+        const openSpots = fields.capacity;
+        const totalSpots = fields.capacity;
+        const day = fields.day;
+        const classTime = fields.time;
+        const deadline = Date.parse(fields.deadline)/1000;
+        const startDate = Date.parse(fields.startDate)/1000;;
+        const endDate = Date.parse(fields.endDate)/1000;
+        const details = fields.details;
+        var newClassRef = classesRef.push({
+            title,
+            location,
+            instructorUID,
+            openSpots,
+            totalSpots,
+            day,
+            classTime,
+            deadline,
+            startDate,
+            endDate,
+            details
+        }).then(() => {
             res.redirect('/classes');
-        }
-    };
+        })
+    });
 };
+
 export const postDeleteClassById = function(req, res) {
     var classID = req.param("classID");
     // ClassDB.findOneAndRemove({firebaseID: classID}, function (err, result) {
