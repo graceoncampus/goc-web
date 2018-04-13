@@ -38,9 +38,15 @@
             <p class="card-text mt-4">
               <%= Class.details %>
             </p>
-            <% if (Class.isEnrolled) { %>
+            <% if(user && (user.permissions.admin || user.permissions.classes)) { %>
+              <div class="vertical">
+                <button class= "btn-primary col-lg-3 mt-3">Edit</button><br/>
+                <button class="btn-primary col-lg-3 mt-3 red">Delete</button>
+              </div>
+            <% } %>
+            <% if (Class.isEnrolled && (user && !(user.permissions.admin || user.permissions.classes))) { %>
               <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="unenroll(this)" class="float-right btn-primary col-lg-3 mt-3 red">Unenroll</button>
-              <% } else if (Class.openSpots > 0) { %>
+              <% } else if (Class.openSpots > 0 && (user && !(user.permissions.admin || user.permissions.classes))) { %>
                 <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="enroll(this)" class="float-right btn-primary col-lg-3 mt-3">Enroll</button>
                 <% } %>
           </div>
