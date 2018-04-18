@@ -147,12 +147,22 @@ hr {
     vertical-align: middle;
     font-size: 10vw;
     margin: 0;
+    position: relative;
     color: #fdfdfd;
 }
 
-.overlay p {
-    font-size: 1rem;
-    padding: 5rem 5rem;
+.overlay .meta {
+    margin: 0 auto;
+    color: #fdfdfd;
+    max-width: 800px;
+    top: 50%;
+    transform: translateY(-50%);
+    position: relative;
+    display: inline-block;
+}
+.overlay h2 {
+    font-size: 6vw;
+    color: #fdfdfd;
 }
 
 html,
@@ -403,6 +413,13 @@ small {
     ),
     url(../images/events.jpg);
 }
+#blog {
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+    ),
+    url(../images/blog.jpg);
+}
 @media (min-width: 992px) {
     .mobile-padding {
         padding: 0;
@@ -436,7 +453,7 @@ small {
     background-color: #f9f9f9
 }
 
-td:nth-child(2) {
+.sermon td:nth-child(2) {
     text-align: right
 }
 td {
@@ -515,4 +532,59 @@ thead td {
 .dropdown-item > a:first-child {
     color: #212529;
     vertical-align: middle
+}
+.badge {
+    display: none;
+}
+.calendar-month {
+    cursor: pointer;
+    color: #007bff;
+}
+.btn-link {
+    cursor:pointer;
+}
+.calendar-table thead td {
+    border-top: none;
+    width: calc( 100% / 3);
+    vertical-align: middle;
+}
+.calendar-table .btn {
+    padding: .1em; 
+    cursor:pointer;
+}
+.js-cal-option:hover, .js-cal-years:hover {
+    text-decoration: none;
+}
+.js-cal-option {
+    padding-right: 0.1em;
+}
+.calendar-table .btn-group > .btn {
+    color: black;
+}
+.js-cal-option {
+    margin-right: 0.5em;
+}
+.js-cal-option:hover {
+    color: #007bff!important;
+}
+.js-cal-years:hover {
+    cursor: default
+}
+.date:hover {
+    cursor: pointer;
+}
+.thumbnail {
+    width: 100%;
+}
+.post img {
+    width: 100%;
+    height: auto;
+}
+.overlay.post {
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+    );
+    background-position-y: top;
+    height: 30rem;
 }

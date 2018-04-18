@@ -36,9 +36,7 @@ firebaseDB.ref('ridesSignup').on('child_added', async (snapshot) => {
 })
 var app = express()
 mongoose.Promise = global.Promise
-mongoose.connect(configDB.url, {
-  useMongoClient: true,
-});
+mongoose.connect(configDB.url);
 
 app.set('view engine', 'ejs'); // set up ejs for templating
 app.set('views', './views');
