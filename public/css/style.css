@@ -591,3 +591,6 @@ thead td {
 .pagination {
    flex-wrap: wrap!important;
 }
+.hidden {
+   list-style-type: none;
+}
