@@ -75,6 +75,11 @@ import {
     getRidesSignup,
     updateRides
 } from './rides.js';
+import {
+    getPostsPaginated,
+    getPosts,
+    getPost
+} from './blog.js';
 import firebaseLogin from '../auth/login';
 
 router.get('/', getRoot);
@@ -134,6 +139,12 @@ router.get('/sermons/edit/:sermonid', getEditSermonById);
 router.post('/sermons/edit/:sermonid', postEditSermonById);
 router.post('/notifications', postNotify);
 router.post('/ridesNotify', postRidesNotify);
+
+//blog
+router.get('/blog/:postID', getPost)
+router.get('/blog/', getPosts);
+router.get('/blog/page/:page', getPosts);
+
 router.use(get404);
 
 export default router;
