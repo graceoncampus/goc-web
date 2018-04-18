@@ -588,3 +588,6 @@ thead td {
     background-position-y: top;
     height: 30rem;
 }
+.pagination {
+   flex-wrap: wrap!important;
+}
