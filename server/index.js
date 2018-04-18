@@ -15,6 +15,7 @@ const mailgun = mail({
   apiKey: process.env.apiKey,
   domain: process.env.apiDomain
 });
+const MongoStore = require('connect-mongo')(session);
 
 
 firebaseDB.ref('ridesSignup').on('child_added', async (snapshot) => {
@@ -53,6 +54,7 @@ app.use(bodyParser.urlencoded({
 app.use(session({
   secret: process.env.secret,
   resave: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
   saveUninitialized: true
 }));
 app.use(passport.initialize());
