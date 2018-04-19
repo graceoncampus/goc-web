@@ -26,7 +26,7 @@ jobs:
     steps:
       - run:
           name: Deploy
-          command: ssh -v $GOC_USER@$GOC_IP "cd $GOC_DIR; git pull; yarn; yarn run prod; pm2 restart $GOC_APP_NAME;"
+          command: ssh -v $GOC_USER@$GOC_IP "cd $GOC_DIR; git pull; pm2 stop $GOC_APP_NAME; yarn; yarn run prod; pm2 restart $GOC_APP_NAME;"
 workflows:
    version: 2
    build-deploy:
