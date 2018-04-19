@@ -2,13 +2,13 @@
 <html lang="en">
 <%- include widgets/header.ejs %>
 <%- include widgets/mainNav.ejs %>
-<div class="overlay post" style="background-image:linear-gradient(rgba(0, 0, 0, 0.8),  rgba(0, 0, 0, 0.5)), url(<%= post.image %>)">
+<div class="postHead post" style="background-image:linear-gradient(rgba(0, 0, 0, 0.8),  rgba(0, 0, 0, 0.5)), url(<%= post.image %>)">
   <div class="meta">
         <h2><%- post.title %></h2><br />
         <em><p><%= post.date %></p></em>
   </div>
 </div>
-<div class="container py-5 my-5">
+<div class="container mt-5">
     <div class="post mx-auto col-md-8">
         <a href="/blog/">&larr; All Posts</a>
         <p><%- post.content %></p>
