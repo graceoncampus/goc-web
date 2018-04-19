@@ -1,0 +1,40 @@
+version: 2
+jobs:
+  build-job:
+    docker:
+      - image: circleci/node:latest # primary container
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: build
+          command: npm run build
+  deploy-job:
+    machine:
+        enabled: true
+    steps:
+      - run:
+          name: Deploy
+          command: ssh -v $GOC_USER@$GOC_IP "cd $GOC_DIR; git pull; yarn; yarn run prod; pm2 restart $GOC_APP_NAME;"
+workflows:
+   version: 2
+   build-deploy:
+     jobs:
+       - build-job
+       - deploy-job:
+           requires:
+             - build-job
+           filters:
+             branches:
+               only: master
