@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/graceoncampus/goc-web.svg?style=shield)](https://circleci.com/gh/graceoncampus/goc-web)
 ## Installation
 
 1. Install [Node.js](https://nodejs.org/en/download/)
