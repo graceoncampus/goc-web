@@ -5,19 +5,17 @@
 <div class="overlay" id="blog">
     <a href="/blog/"><h1>Blog</h1></a>
 </div>
-<div class="container py-5 my-5">
-    <div class="post mx-auto col-md-8">
+<div class="container pt-5">
+    <div class="post col-md-8 mx-auto col-sm-12 px-0">
     <% posts.forEach(function(post) { %>
-        <div class="card my-5">
-            <div class="card-body">
-                <div>
-                    <a href="/blog/<%- post.ID %>"><h5 class="mb-0"><%- post.title %></h5></a>
-                    <label class="mb-3"><%= post.date %></label>
-                    <% if (post.image) { %>
-                        <a href="/blog/<%- post.ID %>"><img class="thumbnail" src=<%= post.image %> /></a>
-                    <% } %>
-                    <p><%- post.excerpt %></p>
-                </div>
+        <div class="card-body">
+            <div>
+                <a href="/blog/<%- post.ID %>"><h5 class="mb-0"><%- post.title %></h5></a>
+                <label class="mb-3"><%= post.date %></label>
+                <% if (post.image) { %>
+                    <a href="/blog/<%- post.ID %>"><img class="thumbnail" src=<%= post.image %> /></a>
+                <% } %>
+                <p><%- post.excerpt %></p>
             </div>
         </div>
     <% }) %>
