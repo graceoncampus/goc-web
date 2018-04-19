@@ -151,20 +151,6 @@ hr {
     color: #fdfdfd;
 }
 
-.overlay .meta {
-    margin: 0 auto;
-    color: #fdfdfd;
-    max-width: 800px;
-    top: 50%;
-    transform: translateY(-50%);
-    position: relative;
-    display: inline-block;
-}
-.overlay h2 {
-    font-size: 6vw;
-    color: #fdfdfd;
-}
-
 html,
 body{
     color: #3a3f4b;
@@ -580,13 +566,41 @@ thead td {
     width: 100%;
     height: auto;
 }
-.overlay.post {
+.postHead.post {
     background-image: linear-gradient(
             rgba(0, 0, 0, 0.5),
             rgba(0, 0, 0, 0.5)
     );
     background-position-y: top;
     height: 30rem;
+}
+.postHead {
+    background: no-repeat center;
+    background-size: cover;
+    height: 20rem;
+    width: 100%;
+    text-align: center;
+}
+
+.postHead .meta {
+    margin: 0 auto;
+    color: #fdfdfd;
+    max-width: 800px;
+    top: 50%;
+    transform: translateY(-50%);
+    position: relative;
+    display: inline-block;
+}
+
+.postHead h2 {
+    font-size: 6vw;
+    color: #fdfdfd;
+}
+
+@media screen and (max-width: 768px) {
+    .postHead h2 {
+        font-size: 10vw;
+    }
 }
 .pagination {
    flex-wrap: wrap!important;
