@@ -15,7 +15,7 @@
 				 <br>
 			  	<label for="date">Instructor</label>
 			  	<input type="text" value="<%= Class.instructorUID %>" name="instructorUID" class="form-control" placeholder="Instructor" required>
-				<br>  
+				<br>
 				<label for="date">Location</label>
 				<input type="text" value="<%= Class.location %>" name="location" class="form-control" placeholder="Location" required>
 				<br>
@@ -23,7 +23,7 @@
 				<input type="text" value="<%= Class.day %>" name="day" class="form-control" placeholder="day" required>
 				<br>
 		      	<label for="date">Time</label>
-		      	<input type="text" value="<%= Class.time %>" name="time" class="form-control" placeholder="Time" required>
+		      	<input type="text" value="<%= Class.classTime %>" name="time" class="form-control" placeholder="Time" required>
 			  </div>
 			  <div class="col-md-6">
 				<label for="date">Capacity</label>
@@ -46,6 +46,7 @@
           <div class="row">
             <div class="mx-auto col-md-6 mt-4 mb-2">
                 <button type="submit" class="btn btn-primary">Submit</button>
+
             </div>
           </div>
         </form>
