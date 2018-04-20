@@ -53,9 +53,27 @@ export const getEditClassById = async (req, res) => {
     });
 };
 
-export const postEditClassById = function () {
-    return (req, res) => {
+export const postEditClassById = async (req, res) => {
+  console.log("FUNCTION RUNNING!!")
         var classID = req.param("classID");
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields){
+          console.log("MY DATA COMING NOW")
+          console.log(fields);
+          var newClassEdit = {
+            title: fields.title;
+            classTime: fields.classTime;
+            startDate: Date.parse(fields.startDate)/1000;
+            day: fields.day;
+            deadline: Date.parse(fields.deadline)/1000;
+            endDate: Date.parse(fields.endDate)/1000;
+            instructorUID: fields.instructorUID;
+            location: fields.location;
+            totalSpots: fields.totalSpots;
+            await admin.database().ref('classes/${classID}').set(newClassEdit);
+          }
+        });
+
         // ClassDB.findOne({firebaseID: classID}, function (err, Class) {
         //     UserDB.findOne({email: req.body.instructorEmail}, function(e, instructor) {
         //         if (req.body.title) {
@@ -105,7 +123,6 @@ export const postEditClassById = function () {
         //         });
         //     });
         // });
-    }
 };
 export const getClassById = (req, res) => {
     var classID = req.param("classID");
