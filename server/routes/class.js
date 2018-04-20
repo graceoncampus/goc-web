@@ -54,26 +54,32 @@ export const getEditClassById = async (req, res) => {
 };
 
 export const postEditClassById = async (req, res) => {
-  console.log("FUNCTION RUNNING!!")
         var classID = req.param("classID");
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields){
-          console.log("MY DATA COMING NOW")
-          console.log(fields);
-          var newClassEdit = {
-            title: fields.title;
-            classTime: fields.classTime;
-            startDate: Date.parse(fields.startDate)/1000;
-            day: fields.day;
-            deadline: Date.parse(fields.deadline)/1000;
-            endDate: Date.parse(fields.endDate)/1000;
-            instructorUID: fields.instructorUID;
-            location: fields.location;
-            totalSpots: fields.totalSpots;
-            await admin.database().ref('classes/${classID}').set(newClassEdit);
-          }
+          const title = fields.title;
+          const classTime = fields.classTime;
+          const startDate = Date.parse(fields.startDate)/1000;
+          const day = fields.day;
+          const deadline = Date.parse(fields.deadline)/1000;
+          const endDate = Date.parse(fields.endDate)/1000;
+          const instructorUID = fields.instructorUID;
+          const location = fields.location;
+          const totalSpots = fields.totalSpots;
+          classesRef.child(classID).update({
+            title,
+            classTime,
+            startDate,
+            day,
+            deadline,
+            endDate,
+            instructorUID,
+            location,
+            totalSpots
+          }).then(() => {
+            res.redirect('/classes');
+          })
         });
-
         // ClassDB.findOne({firebaseID: classID}, function (err, Class) {
         //     UserDB.findOne({email: req.body.instructorEmail}, function(e, instructor) {
         //         if (req.body.title) {
