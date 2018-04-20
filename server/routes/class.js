@@ -39,25 +39,20 @@ export const getClasses = async (req, res) => {
     });
 };
 
-export const getEditClassById = (req, res) => {
+export const getEditClassById = async (req, res) => {
     var classID = req.param("classID");
-    // ClassDB.findOne({firebaseID: classID}, function (err, Class) {
-    //     if (err) {
-    //         res.render('error.ejs', {title: 'Error', message: "Specified class does not exist."});
-    //     }
-    //     else {
-    //         UserDB.findOne({firebaseID: Class.instructorUID}, function(err, instructor) {
-    //             Class.instructor = instructor;
-    //             res.render('editclass.ejs', {
-    //                 title: 'Edit Class',
-    //               Class: Class,
-    //               inputDeadline: moment.tz(Class.deadline * 1000, req.cookies.timezone).format("YYYY-MM-DDTHH:mm:ss"),
-    //               inputEnd: moment.tz(Class.endDate * 1000, req.cookies.timezone).format("YYYY-MM-DDTHH:mm:ss")
-    //             });
-    //         });
-    //     }
-    // });
+    const snapshot = await classesRef.child(classID).once('value');
+    let Class = snapshot.val();
+    Class.startDate = moment.unix(Class.startDate).format('YYYY-MM-DDThh:mm')
+    Class.endDate = moment.unix(Class.endDate).format('YYYY-MM-DDThh:mm')
+    Class.deadline = moment.unix(Class.deadline).format('YYYY-MM-DDThh:mm')
+    Class.id = classID
+    res.render('editclass.ejs', {
+        title: 'Edit Class',
+        Class
+    });
 };
+
 export const postEditClassById = function () {
     return (req, res) => {
         var classID = req.param("classID");
