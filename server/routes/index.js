@@ -42,7 +42,8 @@ import {
     postEditClassById,
     postDeleteClassById,
     enrollStudent,
-    unenrollStudent
+    unenrollStudent,
+    getViewClassRosterById
 } from './class.js';
 import {
     getRoot,
@@ -127,6 +128,7 @@ router.post('/classes', postClass);
 router.post('/c/delete/:classID', postDeleteClassById);
 router.get('/c/edit/:classID', getEditClassById);
 router.post('/c/edit/:classID', postEditClassById);
+router.get('/c/view/:classID', getViewClassRosterById);
 // sermons
 router.get('/sermons', getSermons);
 router.post('/sermons', postSermon);
