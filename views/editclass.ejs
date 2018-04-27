@@ -5,6 +5,9 @@
 <div class="container py-8 my-8">
     <div class="my-5">
 	  <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
+		<% var numStudents = 0 %>
+		<% if(Class.students != null) {numStudents = Object.keys(Class.students).length} %>
+		<% console.log(numStudents) %>
         <h1 class="mb-2">Edit Class</h1>
         <form action="/c/edit/<%= Class.id %>" class="w-100" enctype="multipart/form-data" method="post">
           <div class="mt-5 form">
@@ -23,7 +26,7 @@
 				<input type="text" value="<%= Class.day %>" name="day" class="form-control" placeholder="day" required>
 				<br>
 		      	<label for="date">Time</label>
-		      	<input type="text" value="<%= Class.classTime %>" name="time" class="form-control" placeholder="Time" required>
+		      	<input type="text" value="<%= Class.classTime %>" name="classTime" class="form-control" placeholder="Time" required>
 			  </div>
 			  <div class="col-md-6">
 				<label for="date">Capacity</label>
@@ -39,7 +42,8 @@
 				<input value="<%= Class.deadline %>" type="datetime-local" name="deadline" class="form-control date" required>
 				<br>
                 <label for="summary">Description of Class</label>
-                <textarea class="form-control" placeholder="Details" name="details" required><%= Class.details %></textarea>
+				<textarea class="form-control" placeholder="Details" name="details" required><%= Class.details %></textarea>
+				<input type='hidden' name='numStudents' value="<%= numStudents %>" required>
                </div>
 		  </div>
 		</div>
