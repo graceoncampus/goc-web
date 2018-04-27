@@ -66,6 +66,12 @@ export const postEditClassById = async (req, res) => {
           const instructorUID = fields.instructorUID;
           const location = fields.location;
           const totalSpots = fields.totalSpots;
+          const openSpots = totalSpots - Number(fields.numStudents);
+          const details = fields.details;
+          console.log(openSpots);
+          console.log(totalSpots);
+          console.log(fields.totalSpots);
+          console.log(fields.numStudents);
           classesRef.child(classID).update({
             title,
             classTime,
@@ -75,60 +81,13 @@ export const postEditClassById = async (req, res) => {
             endDate,
             instructorUID,
             location,
-            totalSpots
+            totalSpots,
+            openSpots,
+            details
           }).then(() => {
             res.redirect('/classes');
           })
         });
-        // ClassDB.findOne({firebaseID: classID}, function (err, Class) {
-        //     UserDB.findOne({email: req.body.instructorEmail}, function(e, instructor) {
-        //         if (req.body.title) {
-        //             Class.title = req.body.title;
-        //         }
-        //         if (!e && req.body.instructorEmail) {
-        //             Class.instructorUID = instructor.firebaseID;
-        //         }
-        //         if (req.body.location) {
-        //             Class.location = req.body.location;
-        //         }
-        //         if (req.body.details) {
-        //             Class.details = req.body.details;
-        //         }
-        //         if (req.body.time) {
-        //             Class.classTime = req.body.time;
-        //         }
-        //         if (req.body.endDate) {
-        //             Class.endDate = common.timezonify(req.body.endDate, req.cookies.timezone);
-        //         }
-        //         if (req.body.capacity) {
-        //             Class.totalSpots = req.body.capacity;
-        //         }
-        //         if (req.body.deadline) {
-        //             Class.deadline = common.timezonify(req.body.deadline, req.cookies.timezone);
-        //         }
-
-        //         Class.save(function () {
-        //             classesRef.child(Class.firebaseID)
-        //               .update({
-        //                 title: Class.title || "",
-        //                 classTime: Class.classTime || "",
-        //                 location: Class.location || "",
-        //                 endDate: Class.endDate || 0,
-        //                 details: Class.details || "",
-        //                 instructorUID: Class.instructorUID || "",
-        //                 enrolledUsers: Class.enrolledUsers || [],
-        //                 totalSpots: Class.totalSpots || 0,
-        //                 openSpots: Class.openSpots || 0,
-        //                 deadline: Class.deadline || 0
-        //               })
-        //               .then(function () {
-        //                 res.redirect('/c/' + Class.firebaseID);
-        //               }, function (error) {
-        //                 res.redirect('/c/' + Class.firebaseID);
-        //               });
-        //         });
-        //     });
-        // });
 };
 export const getClassById = (req, res) => {
     var classID = req.param("classID");
