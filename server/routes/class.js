@@ -68,10 +68,6 @@ export const postEditClassById = async (req, res) => {
           const totalSpots = fields.totalSpots;
           const openSpots = totalSpots - Number(fields.numStudents);
           const details = fields.details;
-          console.log(openSpots);
-          console.log(totalSpots);
-          console.log(fields.totalSpots);
-          console.log(fields.numStudents);
           classesRef.child(classID).update({
             title,
             classTime,
@@ -210,6 +206,20 @@ export const postClass = async(req, res) => {
             res.redirect('/classes');
         })
     });
+};
+
+export const getViewClassRosterById = async(req, res) => {
+  var classID = req.param("classID");
+  const snapshot = await classesRef.child(classID).once('value');
+  let Class = snapshot.val();
+  Class.startDate = moment.unix(Class.startDate).format('MM-DD-YYYY');
+  Class.endDate = moment.unix(Class.endDate).format('MM-DD-YYYY');
+  Class.deadline = moment.unix(Class.deadline).format('MM-DD-YYYY');
+  Class.id = classID
+  res.render('viewClassRoster.ejs', {
+      title: 'View Class',
+      Class
+  });
 };
 
 export const postDeleteClassById = function(req, res) {

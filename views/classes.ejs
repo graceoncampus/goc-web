@@ -47,6 +47,8 @@
               <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="unenroll(this)" class="float-right btn-primary col-lg-3 mt-3 red">Unenroll</button>
               <% } else if (Class.openSpots > 0 && (user && !(user.permissions.admin || user.permissions.classes))) { %>
                 <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="enroll(this)" class="float-right btn-primary col-lg-3 mt-3">Enroll</button>
+              <% } else if (user && (user.permissions.admin || user.permissions.classes)) { %>
+                <a href="/c/view/<%= Class.id %>">View Class Information</a><br/>
                 <% } %>
           </div>
         </div>
