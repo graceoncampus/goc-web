@@ -212,15 +212,28 @@ export const getViewClassRosterById = async(req, res) => {
   var classID = req.param("classID");
   const snapshot = await classesRef.child(classID).once('value');
   let Class = snapshot.val();
-  Class.startDate = moment.unix(Class.startDate).format('MM-DD-YYYY');
-  Class.endDate = moment.unix(Class.endDate).format('MM-DD-YYYY');
-  Class.deadline = moment.unix(Class.deadline).format('MM-DD-YYYY');
-  Class.id = classID
+  Class.startDate = moment.unix(Class.startDate).format('MMMM DD');
+  Class.endDate = moment.unix(Class.endDate).format('MMMM DD');
+  Class.deadline = moment.unix(Class.deadline).format('MMMM DD');
+  Class.id = classID;
+  var enrolledUsers = await classUsersFetch(Class.students);
   res.render('viewClassRoster.ejs', {
       title: 'View Class',
-      Class
+      Class, enrolledUsers
   });
 };
+
+const classUsersFetch = async(studentUids) => {
+  var usersRef = await firebaseDB.ref("users").once('value');
+  var users = usersRef.val();
+  var Objkeys = Object.keys(studentUids);
+  var studentInfo = [];
+  for (var key in Objkeys) {
+    var thisUid = studentUids[Objkeys[key]].uid;
+    studentInfo.push(users[thisUid]);
+  }
+  return studentInfo;
+}
 
 export const postDeleteClassById = function(req, res) {
     var classID = req.param("classID");
