@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+
+<div class="container py-8 my-8">
+  <h1><%= Class.title %></h1>
+    <div class="my-5">
+    <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
+      <div class="card">
+          <div class="card-body">
+              <div class="col-md-8 mx-auto px-4 py-5 my-3">
+                  <p><b>Instructor:</b> <%= Class.instructorUID %><p>
+                  <p><b>Location:</b> <%= Class.location %><p>
+                  <p><b>Dates:</b> <%= Class.startDate %> - <%= Class.endDate%><p>
+                  <p><b>Time:</b> <%= Class.classTime %><p>
+                  <p><b>Day of the Week:</b> <%= Class.day %><p>
+                  <p><b>Enroll by:</b> <%= Class.deadline %><p>
+                  <p><b>Spots Left:</b> <%= Class.openSpots %> / <%=Class.totalSpots%> <p>
+                  <p><%= Class.details %></p>
+              </div>
+          </div>
+      </div>
+        <table class="table table-striped">
+            <thead class="sermon">
+                <tr>
+                    <td>Name</td>
+                    <td>Graduation Year</td>
+                    <td>Major</td>
+                    <td>Email</td>
+                    <td>Phone Number</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% enrolledUsers.forEach(function(user) { %>
+                    <tr>
+                        <td>
+                            <%= user.firstName %> <%= user.lastName %>
+                        </td>
+                        <td>
+                            <%= user.grad %>
+                        </td>
+                        <td>
+                          <%= user.major %>
+                        </td>
+                        <td>
+                          <%= user.email %>
+                        </td>
+                        <td>
+                          <%= user.phoneNumber %>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+</div>
+</html>
