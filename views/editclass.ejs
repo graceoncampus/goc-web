@@ -7,7 +7,6 @@
 	  <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
 		<% var numStudents = 0 %>
 		<% if(Class.students != null) {numStudents = Object.keys(Class.students).length} %>
-		<% console.log(numStudents) %>
         <h1 class="mb-2">Edit Class</h1>
         <form action="/c/edit/<%= Class.id %>" class="w-100" enctype="multipart/form-data" method="post">
           <div class="mt-5 form">

@@ -124,11 +124,11 @@ router.get('/c/:classID', isLoggedIn, getClassById);
 router.post('/classes/enroll', isLoggedIn, enrollStudent);
 router.post('/classes/unenroll', isLoggedIn, unenrollStudent);
 
-router.post('/classes', postClass);
-router.post('/c/delete/:classID', postDeleteClassById);
-router.get('/c/edit/:classID', getEditClassById);
-router.post('/c/edit/:classID', postEditClassById);
-router.get('/c/view/:classID', getViewClassRosterById);
+router.post('/classes', isLoggedIn, postClass);
+router.post('/c/delete/:classID', isLoggedIn, postDeleteClassById);
+router.get('/c/edit/:classID', isLoggedIn, getEditClassById);
+router.post('/c/edit/:classID', isLoggedIn, postEditClassById);
+router.get('/c/view/:classID', isLoggedIn, getViewClassRosterById);
 // sermons
 router.get('/sermons', getSermons);
 router.post('/sermons', postSermon);
