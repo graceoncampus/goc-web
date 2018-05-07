@@ -61,6 +61,5 @@ firebase.json
 #build directory
 build/
 *.br
-*.gzpackage-lock.json
 env.bat
 env.sh
