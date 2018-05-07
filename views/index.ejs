@@ -1,8 +1,17 @@
 ﻿<!doctype html>
 <html lang="en">
+<head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67990816-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-67990816-1');
+</script>
 <title>
 <% if (title) { %>
   <%- title %> - Christian Fellowship at UCLA
@@ -11,6 +20,8 @@ Grace on Campus - Christian Fellowship at UCLA
 <% } %>
 </title>
 <meta name="description" content="Grace on Campus is a Christian fellowship at UCLA. As a ministry of Grace Community Church, we focus on Bible teaching, leadership training, evangelism, and discipleship.">
+<meta name="keywords" content ="Grace on Campus, GOC, UCLA, GOC UCLA, UCLA GOC, Christian fellowship, fellowship, Christian, Grace Community Church, Chris Gee"/>
+<meta name="google-site-verification" content="3jI7b2uXg9Inp6U9touLtmMSVdbXhgSvyRxJ6Mfps2c" />
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <style>
@@ -22,7 +33,7 @@ Grace on Campus - Christian Fellowship at UCLA
 <noscript><link rel="stylesheet" href="/css/bootstrap.min.css"></noscript>
 <noscript><link rel="stylesheet" href="/css/style.min.css"></noscript>
 <noscript><link rel="stylesheet" href="/css/ionicons.min.css"></noscript>
-
+</head>
 
 <%- include widgets/mainNav.ejs %>
 <div id="carouselExampleIndicators" class="carousel slide unloaded" data-ride="carousel">
