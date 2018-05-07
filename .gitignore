@@ -63,3 +63,4 @@ build/
 *.br
 *.gzpackage-lock.json
 env.bat
+env.sh
