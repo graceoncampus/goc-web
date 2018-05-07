@@ -61,4 +61,4 @@ firebase.json
 #build directory
 build/
 *.br
-*.gz
+*.gzpackage-lock.json
