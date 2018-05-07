@@ -63,3 +63,4 @@ build/
 *.br
 env.bat
 env.sh
+*.gz
