@@ -2,42 +2,60 @@
 <html lang="en">
 <%- include widgets/header.ejs %>
 <%- include widgets/mainNav.ejs %>
-<div class="container">
-	<div class="col-sm-6 col-sm-offset-3">
-		<h1><span class="fa fa-sign-in"></span> Edit Class</h1>
-		<div class="form">
-			<form action="/c/edit/<%= Class.firebaseID %>" method="post" enctype="multipart/form-data">
-					<label>Title</label>
-					<input type="text" name="title" value="<%= Class.title %>"><br>
-
-					<label>Instructor's login email</label>
-					<input type="text" name="instructorEmail" value="<%= Class.instructor.email %>"><br>
-
-					<label>Location</label>
-					<input type="text" name="location" value="<%= Class.location %>"><br>
-
-					<label>Capacity</label>
-					<input type="number" name="capacity" value="<%= Class.totalSpots %>"><br>
-
-					<label>Weeks, Days, and Times</label>
-					<input type="text" name="time" value="<%= Class.classTime %>"><br>
-
-					<label>Signup deadline</label>
-					<input type="datetime-local" name="deadline" value="<%= inputDeadline %>"/><br>
-
-					<label>End date/time</label>
-					<input type="datetime-local" name="endDate" value="<%= inputEnd %>"/><br>
-
-					<label>Description of class</label>
-					<textarea name="details"><%= Class.details %></textarea><br>
-
-					<input type="submit">
-				</form>
-
-				<form action="/c/delete/<%= Class.firebaseID %>" method="post">
-					<input type="submit" name="delete" value="Delete">
-				</form>
+<div class="container py-8 my-8">
+    <div class="my-5">
+	  <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
+		<% var numStudents = 0 %>
+		<% if(Class.students != null) {numStudents = Object.keys(Class.students).length} %>
+        <h1 class="mb-2">Edit Class</h1>
+        <form action="/c/edit/<%= Class.id %>" class="w-100" enctype="multipart/form-data" method="post">
+          <div class="mt-5 form">
+			  <div class="row">
+				<div class="col-md-6">
+              	<label for="date">Title</label>
+				 <input type="text" value="<%= Class.title %>" name="title" class="form-control" placeholder="Title" required>
+				 <br>
+			  	<label for="date">Instructor</label>
+			  	<input type="text" value="<%= Class.instructorUID %>" name="instructorUID" class="form-control" placeholder="Instructor" required>
+				<br>
+				<label for="date">Location</label>
+				<input type="text" value="<%= Class.location %>" name="location" class="form-control" placeholder="Location" required>
+				<br>
+		      	<label for="date">Day</label>
+				<input type="text" value="<%= Class.day %>" name="day" class="form-control" placeholder="day" required>
+				<br>
+		      	<label for="date">Time</label>
+		      	<input type="text" value="<%= Class.classTime %>" name="classTime" class="form-control" placeholder="Time" required>
+			  </div>
+			  <div class="col-md-6">
+				<label for="date">Capacity</label>
+				<input type="text" value="<%= Class.totalSpots %>" name="totalSpots" class="form-control" placeholder="totalSpots" required>
+				<br>
+                <label for="date">Start date/time</label>
+				<input value="<%= Class.startDate %>" type="datetime-local" name="startDate" class="form-control date" required>
+				<br>
+                <label for="date">End date/time</label>
+				<input value="<%= Class.endDate %>" type="datetime-local" name="endDate" class="form-control date" required>
+				<br>
+                <label for="date">End date/time</label>
+				<input value="<%= Class.deadline %>" type="datetime-local" name="deadline" class="form-control date" required>
+				<br>
+                <label for="summary">Description of Class</label>
+				<textarea class="form-control" placeholder="Details" name="details" required><%= Class.details %></textarea>
+				<input type='hidden' name='numStudents' value="<%= numStudents %>" required>
+               </div>
+		  </div>
 		</div>
-	</div>
+          <div class="row">
+            <div class="mx-auto col-md-6 mt-4 mb-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+            </div>
+          </div>
+        </form>
+      <% } %>
+  </div>
+
+<br/>
 </div>
 </html>

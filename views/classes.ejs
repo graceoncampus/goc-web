@@ -38,10 +38,17 @@
             <p class="card-text mt-4">
               <%= Class.details %>
             </p>
-            <% if (Class.isEnrolled) { %>
+            <% if(user && (user.permissions.admin || user.permissions.classes)) { %>
+              <div class="vertical">
+                <a href="/c/edit/<%= Class.id %>">Edit</a><br/>
+              </div>
+            <% } %>
+            <% if (Class.isEnrolled && (user && !(user.permissions.admin || user.permissions.classes))) { %>
               <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="unenroll(this)" class="float-right btn-primary col-lg-3 mt-3 red">Unenroll</button>
-              <% } else if (Class.openSpots > 0) { %>
+              <% } else if (Class.openSpots > 0 && (user && !(user.permissions.admin || user.permissions.classes))) { %>
                 <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="enroll(this)" class="float-right btn-primary col-lg-3 mt-3">Enroll</button>
+              <% } else if (user && (user.permissions.admin || user.permissions.classes)) { %>
+                <a href="/c/view/<%= Class.id %>">View Class Information</a><br/>
                 <% } %>
           </div>
         </div>
@@ -56,25 +63,31 @@
                     <label>Title</label>
                     <input class="form-control" type="text" name="title">
                     <br>
-                    <label>Instructor's login email</label>
-                    <input class="form-control" type="text" name="instructorEmail">
+                    <label>Instructor's name</label>
+                    <input class="form-control" type="text" name="instructorName">
                     <br>
                     <label>Location</label>
                     <input class="form-control" type="text" name="location">
                     <br>
-                    <label>Capacity</label>
-                    <input class="form-control" type="number" name="capacity">
+                    <label>Day</label>
+                    <input class="form-control" type="text" name="day">
+                    <br>
+                    <label>Time</label>
+                    <input class="form-control" type="text" name="time">
                     <br>
                   </div>
                   <div class="col-md-6">
-                    <label>Weeks, Days, and Times</label>
-                    <input class="form-control" type="text" name="time">
+                    <label>Start date/time</label>
+                    <input class="form-control" type="datetime-local" name="startDate" />
+                    <br>
+                    <label>End date/time</label>
+                    <input class="form-control" type="datetime-local" name="endDate" />
                     <br>
                     <label>Signup deadline</label>
                     <input class="form-control" type="datetime-local" name="deadline" />
                     <br>
-                    <label>End date/time</label>
-                    <input class="form-control" type="datetime-local" name="endDate" />
+                    <label>Capacity</label>
+                    <input class="form-control" type="number" name="capacity">
                     <br>
                     <label>Description of class</label>
                     <textarea class="form-control" name="details"></textarea>
