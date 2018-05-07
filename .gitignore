@@ -61,4 +61,5 @@ firebase.json
 #build directory
 build/
 *.br
-*.gz
+env.bat
+env.sh
