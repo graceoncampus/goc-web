@@ -226,12 +226,14 @@ export const getViewClassRosterById = async(req, res) => {
 const classUsersFetch = async(studentUids) => {
   var usersRef = await firebaseDB.ref("users").once('value');
   var users = usersRef.val();
-  var Objkeys = Object.keys(studentUids);
   var studentInfo = [];
-  for (var key in Objkeys) {
-    var thisUid = studentUids[Objkeys[key]].uid;
-    studentInfo.push(users[thisUid]);
-  }
+  if (studentUids != null) {
+    var Objkeys = Object.keys(studentUids);
+    for (var key in Objkeys) {
+        var thisUid = studentUids[Objkeys[key]].uid;
+        studentInfo.push(users[thisUid]);
+    }   
+}
   return studentInfo;
 }
 

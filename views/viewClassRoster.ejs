@@ -6,24 +6,21 @@
 <div class="container py-8 my-8">
   <h1><%= Class.title %></h1>
     <div class="my-5">
-      <div class="container">
-          <div class="row">
+    <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
+      <div class="card">
+          <div class="card-body">
               <div class="col-md-8 mx-auto px-4 py-5 my-3">
-                  <h3><%= Class.title %></h3>
-                  <hr>
-                  <p> <%= Class.title %></p>
-                  <p><b> Instructor:</b> <%= Class.instructorUID %><p>
-                  <p> Location: <%= Class.location %><p>
-                  <p> Dates: <%= Class.startDate %> - <%= Class.endDate%><p>
-                  <p> Time: <%= Class.classTime %><p>
-                  <p> Day of the Week: <%= Class.day %><p>
-                  <p> Enroll by: <%= Class.deadline %><p>
-                  <p> Spots Left: <%= Class.openSpots %> / <%=Class.totalSpots%> <p>
+                  <p><b>Instructor:</b> <%= Class.instructorUID %><p>
+                  <p><b>Location:</b> <%= Class.location %><p>
+                  <p><b>Dates:</b> <%= Class.startDate %> - <%= Class.endDate%><p>
+                  <p><b>Time:</b> <%= Class.classTime %><p>
+                  <p><b>Day of the Week:</b> <%= Class.day %><p>
+                  <p><b>Enroll by:</b> <%= Class.deadline %><p>
+                  <p><b>Spots Left:</b> <%= Class.openSpots %> / <%=Class.totalSpots%> <p>
+                  <p><%= Class.details %></p>
               </div>
           </div>
       </div>
-
-
         <table class="table table-striped">
             <thead class="sermon">
                 <tr>
@@ -56,6 +53,6 @@
                     <% }); %>
             </tbody>
         </table>
-
+    <% } %>
 </div>
 </html>
