@@ -43,10 +43,12 @@
 <script src="/js/jquery.min.js"></script>
 <script src="/js/popper.min.js" ></script>
 <script src="/js/bootstrap.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67990816-1"></script>
 <script>
-    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-    ga('create', 'UA-XXXXX-Y', 'auto');
-    ga('send', 'pageview');
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-67990816-1');
     $(document).ready(function() {
         var pathname = window.location.pathname;
         var reg = /\/[^/\\]+/

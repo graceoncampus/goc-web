@@ -18,6 +18,7 @@ export const getClasses = async (req, res) => {
         let push = c
         const currentUid = req.user.uid
         const allStudents = _.values(c.students);
+        push.details = push.details.replace(/\n/g, "<br/>");
         push.isEnrolled = false;
         push.id = keys[i]
         i++;
