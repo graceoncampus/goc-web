@@ -8,10 +8,10 @@ export const getAnnouncements = async(req, res) => {
     posts = _.values(posts.val()).reverse()
     const finalPosts = []
     for (let post of posts) {
-        const formattedPost = replaceURLsWithLinks(post.Post)
+        var formattedPost = replaceURLsWithLinks(post.Post)
+        formattedPost = formattedPost.replace(/\n/g, "<br/>");
         post.date = moment.unix(post.Time).fromNow();
         post.Post = formattedPost
-        console.log(post.Post)
         finalPosts.push(post)
     }
     res.render('announcements.ejs', {
