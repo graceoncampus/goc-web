@@ -1,65 +1,99 @@
-var rp = require('request-promise');
-var cheerio = require('cheerio');
-var moment = require('moment-timezone');
-var mongoose = require('mongoose');
-var configDB = require('../build/config/database.js');
-var SermonDB = require('../build/models/sermon.js');
+var axios = require("axios");
+const { resolve } = require("url");
+var cheerio = require("cheerio");
+var moment = require("moment-timezone");
+var mongoose = require("mongoose");
+var configDB = require("../build/config/database.js");
+var SermonDB = require("../build/models/sermon.js");
 mongoose.Promise = global.Promise;
 mongoose.connect(configDB.url); // connect to our database
 
-const loadSermons = async () => {
-    let uri = "https://www.gracechurch.org/teachings/ministry/UCLA%20Grace%20on%20Campus"        
-    let options = {
-        uri,
-        transform: function (body) {
-            return cheerio.load(body);
-        }
-    };
-    
-    let $ = await rp(options);
-    
-    const pages = $('.pagination').children('li').text()
-    const pageArr = [];
-    for (page of pages) {
-        if (!isNaN(page)) pageArr.push(page);
-    }
-    for (page of pageArr) {
-        uri = "https://www.gracechurch.org/teachings/ministry/UCLA%20Grace%20on%20Campus?page="+ page;
-        options = {
-            uri,
-            transform: function (body) {
-                return cheerio.load(body);
-            }
-        };
-        $ = await rp(options);
-        var sermons = [];
+const sermons = [];
 
-        $('.listing-wrap').each(function(i, elem) {
-            let meta = $(this).find(".listing-content .meta").text().replace(/(?:\r\n|\r|\n)/g, '').split('|')
-            meta = meta.map(el => el.trim()) 
-            var title = $(this).find(".listing-title").children().first().text();
-            var speaker = meta[0]
-            var date = moment.tz(meta[2], "M/D/YYYY", "America/Los_Angeles").toDate();
-            var URI = $(this).find(".fa-cloud-download").next().attr("href");
-            var passage = meta[1]
-            sermons[i] = {title: title, speaker: speaker, date: date, passage: passage, URI: URI}
+let uri =
+    "https://www.gracechurch.org/sermons/ministry/UCLA%20Grace%20on%20Campus";
+const loadSermons = async url => {
+    try {
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        $(".listing-wrap").each(function(i, elem) {
+            let meta = $(this)
+                .find(".listing-content .meta")
+                .text()
+                .replace(/(?:\r\n|\r|\n)/g, "")
+                .split("|");
+            meta = meta.map(el => el.trim());
+            var title = $(this)
+                .find(".listing-title")
+                .children()
+                .first()
+                .text();
+            var speaker = meta[0];
+            var date = moment
+                .tz(meta[2], "M/D/YYYY", "America/Los_Angeles")
+                .toDate();
+            var URI = $(this)
+                .find(".fa-cloud-download")
+                .next()
+                .attr("href");
+            var passage = meta[1];
+            sermons.push({
+                title: title,
+                speaker: speaker,
+                date: date,
+                passage: passage,
+                URI: URI
+            });
         });
-        for (let s of sermons) {
-            const result = await SermonDB.find({title: s.title, date: s.date})
-            if (result.length === 0) {
-                var sermon = new SermonDB();
-                sermon.title = s.title;
-                sermon.speaker = s.speaker;
-                sermon.passage = s.passage;
-                sermon.date = s.date;
-                sermon.URI = s.URI;
-                sermon.transcriptURI = "";
-                await sermon.save();
-            }
-        }
+        let nextPageLink = $(".pagination")
+            .find(".active")
+            .next()
+            .find("a")
+            .attr("href");
+        nextPageLink = nextPageLink.replace(
+            "/" + nextPageLink.split("/")[1],
+            "https://www.gracechurch.org"
+        );
+        if (!nextPageLink) exportSermons();
+        else loadSermons(nextPageLink);
+    } catch (error) {
+        console.log(error);
+        exportSermons();
     }
-}
+};
 
-loadSermons();
+const exportSermons = async () => {
+    console.log("exporting");
+    await Promise.all(
+        sermons.map(({ title, date, speaker, passage, URI }) => {
+            console.log(speaker)
+            return new Promise((resolve, reject) =>
+                SermonDB.findOneAndUpdate(
+                    {
+                        title,
+                        date
+                    },
+                    {
+                        title,
+                        date,
+                        speaker,
+                        passage,
+                        URI
+                    },
+                    { upsert: true },
+                    function(err, doc) {
+                        if (err) {
+                            console.log(err);
+                            reject(err);
+                        } else {
+                            resolve(doc);
+                        }
+                    }
+                )
+            );
+        })
+    );
+};
+loadSermons(uri);
 
-module.exports.loadSermons = loadSermons
+module.exports.loadSermons = loadSermons;
