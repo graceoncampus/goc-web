@@ -41,6 +41,7 @@
     "babel-watch": "^2.0.7",
     "chai": "*",
     "mocha": "^5.2.0",
+    "request-promise": "^4.2.2",
     "url": "^0.11.0"
   },
   "scripts": {
