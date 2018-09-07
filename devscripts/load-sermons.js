@@ -63,10 +63,8 @@ const loadSermons = async url => {
 };
 
 const exportSermons = async () => {
-    console.log("exporting");
     await Promise.all(
         sermons.map(({ title, date, speaker, passage, URI }) => {
-            console.log(speaker)
             return new Promise((resolve, reject) =>
                 SermonDB.findOneAndUpdate(
                     {
