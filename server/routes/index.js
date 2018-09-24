@@ -9,7 +9,8 @@ import {
     getAnnouncements
 } from './announcements'
 import {
-    getCalendar
+    getCalendar,
+    updateCalendar
 } from './calendar'
 import {
     postNotify,
@@ -86,6 +87,7 @@ import firebaseLogin from '../auth/login';
 router.get('/', getRoot);
 router.get('/announcements', isLoggedIn, getAnnouncements)
 router.get('/calendar', isLoggedIn, getCalendar)
+router.post('/calendar/update', isLoggedIn, updateCalendar)
 
 router.post('/newvisitor', postNewVisitor);
 router.get('/leadership', getLeadership);
