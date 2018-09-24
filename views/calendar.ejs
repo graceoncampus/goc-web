@@ -4,9 +4,20 @@
 <link rel="stylesheet" href="css/calendar.css"/>
 <%- include widgets/mainNav.ejs %>
 <div class="overlay" id="calendar">
-    <h1>Calendar</h1>
+    <h1><%= title%></h1>
 </div>
 <div id="holder" class="container py-5 my-5">
+</div>
+<div class="container px-0 px-sm-3 my-5">
+    <% if (user && (user.permissions.admin || user.permissions.rides)) { %>
+        <div class="px-3 px-sm-0 mb-5">
+            <hr>
+            <h2>Admin Settings</h2>
+            <form action="/calendar/update" method="post">
+                <button type="submit" class="col-md-3 my-3 btn btn-primary btn-lg">Update Calendar</button>
+            </form>
+        </div>
+    <% } %>
 </div>
 <%- include widgets/footer.ejs %>
 <script type="text/tmpl" id="tmpl">
@@ -121,7 +132,7 @@
           <table class="table table-striped table-condensed table-tight-vert" >
             <thead>
               <tr>
-                <th> </th>
+                <th> </th>
                 <th style="text-align: center; width: 100%">{{: days[date.getDay()] }}</th>
               </tr>
             </thead>
@@ -157,6 +168,7 @@
   </table>
 </script>
 <script>
+
   var $currentPopover = null;
   $(document).on('shown.bs.popover', function (ev) {
     var $target = $(ev.target);
@@ -237,7 +249,6 @@
           index = +($t.attr('data-index')),
           haspop = $t.data('popover'),
           data, time;
-
       if (haspop || isNaN(index)) { return true; }
       data = options.data[index];
       time = data.start.toTimeString();
@@ -281,14 +292,15 @@
           e = new Date(event.start),
           dateclass = e.toDateCssClass(),
           day = $('.' + e.toDateCssClass()),
-          empty = $('<div/>', {'class':'clear event', html:' '}),
+          empty = $('<div/>', {'class':'clear event', html:' '}),
           numbevents = 0,
           time = event.start.toTimeString(),
           endday = event.end && $('.' + event.end.toDateCssClass()).length > 0,
           checkanyway = new Date(e.getFullYear(), e.getMonth(), e.getDate()+40),
           existing,
           i;
-      $event.toggleClass('all-day', !!event.allDay);
+      $event.toggleClass('holiday', !!(event.type == 'holiday'));
+      $event.toggleClass('mygoc', !!(event.type == 'mygoc'));
       if (!!time) {
         $event.html('<strong>' + time + '</strong> ' + $event.html());
       }
@@ -311,7 +323,7 @@
             toggleClass('end', dateclass === event.end.toDateCssClass())
           );
           $event = $event.clone();
-          $event.html(' ');
+          $event.html(' ');
         }
         e.setDate(e.getDate() + 1);
         dateclass = e.toDateCssClass();
@@ -379,20 +391,43 @@
   }, jQuery, window, document);
 
 })(jQuery);
-  var data = [];
-  var events = <%- JSON.stringify(events)  %>
-  for(date in events) {
-    for (item of events[date]) {
-      data.push({ 
-        title: item.text,
-        start: new Date(date),
-        allDay: true,
-      });
-    }
-  }
+  var data = []
+    var calendar_events= <%- JSON.stringify(events) %>
+    //need to add something if it's multiple events
+    for (var key in calendar_events){
+      if (calendar_events.hasOwnProperty(key)){
+        let arr = key.split("-");
+        let y = parseInt(arr[0]);
+        let m = parseInt(arr[1]) - 1;
+        let d = parseInt(arr[2]);
+        let hr = 0;
+        let min = 0;
+        let allDay = true
+        for (var obj in calendar_events[key]){
+          if (calendar_events[key].hasOwnProperty(obj)){
+            let time = calendar_events[key][obj]['time']
+            if (!!time){
+              time = time.split(":")
+              hr = parseInt(time[0])
+              min = parseInt(time[1])
+              allDay = false
+            }
+            else{
+              allDay = true
+            }
+            let end_date = calendar_events[key][obj]['end_date'].split("-")
+            for (var i=0; i < 3; i++){
+              end_date[i] = parseInt(end_date[i])
+            }
+            data.push({ title: calendar_events[key][obj]['text'], start: new Date(y, m, d, hr, min), end: new Date(end_date[0], end_date[1] - 1, end_date[2],hr,min), allDay: allDay, text: '', type: calendar_events[key][obj]['type']})
+          }
+        }
+      }
 
-    data.sort(function(a,b) { return (+a.start) - (+b.start); });
+    }
+    // data.sort(function(a,b) { return (+a.start) - (+b.start); });
   $('#holder').calendar({
     data: data
   });
+
 </script>
