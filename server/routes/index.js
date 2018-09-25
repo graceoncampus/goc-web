@@ -86,7 +86,7 @@ import firebaseLogin from '../auth/login';
 
 router.get('/', getRoot);
 router.get('/announcements', isLoggedIn, getAnnouncements)
-router.get('/calendar', isLoggedIn, getCalendar)
+router.get('/calendar', getCalendar)
 router.post('/calendar/update', isLoggedIn, updateCalendar)
 
 router.post('/newvisitor', postNewVisitor);
