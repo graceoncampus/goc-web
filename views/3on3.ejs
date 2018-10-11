@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>   
+<link rel="stylesheet" href="/css/loader.css"/>
+<style>
+    body {
+        background: linear-gradient(
+            to bottom, 
+            rgb(255, 255, 255),
+            rgba(255, 255, 255, .8),
+            rgb(255, 255, 255)
+        ),
+        url(../images/bball.jpg);
+        background-size: cover;
+    }
+    
+    .cont {
+        min-height: 600px;
+    }
+    .cent {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    @media only screen and (min-width: 576px) {
+        .signup-container {
+            background: #ffffffe0;
+            box-shadow: 0px 1px 17px -10px black;
+        }
+        .cont {
+            margin-bottom: -2rem;
+        }
+    }
+</style>
+<%- include widgets/mainNav.ejs %>
+<div class="row cont mx-0">
+    <div class="mt-5 mt-sm-0 col-sm-6 px-0">
+        <div class="cent mx-auto">
+            <img style="max-width:250px" class="d-block mx-auto w-100" src="/images/bball.svg" />
+            <div style="max-width:350px" class="mx-auto mt-5 text-center">
+                <h5>Saturday, November 3rd, 2:00 PM</h5>
+                <h5>Student Activities Center</h5>
+                <h5>Prizes include Lakers tickets and Steph Curry autographed basketball.</h5>
+                <h5>Free Entry</h5>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5 mt-sm-0 signup-container col-sm-6 px-0">
+        <div class="cent px-3 px-md-5 px-sm-4 mx-auto text-center">
+            <form id="form" class="w-100">
+                <div class="text-left form-group">
+                    <label for="name">Manager Name <span class="text-red">*</span></label>
+                    <input id="name" type="text" class="form-control" placeholder="Full Name" name="name" required>
+                    <div class="invalid-feedback">
+                      Manager Name is required.
+                    </div>
+                </div>
+                <div class="mb-5 text-left form-group">
+                    <label for="email">Manager Email <span class="text-red">*</span></label>
+                    <input id="email" type="email" class="form-control" placeholder="Email" name="email" required>
+                    <div id="feedback" class="invalid-feedback">
+                      Email is required.
+                    </div>
+                </div>
+                <button type="button" id="update" class="btn btn-primary mb-2">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+<%- include widgets/footer.ejs %>
+<script>
+    $("#update").click(function(event) {
+        const form = $("#form")
+        console.log($('#email'))
+        if ($('#email').validity.typeMismatch) $('#feedback').html('This email is invalid.')
+        form.addClass('was-validated');
+        $.post('/3on3', form.serialize(), function(data) {
+            if(data!=='success') {
+                $('#email').addClass('is-invalid')
+            }
+            else {
+                $('#update').addClass('success')
+                $('#update').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+            }
+        }, 'json');
+    });
+</script>
+</html>

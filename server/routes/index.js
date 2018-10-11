@@ -82,9 +82,15 @@ import {
     getPosts,
     getPost
 } from './blog.js';
+import {
+    get3On3,
+    post3On3
+} from './3on3.js';
 import firebaseLogin from '../auth/login';
 
 router.get('/', getRoot);
+router.get('/3on3', get3On3);
+router.post('/3on3', post3On3);
 router.get('/announcements', isLoggedIn, getAnnouncements)
 router.get('/calendar', getCalendar)
 router.post('/calendar/update', isLoggedIn, updateCalendar)
