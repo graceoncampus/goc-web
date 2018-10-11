@@ -71,16 +71,19 @@
 <script>
     $("#update").click(function(event) {
         const form = $("#form")
-        console.log($('#email'))
-        if ($('#email').validity.typeMismatch) $('#feedback').html('This email is invalid.')
-        form.addClass('was-validated');
+        // console.log($('#email'))
+        // if ($('#email').validity.typeMismatch) $('#feedback').html('This email is invalid.')
+        // form.addClass('was-validated');
         $.post('/3on3', form.serialize(), function(data) {
             if(data!=='success') {
                 $('#email').addClass('is-invalid')
+                $('#feedback').html('Looks like someone already signed up with this email.')
             }
             else {
                 $('#update').addClass('success')
                 $('#update').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+                alert("Congrats you're signed up! Expect an email with more details shortly!")
+                window.location.href = "/";
             }
         }, 'json');
     });
