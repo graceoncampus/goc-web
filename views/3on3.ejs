@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<%- include widgets/header.ejs %>   
+<%- include widgets/header.ejs %>
 <link rel="stylesheet" href="/css/loader.css"/>
 <style>
     body {
@@ -21,6 +21,7 @@
         position: relative;
         top: 50%;
         transform: translateY(-50%);
+        padding: 0 20px;
     }
     @media only screen and (min-width: 576px) {
         .signup-container {
@@ -69,23 +70,63 @@
 </div>
 <%- include widgets/footer.ejs %>
 <script>
+    var didbluremail = false
+    $('#email').on('keydown', function(event) {
+        if (didbluremail && document.getElementById('email').checkValidity()) {
+            if($('#email').hasClass('is-invalid')) {
+                $('#email').removeClass('is-invalid')
+                $('#email').addClass('is-valid')
+            }
+        }
+    })
+    $('#email').on('blur', function(event) {
+        didbluremail = true
+        if($('#email').hasClass('is-invalid')) $('#email').removeClass('is-invalid')
+        if (!document.getElementById('email').checkValidity()) {
+            if(!$('#email').hasClass('is-invalid')) $('#email').addClass('is-invalid')
+            $('#feedback').html('This email is invalid.')
+        }
+    })
+    var didblurname = false
+    $('#name').on('keydown', function(event) {
+        if (didblurname && document.getElementById('name').checkValidity()) {
+            if($('#name').hasClass('is-invalid')) {
+                $('#name').removeClass('is-invalid')
+                $('#name').addClass('is-valid')
+            }
+        }
+    })
+    $('#name').on('blur', function(event) {
+        didblurname = true
+        if($('#name').hasClass('is-invalid')) $('#name').removeClass('is-invalid')
+        if (!document.getElementById('name').checkValidity()) {
+            if(!$('#name').hasClass('is-invalid')) $('#name').addClass('is-invalid')
+        }
+    })
+
     $("#update").click(function(event) {
-        const form = $("#form")
-        // console.log($('#email'))
-        // if ($('#email').validity.typeMismatch) $('#feedback').html('This email is invalid.')
-        // form.addClass('was-validated');
-        $.post('/3on3', form.serialize(), function(data) {
-            if(data!=='success') {
-                $('#email').addClass('is-invalid')
-                $('#feedback').html('Looks like someone already signed up with this email.')
-            }
-            else {
-                $('#update').addClass('success')
-                $('#update').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
-                alert("Congrats you're signed up! Expect an email with more details shortly!")
-                window.location.href = "/";
-            }
-        }, 'json');
+        const form = $("#form")        
+        if (!$('#name').val()) {
+            if(!$('#name').hasClass('is-invalid')) $('#name').addClass('is-invalid')
+        }
+        if (!$('#email').val()) {
+            if(!$('#email').hasClass('is-invalid')) $('#email').addClass('is-invalid')
+            $('#feedback').html('Email is required')
+        }
+        else {
+            $.post('/3on3', form.serialize(), function(data) {
+                if(data!=='success') {
+                    if(!$('#email').hasClass('is-invalid')) $('#email').addClass('is-invalid')
+                    $('#feedback').html('Looks like someone already signed up with this email.')
+                }
+                else {
+                    $('#update').addClass('success')
+                    $('#update').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+                    alert("Congrats you're signed up! Expect an email with more details shortly!")
+                    window.location.href = "/";
+                }
+            }, 'json');
+        }
     });
 </script>
 </html>
