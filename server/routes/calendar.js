@@ -42,7 +42,7 @@ export const updateCalendar = async(req, res) => {
         let count = 0;
         for (let header of event_headers){
           if (row[header].length > 1){
-            events[row.startdate][count] = { text: row[header], time: row[header + 'time'], end_date: row.enddate, type: row[header + 'type']};
+            events[row.startdate][count] = { text: row[header], time: row[header + 'time'], endtime: row[header + 'timeend'],location: row[header + 'location'],end_date: row.enddate, type: row[header + 'type']};
             count = count + 1;
           }
         }

@@ -254,7 +254,7 @@
       time = data.start.toTimeString();
       if (time && data.end) { time = time + ' - ' + data.end.toTimeString(); }
       $t.data('popover',true);
-      $t.popover({content: '<p><strong>' + time + '</strong></p>'+data.text, html: true, placement: 'auto left'}).popover('toggle');
+      $t.popover({content: '<strong>'+time + '</strong>' + ' ' + data.location, html: true}).popover('toggle');
       return false;
     });
     function dayAddEvent(index, event) {
@@ -400,17 +400,25 @@
         let y = parseInt(arr[0]);
         let m = parseInt(arr[1]) - 1;
         let d = parseInt(arr[2]);
-        let hr = 0;
-        let min = 0;
-        let allDay = true
+        let hr,hr_end = 0;
+        let min,min_end = 0;
+        let allDay = true;
+        let location = '';
         for (var obj in calendar_events[key]){
           if (calendar_events[key].hasOwnProperty(obj)){
+            location = calendar_events[key][obj]['location']
             let time = calendar_events[key][obj]['time']
             if (!!time){
               time = time.split(":")
               hr = parseInt(time[0])
               min = parseInt(time[1])
               allDay = false
+              end = calendar_events[key][obj]['endtime']
+              if (!!end){
+                end = end.split(":")
+                hr_end = parseInt(end[0])
+                min_end = parseInt(end[1])
+              }
             }
             else{
               allDay = true
@@ -419,7 +427,7 @@
             for (var i=0; i < 3; i++){
               end_date[i] = parseInt(end_date[i])
             }
-            data.push({ title: calendar_events[key][obj]['text'], start: new Date(y, m, d, hr, min), end: new Date(end_date[0], end_date[1] - 1, end_date[2],hr,min), allDay: allDay, text: '', type: calendar_events[key][obj]['type']})
+            data.push({ title: calendar_events[key][obj]['text'], start: new Date(y, m, d, hr, min), end: new Date(end_date[0], end_date[1] - 1, end_date[2],hr_end,min_end), allDay: allDay, location: location, text: '', type: calendar_events[key][obj]['type']})
           }
         }
       }
