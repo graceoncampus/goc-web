@@ -535,7 +535,7 @@ thead td {
     vertical-align: middle;
 }
 .calendar-table .btn {
-    padding: .1em; 
+    padding: .1em;
     cursor:pointer;
 }
 .js-cal-option:hover, .js-cal-years:hover {
