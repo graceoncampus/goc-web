@@ -48,86 +48,9 @@
     </div>
     <div class="mt-5 mt-sm-0 signup-container col-sm-6 px-0">
         <div class="cent px-3 px-md-5 px-sm-4 mx-auto text-center">
-            <p><b>Only one team manager </b> needs to sign up for the whole team. This will be the contact to request team names and rosters.</p>
-            <form id="form" class="w-100">
-                <div class="text-left form-group">
-                    <label for="name">Team Manager Name <span class="text-red">*</span></label>
-                    <input id="name" type="text" class="form-control" placeholder="Full Name" name="name" required>
-                    <div class="invalid-feedback">
-                      Manager Name is required.
-                    </div>
-                </div>
-                <div class="mb-5 text-left form-group">
-                    <label for="email">Team Manager Email <span class="text-red">*</span></label>
-                    <input id="email" type="email" class="form-control" placeholder="Email" name="email" required>
-                    <div id="feedback" class="invalid-feedback">
-                      Email is required.
-                    </div>
-                </div>
-                <button type="button" id="update" class="btn btn-primary mb-2">Sign Up</button>
-            </form>
+            <p>Thanks for your interest, signups are currently full</p>
         </div>
     </div>
 </div>
 <%- include widgets/footer.ejs %>
-<script>
-    var didbluremail = false
-    $('#email').on('keydown', function(event) {
-        if (didbluremail && document.getElementById('email').checkValidity()) {
-            if($('#email').hasClass('is-invalid')) {
-                $('#email').removeClass('is-invalid')
-                $('#email').addClass('is-valid')
-            }
-        }
-    })
-    $('#email').on('blur', function(event) {
-        didbluremail = true
-        if($('#email').hasClass('is-invalid')) $('#email').removeClass('is-invalid')
-        if (!document.getElementById('email').checkValidity()) {
-            if(!$('#email').hasClass('is-invalid')) $('#email').addClass('is-invalid')
-            $('#feedback').html('This email is invalid.')
-        }
-    })
-    var didblurname = false
-    $('#name').on('keydown', function(event) {
-        if (didblurname && document.getElementById('name').checkValidity()) {
-            if($('#name').hasClass('is-invalid')) {
-                $('#name').removeClass('is-invalid')
-                $('#name').addClass('is-valid')
-            }
-        }
-    })
-    $('#name').on('blur', function(event) {
-        didblurname = true
-        if($('#name').hasClass('is-invalid')) $('#name').removeClass('is-invalid')
-        if (!document.getElementById('name').checkValidity()) {
-            if(!$('#name').hasClass('is-invalid')) $('#name').addClass('is-invalid')
-        }
-    })
-
-    $("#update").click(function(event) {
-        const form = $("#form")        
-        if (!$('#name').val()) {
-            if(!$('#name').hasClass('is-invalid')) $('#name').addClass('is-invalid')
-        }
-        if (!$('#email').val()) {
-            if(!$('#email').hasClass('is-invalid')) $('#email').addClass('is-invalid')
-            $('#feedback').html('Email is required')
-        }
-        else {
-            $.post('/3on3', form.serialize(), function(data) {
-                if(data!=='success') {
-                    if(!$('#email').hasClass('is-invalid')) $('#email').addClass('is-invalid')
-                    $('#feedback').html('Looks like someone already signed up with this email.')
-                }
-                else {
-                    $('#update').addClass('success')
-                    $('#update').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
-                    alert("Congrats you're signed up! Expect an email with more details shortly!")
-                    window.location.href = "/";
-                }
-            }, 'json');
-        }
-    });
-</script>
 </html>
