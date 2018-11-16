@@ -5,5 +5,5 @@ admin.initializeApp({
     databaseURL: process.env.databaseURL
 })
 
-export const firebaseDB = admin.database();
+export const firestoreDB = admin.firestore();
 export default admin;
