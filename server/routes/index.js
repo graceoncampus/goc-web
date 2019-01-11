@@ -30,7 +30,6 @@ import {
 } from './auth.js';
 import {
     getEvents,
-    postEvent,
     getEditEventById,
     postEditEventById,
     postDeleteEventById
@@ -127,7 +126,7 @@ router.get('/profile', isLoggedIn, getProfile);
 router.post('/profile', isLoggedIn, postProfileEdit);
 router.get('/roster', isLoggedIn, getRoster);
 router.get('/events', getEvents);
-router.post('/events', postEvent);
+router.post('/events', postEditEventById);
 router.get('/e/edit/:eventid', getEditEventById);
 router.post('/e/edit/:eventid', postEditEventById);
 router.post('/e/delete/:eventid', postDeleteEventById);
