@@ -12,13 +12,15 @@ import _ from "lodash";
 
 const eventsCollection = firestoreDB.collection("events");
 
-const getEventFromDoc = doc => {
+const getEventFromDoc = (doc, rawDate) => {
   let event;
   if (doc.exists) {
     event = doc.data();
     event.summary = replaceURLsWithLinks(event.summary);
-    const startdate = moment.unix(event.startDate);
-    const enddate = moment.unix(event.endDate);
+    const startdate = moment.unix(event.startDate)
+    const enddate = moment.unix(event.endDate)
+    event.startDate = event.startDate.toISOString();
+    event.endDate = enddate.toISOString();
     event.summary = event.summary.replace(/\\r/g, "").replace(/\\n/g, "<br/>");
     event.formattedDate =
       startdate.format("MMMM D") === startdate.format("MMMM D")
