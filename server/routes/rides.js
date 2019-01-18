@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import admin from 'firebase-admin';
+import * as firebase from 'firebase';
 import GoogleSpreadsheet from 'google-spreadsheet';
 import mail from 'mailgun-js';
 const mailgun = mail({
@@ -9,8 +10,8 @@ const mailgun = mail({
 });
 import creds from '../config/goc-form-ca6452f3be85.json';
 import common from '../lib';
-import {
-  firestore,firestoreDB } from '../firebase';
+import 
+  firestore, {firestoreDB } from '../firebase';
 const ridesRef = firestoreDB.collection('rides');
 
 export const getRidesSignup = (req, res) => {
