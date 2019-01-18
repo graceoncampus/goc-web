@@ -12,16 +12,20 @@ import _ from "lodash";
 
 const eventsCollection = firestoreDB.collection("events");
 
-const getEventFromDoc = (doc, rawDate) => {
+const getEventFromDoc = (doc, rawSummary) => {
   let event;
   if (doc.exists) {
     event = doc.data();
     event.summary = replaceURLsWithLinks(event.summary);
-    const startdate = moment.unix(event.startDate)
-    const enddate = moment.unix(event.endDate)
+    const startdate = moment.unix(event.startDate);
+    const enddate = moment.unix(event.endDate);
     event.startDate = event.startDate.toISOString();
-    event.endDate = enddate.toISOString();
-    event.summary = event.summary.replace(/\\r/g, "").replace(/\\n/g, "<br/>");
+    event.endDate = event.endDate.toISOString();
+    event.startDate = event.startDate.replace(".000Z", "");
+    event.endDate = event.endDate.replace(".000Z", "");
+    event.summary = !rawSummary
+      ? event.summary.replace(/\\r/g, "").replace(/\\n/g, "<br/>")
+      : event.summary.replace(/\\r/g, '\r').replace(/\\n/g, '\n');
     event.formattedDate =
       startdate.format("MMMM D") === startdate.format("MMMM D")
         ? startdate.format("MMMM Do, h:mm A") + " - " + enddate.format("h:mm A")
@@ -50,7 +54,7 @@ export const getEditEventById = (req, res) => {
     .doc(eventid)
     .get()
     .then(doc => {
-      const event = getEventFromDoc(doc);
+      const event = getEventFromDoc(doc, true);
       res.render("editevent.ejs", {
         title: "Edit Event",
         event
