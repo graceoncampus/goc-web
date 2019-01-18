@@ -3,61 +3,74 @@ import async from 'async';
 import _ from 'lodash';
 import moment from 'moment';
 import marked from 'marked';
-import admin from 'firebase-admin';
+import { firestoreDB } from "../firebase"
 import formidable from 'formidable';
-var firebaseDB = admin.database();
-var classesRef = firebaseDB.ref("classes");
 
-export const getClasses = async (req, res) => {
-    const classes = await admin.database().ref('/classes').once('value');
-    const finalClasses = []
-    const claz = _.values(classes.val())
-    const keys = _.keys(classes.val());
-    let i = 0;
-    for (let c of claz) {
-        let push = c
-        const currentUid = req.user.uid
-        const allStudents = _.values(c.students);
-        push.details = push.details.replace(/\n/g, "<br/>");
-        push.isEnrolled = false;
-        push.id = keys[i]
-        i++;
-        push.dates = moment.unix(c.startDate).format('MMMM Do')+ ' - ' +moment.unix(c.endDate).format('MMMM Do');
-        for (const student in allStudents) {
-          if (allStudents.hasOwnProperty(student)) {
-            if (currentUid === allStudents[student].uid) {
-              push.isEnrolled = true;
-            }
+var classesRef = firestoreDB.collection("classes");
+
+export const getClasses = (req, res) => {
+    classesRef.get().then(snapshot => {
+        const classes = [];
+        snapshot.forEach(doc => {
+          let iClass;
+          if(doc.exists){
+              iClass = doc.data();
+              const currentUid = req.user.uid
+              const allStudents = _.values(iClass.students);
+              iClass.details = iClass.details.replace(/\n/g, "<br/>");
+              iClass.isEnrolled = false;
+              iClass.id = doc.id;
+              iClass.startDate = iClass.startDate.toISOString();
+              iClass.endDate = iClass.endDate.toISOString();
+              iClass.startDate = iClass.startDate.replace(".000Z", "");
+              iClass.endDate = iClass.endDate.replace(".000Z", "");
+              iClass.dates =
+                  moment(iClass.startDate).format('MMMM Do')+ ' - ' + moment(iClass.endDate).format('MMMM Do');
+              for (const student in allStudents) {
+                if (allStudents.hasOwnProperty(student)) {
+                  if (currentUid === allStudents[student].uid) {
+                     iClass.isEnrolled = true;
+                  }
+                }
+              }
+              iClass.instructor = lookupByUID(iClass.instructorUID)
+              iClass.deadlineString = moment.unix(iClass.deadline).format('MMMM Do')
+              classes.push(iClass);
           }
-        }
-        push.instructor = await lookupByUID(c.instructorUID)
-        push.deadlineString = moment.unix(c.deadline).format('MMMM Do')
-        finalClasses.push(push)
-    }
-    res.render('classes.ejs', {
-        classes: finalClasses,
-        title: 'Classes'
+        });
+        res.render('classes.ejs', {
+          title: 'Classes',
+          classes
+        });
     });
 };
 
-export const getEditClassById = async (req, res) => {
-    var classID = req.param("classID");
-    const snapshot = await classesRef.child(classID).once('value');
-    let Class = snapshot.val();
-    Class.startDate = moment.unix(Class.startDate).format('YYYY-MM-DDThh:mm')
-    Class.endDate = moment.unix(Class.endDate).format('YYYY-MM-DDThh:mm')
-    Class.deadline = moment.unix(Class.deadline).format('YYYY-MM-DDThh:mm')
-    Class.id = classID
-    res.render('editclass.ejs', {
-        title: 'Edit Class',
-        Class
-    });
+export const getEditClassById = (req, res) => {
+    const { classID } = req.params;
+    classesRef
+      .doc(classID)
+      .get()
+      .then(doc => {
+          let Class;
+          if(doc.exists){
+              Class = doc.data();
+              Class.startDate = moment.unix(Class.startDate).format('YYYY-MM-DDThh:mm')
+              Class.endDate = moment.unix(Class.endDate).format('YYYY-MM-DDThh:mm')
+              Class.deadline = moment.unix(Class.deadline).format('YYYY-MM-DDThh:mm')
+              Class.id = classID
+
+              res.render('editclass.ejs', {
+                  title: 'Edit Class',
+                  Class
+              });
+          }
+      });
 };
 
-export const postEditClassById = async (req, res) => {
-        var classID = req.param("classID");
-        var form = new formidable.IncomingForm();
-        form.parse(req, function(err, fields){
+export const postEditClassById = (req, res) => {
+    const { classID } = req.params;
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields){
           const title = fields.title;
           const classTime = fields.classTime;
           const startDate = Date.parse(fields.startDate)/1000;
@@ -233,7 +246,7 @@ const classUsersFetch = async(studentUids) => {
     for (var key in Objkeys) {
         var thisUid = studentUids[Objkeys[key]].uid;
         studentInfo.push(users[thisUid]);
-    }   
+    }
 }
   return studentInfo;
 }
