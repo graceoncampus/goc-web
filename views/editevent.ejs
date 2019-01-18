@@ -53,7 +53,7 @@
         <img class="card-img-top" src="<%= event.bannerURI %>">            
         <div class="card-body">
           <h4 class="card-title"><%= event.title %></h4>
-          <p class="card-text"><%= event.summary %></p>
+          <p class="card-text"><%= event.summary.replace("\"","").replace(/\\r/g, "").replace(/\\n/g, "<br/>") %></p>
         </div>
         <div class="card-footer">
           <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
