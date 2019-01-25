@@ -156,7 +156,7 @@ export const updateRides = async (req, res) => {
         }
 
         //set the current rider id to be current car id
-        // await firestoreDB2.collection("users").doc(row.rideruid).update({currentCar: carKey});
+        await firestoreDB2.collection("users").doc(row.rideruid).update({currentCar: carKey});
 
         }
       }
