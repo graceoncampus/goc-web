@@ -19,56 +19,60 @@ export const getRidesSignup = (req, res) => {
   });
 };
 
-export const getRides = async (req, res) => {
+export const getRides = (req, res) => {
   const data = [];
-  // const snapshot = await ridesRef.orderByKey().limitToFirst(1).once('value')
-  // const snapshot = ridesRef.get().then(snapshot =>{
-  const snapshot = await ridesRef.get();
-  if (snapshot) {
-    snapshot.forEach(doc => {
-      // console.log(doc.data())
-      const allCars = doc.data().cars;
-      if (allCars) {
-        for (var i = 0; i < allCars.length; i++) {
-          var driver = allCars[i].people[0].name;
-          let riders = [];
-          for (var j = 1; j < allCars[i].people.length; j++) {
-            riders.push(allCars[i].people[j].name);
-          }
-          const toAppend = {
-            driver,
-            riders
-          };
-          data.push(toAppend);
-        }
-      }
+  ridesRef.doc("current_rides").collection("cars").get().then((snapshot) => {
 
-      console.log(data);
-    });
+    if (snapshot.size == 0){
+      res.render("rides.ejs", {
+        title: "Rides",
+        cars: null
+      });
+    }
+
+    snapshot.forEach(doc => {
+      const car = doc.data().car;
+
+      if (car) {
+        var driver = car[0].name;
+        let riders = [];
+        for (var i = 1; i < car.length; i++) {
+          riders.push(car[i].name);
+        }
+        const toAppend = {
+          driver,
+          riders
+        };
+        data.push(toAppend);
+      }
+    })
     res.render("rides.ejs", {
       title: "Rides",
       cars: data
     });
-  } else {
-    res.render("rides.ejs", {
-      title: "Rides",
-      cars: null
-    });
-  }
+  });
 };
+
 
 export const updateRides = async (req, res) => {
   const re1 = /https:\/\/docs\.google\.com\/spreadsheets\/d\//g;
   const re2 = /\/.*/g;
   const sheetID = req.body.sheetURL.replace(re1, "").replace(re2, "");
   const ridesSheet = new GoogleSpreadsheet(sheetID);
-  // ridesRef.remove();
   const date = moment(req.body.date).unix();
   const emailMessage = req.body.emailMessage ? req.body.emailMessage : "";
-  const newRideRef = ridesRef.doc("QScTFrSuaPWWbyGgGqMW").collection("cars");
+
+  deleteRides();
+
+  await ridesRef.doc("current_rides").update({
+    date,
+    emailMessage
+  });
+
+  const newRideRef = ridesRef.doc("current_rides").collection("cars");
 
   var ride = {};
-  ride.cars = { xeWyLWOqiTc4Y7rdwCHP: [{ name: "Alex Cai" }] };
+  ride.cars = {};
   ride.date = date;
   ride.emailMessage = req.body.emailMessage ? req.body.emailMessage : "";
   ridesSheet.useServiceAccountAuth(creds, err => {
@@ -81,14 +85,12 @@ export const updateRides = async (req, res) => {
       }
       for (let row of rows) {
         if (row.ridername !== "") {
-          const carKey = _.findKey(
+          let carKey = _.findKey(
             ride.cars,
             item => item[0]["name"] == row.drivername
           );
           if (carKey) {
             // firebase
-            console.log(carKey);
-            //admin.firestore().doc(`users/${userA}/chats`).update('array', [...]);
             const newRiderRef = await newRideRef.doc(carKey).update({
               car: FieldValue.arrayUnion({
                 uid: row.rideruid || "",
@@ -99,85 +101,96 @@ export const updateRides = async (req, res) => {
               })
             });
             // local
-            // ride.cars[carKey] = {
-            //   uid: row.rideruid,
-            //   morning: row.ridermorning,
-            //   staying: row.riderstaying,
-            //   evening: row.riderevening,
-            //   name: row.ridername,
-            //   email: row.rideremail,
-            //   phoneNumber: row.riderphone,
-            //   location: row.riderpickuplocation
-            // }; //uncomment
-          }
+            ride.cars[carKey].push({
+              uid: row.rideruid,
+              morning: row.ridermorning,
+              staying: row.riderstaying,
+              evening: row.riderevening,
+              name: row.ridername,
+              email: row.rideremail,
+              phoneNumber: row.riderphone,
+              location: row.riderpickuplocation
+            });
+          } else if (row.drivername && row.ridername) {
+          // firebase
+          const newCarRef = await newRideRef.add({ car: [
+            {
+              uid: row.driveruid || "",
+              name: row.drivername || "",
+              email: row.driveremail || "",
+              phoneNumber: row.driverphone || "",
+              comment: row.postedcomment || "",
+              sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
+            },
+            {uid: row.rideruid || "",
+            morning: row.ridermorning,
+            staying: row.riderstaying,
+            evening: row.riderevening,
+            name: row.ridername || "",
+            email: row.rideremail || "",
+            phoneNumber: row.riderphone || "",
+            location: row.riderpickuplocation || ""}
+          ],
+        });
+          ride.cars[newCarRef.id] = [
+         {
+              uid: row.driveruid || "",
+              name: row.drivername,
+              email: row.driveremail,
+              phoneNumber: row.driverphone,
+              comment: row.postedcomment,
+              sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
+            },
+            {
+              uid: row.rideruid || "",
+              morning: row.ridermorning,
+              staying: row.riderstaying,
+              evening: row.riderevening,
+              name: row.ridername,
+              email: row.rideremail,
+              phoneNumber: row.riderphone,
+              location: row.riderpickuplocation,
+            },
+          ];
+          carKey = newCarRef.id
+        }
+
+        //set the current rider id to be current car id
+        // await firestoreDB2.collection("users").doc(row.rideruid).update({currentCar: carKey});
+
         }
       }
-      // } else if (row.drivername && row.ridername) {
-      //   // firebase
-      //   const newCarRef = await newRideRef.child("cars").push({
-      //     driver: {
-      //       uid: row.driveruid || "",
-      //       name: row.drivername || "",
-      //       email: row.driveremail || "",
-      //       phoneNumber: row.driverphone || ""
-      //     },
-      //     riders: {},
-      //     comment: row.postedcomment || "",
-      //     sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
-      //   });
-      //   const newRiderRef = await newCarRef.child("riders").push({
-      //     uid: row.rideruid || "",
-      //     morning: row.ridermorning,
-      //     staying: row.riderstaying,
-      //     evening: row.riderevening,
-      //     name: row.ridername || "",
-      //     email: row.rideremail || "",
-      //     phoneNumber: row.riderphone || "",
-      //     location: row.riderpickuplocation || ""
-      //   });
-      //   ride.cars[newCarRef.key] = {
-      //     driver: {
-      //       uid: row.driveruid || "",
-      //       name: row.drivername,
-      //       email: row.driveremail,
-      //       phoneNumber: row.driverphone
-      //     },
-      //     riders: {},
-      //     comment: row.postedcomment,
-      //     sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
-      //   };
-      //
-      //   ride.cars[newCarRef.key].riders[newRiderRef.key] = {
-      //     uid: row.rideruid || "",
-      //     morning: row.ridermorning,
-      //     staying: row.riderstaying,
-      //     evening: row.riderevening,
-      //     name: row.ridername,
-      //     email: row.rideremail,
-      //     phoneNumber: row.riderphone,
-      //     location: row.riderpickuplocation
-      //   };
-      // } //uncomment
-      //   }
-      // }
-      // _.filter(ride.cars, car => (car.sendEmail)).forEach(car => {
-      //   sendDriverEmail(car, date, emailMessage)
-      // });
+      _.filter(ride.cars, car => (car[0].sendEmail)).forEach(car => {
+        sendDriverEmail(car, date, emailMessage)
+      });
       res.redirect("/rides");
     });
   });
 };
 
+const deleteRides = () => {
+  var collectionRef = ridesRef.doc("current_rides").collection("cars");
+  collectionRef.get().then((snapshot) => {
+    if (snapshot.size == 0){
+      return;
+    }
+
+    //delete all the documents in the collection
+    snapshot.docs.forEach((doc) =>{
+      doc.ref.delete();
+    })
+  })
+}
+
 const sendDriverEmail = (car, date, emailMessage) => {
   if (
-    car &&
-    car.riders &&
-    car.driver &&
-    car.driver.email &&
+    car.length > 1 &&
+    car[0].email &&
     date &&
     emailMessage
   ) {
-    const name = car.driver.name;
+    const name = car[0].name;
+    const carRiders = car.slice(1);
     const formattedDate = moment.unix(date).format("MM/DD");
     const message =
       "Hi " +
@@ -187,7 +200,7 @@ const sendDriverEmail = (car, date, emailMessage) => {
       date +
       "!\n\n" +
       "Here are your riders:\n\n" +
-      _.map(car.riders, function(r) {
+      _.map(carRiders, function(r) {
         return r.name + ": " + r.phoneNumber + " | " + r.location;
       }).join("\n") +
       "\n\n" +
@@ -198,7 +211,7 @@ const sendDriverEmail = (car, date, emailMessage) => {
       "Rides Team\n" +
       "Ashlynn McGuff and Matthew Lin\n" +
       "gocrides@gmail.com | (310) 694-5216";
-    const riders = _.map(car.riders, function(r) {
+    const riders = _.map(carRiders, function(r) {
       let times = "";
       if (r.morning === "m") {
         times += "Morning ";
@@ -215,7 +228,7 @@ const sendDriverEmail = (car, date, emailMessage) => {
     });
     const riderString = riders.join(" "); // remove comma delimiters from riders array
     var data = {
-      to: car.driver.email,
+      to: car[0].email,
       bcc: "gocrides@gmail.com",
       from: "Grace on Campus Rides Team <gocrides@gmail.com>",
       subject: "Rides " + formattedDate,
