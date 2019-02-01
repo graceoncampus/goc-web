@@ -4,20 +4,22 @@ import GoogleSpreadsheet from 'google-spreadsheet';
 import creds from '../config/goc-form-ca6452f3be85.json';
 import _ from 'lodash';
 import {
-  firebaseDB
+  firestoreDB2
 } from '../firebase';
 
-export const getCalendar = async(req, res) => {
-  const snapshot = await firebaseDB.ref("calendar/events").once('value')
-  let events = {}
-  if (snapshot.val()) {
-    events = snapshot.val()
-    events = events[Object.keys(events)]
-    res.render('calendar.ejs', {
+const calendarRef = firestoreDB2.collection("calendar");
+
+export const getCalendar = (req, res) => {
+  calendarRef.doc("events").get().then((doc) => {
+    let events = {}
+    if (doc.exists) {
+      events = doc.data()
+      res.render('calendar.ejs', {
         title: 'Calendar',
         events: events
-    });
-  }
+      });
+    }
+  })
 };
 
 export const updateCalendar = async(req, res) => {
@@ -47,8 +49,8 @@ export const updateCalendar = async(req, res) => {
           }
         }
       }
-    firebaseDB.ref("calendar").remove()
-    const newCalendarRef = await firebaseDB.ref("calendar").child("events").push(events);
+    calendarRef.doc("events").delete();
+    const newCalendarRef = await calendarRef.doc("events").set(events)
     res.redirect('/calendar')
   });
   });
