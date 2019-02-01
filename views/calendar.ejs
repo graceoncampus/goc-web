@@ -258,7 +258,7 @@
       time = data.start.toTimeString();
       if (time && data.end) { time = time + ' - ' + data.end.toTimeString(); }
       $t.data('popover',true);
-      $t.popover({content: '<strong>'+time + '</strong>' + ' ' + data.location, html: true}).popover('toggle');
+      $t.popover({content: '<strong>'+time + '</strong>' + ' ' + data.location + ' <i>' + data.description + '</i>', html: true}).popover('toggle');
       return false;
     });
     function dayAddEvent(index, event) {
@@ -431,7 +431,7 @@
             for (var i=0; i < 3; i++){
               end_date[i] = parseInt(end_date[i])
             }
-            data.push({ title: calendar_events[key][obj]['text'], start: new Date(y, m, d, hr, min), end: new Date(end_date[0], end_date[1] - 1, end_date[2],hr_end,min_end), allDay: allDay, location: location, text: '', type: calendar_events[key][obj]['type']})
+            data.push({ title: calendar_events[key][obj]['text'], start: new Date(y, m, d, hr, min), end: new Date(end_date[0], end_date[1] - 1, end_date[2],hr_end,min_end), allDay: allDay, location: location, text: '', type: calendar_events[key][obj]['type'], description: calendar_events[key][obj]['description']})
           }
         }
       }
