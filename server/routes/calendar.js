@@ -4,10 +4,10 @@ import GoogleSpreadsheet from 'google-spreadsheet';
 import creds from '../config/goc-form-ca6452f3be85.json';
 import _ from 'lodash';
 import {
-  firestoreDB2
+  firestoreDB
 } from '../firebase';
 
-const calendarRef = firestoreDB2.collection("calendar");
+const calendarRef = firestoreDB.collection("calendar");
 
 export const getCalendar = (req, res) => {
   calendarRef.doc("events").get().then((doc) => {

@@ -10,8 +10,8 @@ const mailgun = mail({
 });
 import creds from "../config/goc-form-ca6452f3be85.json";
 import common from "../lib";
-import { firestoreDB, firestoreDB2 } from "../firebase";
-const ridesRef = firestoreDB2.collection("rides");
+import { firestoreDB } from "../firebase";
+const ridesRef = firestoreDB.collection("rides");
 
 export const getRidesSignup = (req, res) => {
   res.render("ridesSignup.ejs", {
@@ -156,7 +156,7 @@ export const updateRides = async (req, res) => {
         }
 
         //set the current rider id to be current car id
-        await firestoreDB2.collection("users").doc(row.rideruid).update({currentCar: carKey});
+        await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
 
         }
       }
