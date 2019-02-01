@@ -25,9 +25,7 @@ export const getCalendar = (req, res) => {
 export const updateCalendar = async(req, res) => {
   const re1 = /https:\/\/docs\.google\.com\/spreadsheets\/d\//g;
   const re2 = /\/.*/g;
-  const sheetURL = 'https://docs.google.com/spreadsheets/d/1P8MTCwyaKNnEi1UjefgViGZlDmfL7qTJMhbIDZaxlNA';
-  // const sheetID = req.body.sheetURL.replace(re1, "").replace(re2, "");
-  const sheetID = sheetURL.replace(re1, "").replace(re2, "");
+  const sheetID = req.body.sheetURL.replace(re1, "").replace(re2, "");
   const calendarSheet = new GoogleSpreadsheet(sheetID);
   const events = {};
   calendarSheet.useServiceAccountAuth(creds, (err) => {
