@@ -28,6 +28,7 @@
     "mongoose": "^5.1.4",
     "morgan": "^1.9.0",
     "node-fetch": "^2.1.2",
+    "npm": "^6.7.0",
     "ora": "^2.1.0",
     "passport": "^0.4.0",
     "passport-custom": "^1.0.5",
