@@ -17,7 +17,7 @@
 				 <input type="text" value="<%= Class.title %>" name="title" class="form-control" placeholder="Title" required>
 				 <br>
 			  	<label for="date">Instructor</label>
-			  	<input type="text" value="<%= Class.instructorUID %>" name="instructorUID" class="form-control" placeholder="Instructor" required>
+			  	<input type="text" value="<%= Class.instructor %>" name="instructor" class="form-control" placeholder="Instructor" required>
 				<br>
 				<label for="date">Location</label>
 				<input type="text" value="<%= Class.location %>" name="location" class="form-control" placeholder="Location" required>
@@ -38,7 +38,7 @@
                 <label for="date">End date/time</label>
 				<input value="<%= Class.endDate %>" type="datetime-local" name="endDate" class="form-control date" required>
 				<br>
-                <label for="date">End date/time</label>
+                <label for="date">Deadline/time</label>
 				<input value="<%= Class.deadline %>" type="datetime-local" name="deadline" class="form-control date" required>
 				<br>
                 <label for="summary">Description of Class</label>
