@@ -113,25 +113,36 @@ export const updateRides = async (req, res) => {
             });
           } else if (row.drivername && row.ridername) {
           // firebase
-          const newCarRef = await newRideRef.add({ car: [
+          const car = {
+            car: [
+              {
+                uid: row.driveruid || "",
+                name: row.drivername || "",
+                email: row.driveremail || "",
+                phoneNumber: row.driverphone || "",
+                comment: row.postedcomment || "",
+                sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
+              },
             {
-              uid: row.driveruid || "",
-              name: row.drivername || "",
-              email: row.driveremail || "",
-              phoneNumber: row.driverphone || "",
-              comment: row.postedcomment || "",
-              sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
-            },
-            {uid: row.rideruid || "",
-            morning: row.ridermorning,
-            staying: row.riderstaying,
-            evening: row.riderevening,
-            name: row.ridername || "",
-            email: row.rideremail || "",
-            phoneNumber: row.riderphone || "",
-            location: row.riderpickuplocation || ""}
+              uid: row.rideruid || "",
+              morning: row.ridermorning,
+              staying: row.riderstaying,
+              evening: row.riderevening,
+              name: row.ridername || "",
+              email: row.rideremail || "",
+              phoneNumber: row.riderphone || "",
+              location: row.riderpickuplocation || ""
+            }
           ],
-        });
+        }
+        let newCarRef = {};
+        if (row.drivername == "In progress"){
+          await newRideRef.doc("0").set(car);
+          newCarRef.id = "0";
+        }
+        else {
+          newCarRef = await newRideRef.add(car);
+        }
           ride.cars[newCarRef.id] = [
          {
               uid: row.driveruid || "",
@@ -156,7 +167,7 @@ export const updateRides = async (req, res) => {
         }
 
         //set the current rider id to be current car id
-        await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
+        //await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
 
         }
       }
