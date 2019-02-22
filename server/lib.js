@@ -1,12 +1,16 @@
 ﻿var _ = require('lodash');
-var admin = require('firebase-admin');
-var firebaseDB = admin.database();
+//var admin = require('firebase-admin');
+//var firebaseDB = admin.database();
+import { firestoreDB } from "./firebase"
+var users = firestoreDB.collection('users');
 
-export const lookupByUID = async (uid) => {
-    const user = await admin.database().ref(`users/${uid}`).once('value');
-    if (!user.val()) return uid
-    return `${user.val().firstName} ${user.val().lastName}`;
-};
+export const lookupByUID = (uid) => users.doc(uid).get().then(doc => {
+  if (doc.exists) {
+    let user = doc.data();
+    return `${user.firstName} ${user.lastName}`;
+  } else return null;
+})//).catch(() => return null)
+
 
 export const isLoggedIn = (req, res, next) => (req.isAuthenticated() ? next() : res.redirect('/login/redir' + req.url));
 

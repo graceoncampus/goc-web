@@ -121,12 +121,21 @@ export const getClassById = (req, res) => {
     //     }
     // });
 };
-export const enrollStudent = async(req, res) => {
+export const enrollStudent = (req, res) => {
     const classKey = req.body.id
+    console.log("HELLO5:" + classKey);
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots - 1;
-    await admin.database().ref(`classes/${classKey}/students`).push({ uid: req.user.uid });
-    await admin.database().ref(`classes/${classKey}/openSpots`).set(newOpenSpots);
+    var sArr = {
+      "uid": req.user.uid,
+      "name": req.user.name
+    }
+    classesRef.doc(classKey).update({
+      "students": firebase.firestore.FieldValue.arrayUnion(sArr),
+      "openSpots": newOpenSpots
+    });
+    //classesRef.get(`classes/${classKey}/students`).update({ uid: req.user.uid });
+    //classesRef.get(`classes/${classKey}/openSpots`).update(newOpenSpots);
     res.json('success')
 };
 export const unenrollStudent = async(req, res) => {
@@ -194,8 +203,7 @@ export const postClass = (req, res) => {
         const totalSpots = fields.capacity;
         const day = fields.day;
         const classTime = fields.time;
-        const startDate = fields.startDate;//admin.firestore.TimeStamp.fromDate(fields.startDate);
-        console.log("HELLO! WORKS");
+        const startDate = fields.startDate;
         const deadline = fields.deadline;
         const endDate = fields.endDate;
         const details = fields.details;
@@ -218,14 +226,16 @@ export const postClass = (req, res) => {
     });
 };
 
-export const getViewClassRosterById = (req, res) => {
+/*export const getViewClassRosterById = (req, res) => {
+  console.log("function called");
   const classID = req.params;
   classesRef.doc(classID).get().then(doc => {
     let Class;
     if(doc.exists){
       Class = doc.data();
       Class.id = classID
-      //var enrolledUsers = classUsersFetch(Class.students);
+      var enrolledUsers = classUsersFetch(Class.students);
+      console.log("HI@&: " + enrolledUsers);
       res.render('viewClassRoster.ejs', {
             title: 'View Class',
             Class
@@ -233,18 +243,37 @@ export const getViewClassRosterById = (req, res) => {
         });
     }
 
-  })
-/*  let Class = snapshot.val();
-  Class.startDate = moment.unix(Class.startDate).format('MMMM DD');
-  Class.endDate = moment.unix(Class.endDate).format('MMMM DD');
-  Class.deadline = moment.unix(Class.deadline).format('MMMM DD');
-  Class.id = classID;
-  var enrolledUsers = await classUsersFetch(Class.students);
-  res.render('viewClassRoster.ejs', {
+  })*/
+
+  export const getViewClassRosterById = (req, res) => {
+    var classID = req.params.classID;
+    var enrolledUsers = [];
+    let Class;
+    classesRef.doc(classID).get().then(function(snapshot){
+      console.log('hii')
+      if(snapshot.exists){
+          Class = snapshot.data();
+          console.log(Class);
+          Class.id = classID;
+          console.log("HELLO2");
+          console.log(Class.students);
+          Class.students.forEach(function(element){
+            console.log(element.name);
+            enrolledUsers.push(element.uid);
+          });
+          //enrolledUsers = classUsersFetch(Class.students);
+          console.log("254");
+      }else{
+        console.log("FAILED RIP RIP RIP");
+      }
+    }).catch(err=> console.log('hi', err.message));
+    res.render('viewClassRoster.ejs', {
       title: 'View Class',
       Class, enrolledUsers
-  });*/
+  });
+    console.log("259");
 };
+
 
 const classUsersFetch = (studentUids) => {
   classesRef.where('students').get().then(snapshot => {
