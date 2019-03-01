@@ -126,16 +126,17 @@ export const enrollStudent = (req, res) => {
     console.log("HELLO5:" + classKey);
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots - 1;
-    var sArr = {
-      "uid": req.user.uid,
-      "name": req.user.name
-    }
+    console.log(newOpenSpots);
+    console.log(req.user.firstName + " " + req.user.lastName);
     classesRef.doc(classKey).update({
-      "students": firebase.firestore.FieldValue.arrayUnion(sArr),
-      "openSpots": newOpenSpots
-    });
-    //classesRef.get(`classes/${classKey}/students`).update({ uid: req.user.uid });
-    //classesRef.get(`classes/${classKey}/openSpots`).update(newOpenSpots);
+      "openSpots": newOpenSpots,
+      "students": FieldValue.arrayUnion({
+        "uid": req.user.uid,
+        "name": req.user.firstName + " " + req.user.lastName
+      })
+    }).then(() => {
+      console.log("success");
+    }).catch(err => console.log("error message: ", err.message));
     res.json('success')
 };
 export const unenrollStudent = async(req, res) => {
@@ -207,6 +208,7 @@ export const postClass = (req, res) => {
         const deadline = fields.deadline;
         const endDate = fields.endDate;
         const details = fields.details;
+        const students = [];
         var newClassRef = classesRef.doc();
         newClassRef.set({
             title: title,
@@ -219,7 +221,8 @@ export const postClass = (req, res) => {
             deadline: deadline,
             startDate: startDate,
             endDate: endDate,
-            details: details
+            details: details,
+            students: students
         }).then(() => {
             res.redirect('/classes');
         })
@@ -250,45 +253,55 @@ export const postClass = (req, res) => {
     var enrolledUsers = [];
     let Class;
     classesRef.doc(classID).get().then(function(snapshot){
-      console.log('hii')
       if(snapshot.exists){
           Class = snapshot.data();
-          console.log(Class);
           Class.id = classID;
-          console.log("HELLO2");
-          console.log(Class.students);
+          var uids = [];
           Class.students.forEach(function(element){
-            console.log(element.name);
-            enrolledUsers.push(element.uid);
+            uids.push(element.UID);
           });
-          //enrolledUsers = classUsersFetch(Class.students);
-          console.log("254");
+          firestoreDB.collection("users").get().then(snapshot =>{
+            snapshot.forEach(doc => {
+              let student;
+              if(doc.exists){
+                student = doc.data();
+                if (uids.includes(doc.id)){
+                  enrolledUsers.push(student);
+                }
+              }
+            })
+            res.render('viewClassRoster.ejs', {
+              title: 'View Class',
+              Class, enrolledUsers
+            });
+          }).catch(err => console.log(err.message));
       }else{
         console.log("FAILED RIP RIP RIP");
       }
     }).catch(err=> console.log('hi', err.message));
-    res.render('viewClassRoster.ejs', {
-      title: 'View Class',
-      Class, enrolledUsers
-  });
-    console.log("259");
 };
 
-
-const classUsersFetch = (studentUids) => {
-  classesRef.where('students').get().then(snapshot => {
-    const studentInfo = [];
-    snapshot.forEach(doc =>{
-      let studentInfo;
-      if(doc.exists){
-        studentInfo = doc.data();
-        var thisUid = studentInfo.UID;
-        studentInfo.push(thisUid);
-      }
-    })
-  });
-  return studentInfo;
-}
+//
+// async function classUsersFetch(studentUids){
+//   //supposed to get by uid
+//   //questions to ask:
+//   //- how to get uid nicely
+//   //- how to do this w/o async
+//   firestoreDB.collection("users").get().then(snapshot =>{
+//     const studentInfo = [];
+//     snapshot.forEach(doc => {
+//       let student;
+//       if(doc.exists){
+//         student = doc.data();
+//         if (studentUids.includes(doc.id)){
+//           studentInfo.push(student);
+//           console.log("doc:" + doc.id);
+//         }
+//       }
+//     })
+//     return studentInfo;
+//   }).catch(err => console.log(err.message));
+// }
 
 export const postDeleteClassById = function(req, res) {
     var classID = req.param("classID");
