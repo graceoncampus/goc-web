@@ -9,6 +9,15 @@
     <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
       <div class="card">
           <div class="card-body">
+              <tr>
+
+                    <td>Emails:</td>
+                <% enrolledUsers.forEach(function(user) { %>
+                    <tr>
+                        <%= user.email %>,
+                     </tr>
+                  <% }); %>
+              </tr>
               <div class="col-md-8 mx-auto px-4 py-5 my-3">
                   <p><b>Instructor:</b> <%= Class.instructor %><p>
                   <p><b>Location:</b> <%= Class.location %><p>
