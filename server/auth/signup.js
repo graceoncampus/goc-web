@@ -3,8 +3,13 @@ import CustomStrategy from 'passport-custom';
 import admin from 'firebase-admin';
 import moment from 'moment';
 import init from './init';
+import {
+  firestoreDB2
+} from '../firebase';
+const invitedRef = firestoreDB2.collection("invitedUsers");
+const usersRef = firestoreDB2.collection("users");
 
-passport.use('signup', new CustomStrategy((req, done) => {
+passport.use('signup', new CustomStrategy((req, done) => { //what is passport? where is this information coming from?
     const {
         firstName,
         lastName,
@@ -40,6 +45,30 @@ passport.use('signup', new CustomStrategy((req, done) => {
         address: address || '',
         permissions: permissions
     }
+
+    usersRef.where("email", "==", email).then((snapshot) => {
+      if(snapshot.size != 0){
+        return done('That email is already registered.', false);
+      }
+      else{
+        invitedRef.where("email", "==", email).then((snapshot2) => {
+          if(snapshot.size != 0){
+            /* something to create user */.then((user) => {
+            users["/users/" + user.uid = usr //change
+            usersRef.add(users).then(() => { //add the new user
+                admin.database()
+                    .ref('invitedUsers')
+                    .orderByChild('email')
+                    .equalTo(email)
+                    .on('child_added').then((snapshot3) => {
+                        snapshot3.ref.remove()
+                        return done(null, user.uid)
+                    });
+          });
+          }
+        });
+      }
+    });
     admin.database()
         .ref('users')
         .orderByChild('email')
@@ -55,19 +84,19 @@ passport.use('signup', new CustomStrategy((req, done) => {
                     .once('value').then((snapshot2) => {
                         if (snapshot2.val()) {
                             admin.auth()
-                                .createUser({
+                                .createUser({  //Where does this create a new user? What does this code mean?
                                     email,
                                     password
                                 })
                                 .then((user) => {
                                     let users = {};
-                                    users["/users/" + user.uid] = usr
-                                    admin.database().ref().update(users).then(() => {
+                                    users["/users/" + user.uid] = usr //creates an object with the new users information?
+                                    admin.database().ref().update(users).then(() => { //add the new user
                                         admin.database()
                                             .ref('invitedUsers')
                                             .orderByChild('email')
                                             .equalTo(email)
-                                            .on('child_added').then((snapshot3) => {
+                                            .on('child_added').then((snapshot3) => { //What does this delete?
                                                 snapshot3.ref.remove()
                                                 return done(null, user.uid)
                                             });
