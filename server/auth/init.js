@@ -1,5 +1,9 @@
 var passport = require('passport');
 var admin = require('firebase-admin');
+import {
+  firestoreDB2
+} from '../firebase';
+const usersRef = firestoreDB2.collection("users");
 
 const init = () => {
     passport.serializeUser(function (uid, done) {
