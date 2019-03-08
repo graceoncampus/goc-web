@@ -63,11 +63,19 @@ export const updateRides = async (req, res) => {
   const emailMessage = req.body.emailMessage ? req.body.emailMessage : "";
 
   deleteRides();
-
-  await ridesRef.doc("current_rides").update({
-    date,
-    emailMessage
-  });
+  const snapshot = await firestoreDB.collection('rides').doc('current_rides').get();
+  if (snapshot.exists) {
+    await ridesRef.doc("current_rides").update({
+      date,
+      emailMessage
+    });
+  }
+  else{
+    await ridesRef.doc("current_rides").set({
+      date,
+      emailMessage
+    });
+  }
 
   const newRideRef = ridesRef.doc("current_rides").collection("cars");
 
