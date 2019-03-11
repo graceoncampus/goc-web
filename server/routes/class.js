@@ -5,6 +5,7 @@ import moment from 'moment';
 import marked from 'marked';
 import { firestoreDB } from "../firebase"
 import formidable from 'formidable';
+const FieldValue = require('firebase').firestore.FieldValue;
 
 var classesRef = firestoreDB.collection("classes");
 
@@ -121,33 +122,50 @@ export const getClassById = (req, res) => {
     //     }
     // });
 };
+/*
+enrollStudent gets the first and last names of the user as well as their uid.
+It appends a map of the student uid and name to the specific class and
+updates the number of open spots
+*/
 export const enrollStudent = (req, res) => {
     const classKey = req.body.id
-    console.log("HELLO5:" + classKey);
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots - 1;
-    console.log(newOpenSpots);
-    console.log(req.user.firstName + " " + req.user.lastName);
+    const fullName = req.user.firstName + " " + req.user.lastName;
+    const uid = req.user.uid;
+    const unionVal = {
+      'uid': uid,
+      'name': fullName
+    };
     classesRef.doc(classKey).update({
-      "openSpots": newOpenSpots,
-      "students": FieldValue.arrayUnion({
-        "uid": req.user.uid,
-        "name": req.user.firstName + " " + req.user.lastName
-      })
+      openSpots: newOpenSpots,
+      students: FieldValue.arrayUnion(unionVal)
     }).then(() => {
       console.log("success");
     }).catch(err => console.log("error message: ", err.message));
     res.json('success')
 };
-export const unenrollStudent = async(req, res) => {
-    const uid = req.user.uid;
+
+/*
+unenrollStudent gets the user name and uid
+It makes sure the user is on the list and then takes it off the student list
+*/
+export const unenrollStudent = (req, res) => {
     const classKey = req.body.id
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots + 1;
-    await admin.database().ref(`classes/${classKey}/students`).orderByChild('uid').equalTo(uid).once('child_added', (snapshot) => {
-      snapshot.ref.remove();
-    });
-    await admin.database().ref(`classes/${classKey}/openSpots`).set(newOpenSpots)
+    const fullName = req.user.firstName + " " + req.user.lastName;
+    const uid = req.user.uid;
+    const unionVal = {
+      'uid': uid,
+      'name': fullName
+    };
+    classesRef.doc(classKey).update({
+      openSpots: newOpenSpots,
+      students: FieldValue.arrayRemove(unionVal)
+    }).then(() => {
+      console.log("success");
+    }).catch(err => console.log("error message: ", err.message));
     res.json('success')
 }
 export const unsignupClassById = (req, res) => {
