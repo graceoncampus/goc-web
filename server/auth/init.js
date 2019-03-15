@@ -1,5 +1,9 @@
 var passport = require('passport');
 var admin = require('firebase-admin');
+import {
+  firestoreDB
+} from '../firebase';
+const usersRef = firestoreDB.collection("users");
 
 const init = () => {
     passport.serializeUser(function (uid, done) {
@@ -7,10 +11,10 @@ const init = () => {
     });
 
     passport.deserializeUser(function (uid, done) {
-        admin.database().ref('users/' + uid).once('value')
+        usersRef.doc(uid).get()
         .then(function(usr) {
-            const userz = usr.val();
-            userz.uid = uid
+            const userz = usr.data();
+            userz.id = uid
             done(null, userz)
         })
         .catch(function (error) {
