@@ -24,32 +24,32 @@ export const getRides = (req, res) => {
   ridesRef.doc("current_rides").collection("cars").get().then((snapshot) => {
 
     if (snapshot.size != 0){
-    snapshot.forEach(doc => {
-      const car = doc.data().car;
+      snapshot.forEach(doc => {
+        const car = doc.data().car;
 
-      if (car) {
-        var driver = car[0].name;
-        let riders = [];
-        for (var i = 1; i < car.length; i++) {
-          riders.push(car[i].name);
+        if (car) {
+          var driver = car[0].name;
+          let riders = [];
+          for (var i = 1; i < car.length; i++) {
+            riders.push(car[i].name);
+          }
+          const toAppend = {
+            driver,
+            riders
+          };
+          data.push(toAppend);
         }
-        const toAppend = {
-          driver,
-          riders
-        };
-        data.push(toAppend);
-      }
-    })
-    res.render("rides.ejs", {
-      title: "Rides",
-      cars: data
-    });
-  } else {
+      })
+      res.render("rides.ejs", {
+        title: "Rides",
+        cars: data
+      });
+    } else {
       res.render("rides.ejs", {
         title: "Rides",
         cars: null
       });
-  }}
+    }}
   );
 };
 
@@ -120,63 +120,64 @@ export const updateRides = async (req, res) => {
               location: row.riderpickuplocation
             });
           } else if (row.drivername && row.ridername) {
-          // firebase
-          const car = {
-            car: [
+            // firebase
+            const car = {
+              car: [
+                {
+                  uid: row.driveruid || "",
+                  name: row.drivername || "",
+                  email: row.driveremail || "",
+                  phoneNumber: row.driverphone || "",
+                  comment: row.postedcomment || "",
+                  sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
+                },
+                {
+                  uid: row.rideruid || "",
+                  morning: row.ridermorning,
+                  staying: row.riderstaying,
+                  evening: row.riderevening,
+                  name: row.ridername || "",
+                  email: row.rideremail || "",
+                  phoneNumber: row.riderphone || "",
+                  location: row.riderpickuplocation || ""
+                }
+              ],
+            }
+            let newCarRef = {};
+            if (row.drivername == "In progress"){
+              await newRideRef.doc("0").set(car);
+              newCarRef.id = "0";
+            }
+            else {
+              newCarRef = await newRideRef.add(car);
+            }
+            ride.cars[newCarRef.id] = [
               {
                 uid: row.driveruid || "",
-                name: row.drivername || "",
-                email: row.driveremail || "",
-                phoneNumber: row.driverphone || "",
-                comment: row.postedcomment || "",
+                name: row.drivername,
+                email: row.driveremail,
+                phoneNumber: row.driverphone,
+                comment: row.postedcomment,
                 sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
               },
-            {
-              uid: row.rideruid || "",
-              morning: row.ridermorning,
-              staying: row.riderstaying,
-              evening: row.riderevening,
-              name: row.ridername || "",
-              email: row.rideremail || "",
-              phoneNumber: row.riderphone || "",
-              location: row.riderpickuplocation || ""
-            }
-          ],
-        }
-        let newCarRef = {};
-        if (row.drivername == "In progress"){
-          await newRideRef.doc("0").set(car);
-          newCarRef.id = "0";
-        }
-        else {
-          newCarRef = await newRideRef.add(car);
-        }
-          ride.cars[newCarRef.id] = [
-         {
-              uid: row.driveruid || "",
-              name: row.drivername,
-              email: row.driveremail,
-              phoneNumber: row.driverphone,
-              comment: row.postedcomment,
-              sendEmail: row.sendemail ? row.sendemail.toLowerCase() == "yes" : false
-            },
-            {
-              uid: row.rideruid || "",
-              morning: row.ridermorning,
-              staying: row.riderstaying,
-              evening: row.riderevening,
-              name: row.ridername,
-              email: row.rideremail,
-              phoneNumber: row.riderphone,
-              location: row.riderpickuplocation,
-            },
-          ];
-          carKey = newCarRef.id
-        }
+              {
+                uid: row.rideruid || "",
+                morning: row.ridermorning,
+                staying: row.riderstaying,
+                evening: row.riderevening,
+                name: row.ridername,
+                email: row.rideremail,
+                phoneNumber: row.riderphone,
+                location: row.riderpickuplocation,
+              },
+            ];
+            carKey = newCarRef.id
+          }
 
-        //set the current rider id to be current car id
-        await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
-
+          //set the current rider id to be current car id
+          if (row.rideruid){
+            await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
+          }
         }
       }
       _.filter(ride.cars, car => (car[0].sendEmail)).forEach(car => {
@@ -212,24 +213,24 @@ const sendDriverEmail = (car, date, emailMessage) => {
     const carRiders = car.slice(1);
     const formattedDate = moment.unix(date).format("MM/DD");
     const message =
-      "Hi " +
-      name +
-      "! :)\n\n" +
-      "Thanks for offering to drive this " +
-      date +
-      "!\n\n" +
-      "Here are your riders:\n\n" +
-      _.map(carRiders, function(r) {
-        return r.name + ": " + r.phoneNumber + " | " + r.location;
-      }).join("\n") +
-      "\n\n" +
-      (car.comment && car.comment != "" ? "Comments: " + car.comment : "") +
-      "\n\n" +
-      (emailMessage ? emailMessage + "\n\n" : "") +
-      "Thanks!\n" +
-      "Rides Team\n" +
-      "Ashlynn McGuff and Matthew Lin\n" +
-      "gocrides@gmail.com | (310) 694-5216";
+    "Hi " +
+    name +
+    "! :)\n\n" +
+    "Thanks for offering to drive this " +
+    date +
+    "!\n\n" +
+    "Here are your riders:\n\n" +
+    _.map(carRiders, function(r) {
+      return r.name + ": " + r.phoneNumber + " | " + r.location;
+    }).join("\n") +
+    "\n\n" +
+    (car.comment && car.comment != "" ? "Comments: " + car.comment : "") +
+    "\n\n" +
+    (emailMessage ? emailMessage + "\n\n" : "") +
+    "Thanks!\n" +
+    "Rides Team\n" +
+    "Ashlynn McGuff and Matthew Lin\n" +
+    "gocrides@gmail.com | (310) 694-5216";
     const riders = _.map(carRiders, function(r) {
       let times = "";
       if (r.morning === "m") {
