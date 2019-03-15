@@ -28,8 +28,10 @@ export const getClasses = (req, res) => {
               iClass.details = iClass.details.replace(/\n/g, "<br/>");
               iClass.isEnrolled = false;
               iClass.id = doc.id;
-              iClass.dates = moment(iClass.startDate).format('MMMM Do') + ' - ' + moment(iClass.endDate).format('MMMM Do');
-              iClass.deadlineString = moment(iClass.deadline).format('MMMM Do');
+              //iClass.dates = moment(iClass.startDate).format('MMMM Do') + ' - ' + moment(iClass.endDate).format('MMMM Do');
+              //iClass.deadlineString = moment(iClass.deadline).format('MMMM Do');
+              iClass.dates = iClass.startDate.toDate().toString().slice(4, -47) + ' - ' + iClass.endDate.toDate().toString().slice(4, -47);
+              iClass.deadlineString = iClass.deadline.toDate().toString().slice(4, -47);
               for (const student in allStudents) {
                 if (allStudents.hasOwnProperty(student)) {
                   if (currentUid === allStudents[student].uid) {
@@ -52,25 +54,21 @@ export const getClasses = (req, res) => {
 /*
 * getEditClassById accesses a specific class based on their classID and passes
 * the information to be rendered when accessing graceoncampus.org/c/edit/[classID]
-* Problems with getEditClassById:
-*             - the dates aren't displayed in the edit page; have to manually reenter
-*               even if not changing the date information
-*                 - probably a conflicting Date format used between TimeStamp and what
-*                   used in editclass.ejs ??
 */
 export const getEditClassById = (req, res) => {
     const { classID } = req.params; // get classID
     classesRef
       .doc(classID)
       .get()
-      .then(doc =>  //doc is the specific class information
+      .then(doc => { //doc is the specific class information
           let Class;
           if(doc.exists){
               Class = doc.data();
-              // ***************possibly might need to format these dates
-              //Class.startDate = moment.unix(Class.startDate).format('YYYY-MM-DDThh:mm')
-              //Class.endDate = moment.unix(Class.endDate).format('YYYY-MM-DDThh:mm')
-              //Class.deadline = moment.unix(Class.deadline).format('YYYY-MM-DDThh:mm')
+              Class.startDate = Class.startDate.toDate().toISOString().replace(".000Z", "");
+              Class.endDate = Class.endDate.toDate().toISOString().replace(".000Z", "");
+              Class.deadline = Class.deadline.toDate().toISOString().replace(".000Z", "");
+              console.log(Class.startDate);
+              console.log(Class.endDate);
               Class.id = classID
               //render
               res.render('editclass.ejs', {
@@ -93,10 +91,10 @@ export const postEditClassById = (req, res) => {
     form.parse(req, function(err, fields){
           const title = fields.title;
           const classTime = fields.classTime;
-          const startDate = fields.startDate;
+          const startDate = new Date(fields.startDate);
           const day = fields.day;
-          const deadline = fields.deadline;
-          const endDate = fields.endDate;
+          const deadline = new Date(fields.deadline);
+          const endDate = new Date(fields.endDate);
           const instructor = fields.instructor;
           const location = fields.location;
           const totalSpots = fields.totalSpots;
@@ -259,9 +257,9 @@ export const postClass = (req, res) => {
         const totalSpots = fields.capacity;
         const day = fields.day;
         const classTime = fields.time;
-        const startDate = fields.startDate;
-        const deadline = fields.deadline;
-        const endDate = fields.endDate;
+        const startDate = new Date(fields.startDate);
+        const deadline = new Date (fields.deadline);
+        const endDate = new Date(fields.endDate);
         const details = fields.details;
         const students = [];
         var newClassRef = classesRef.doc(); //create new document under 'classes'
@@ -300,6 +298,9 @@ export const getViewClassRosterById = (req, res) => {
       if(snapshot.exists){
           Class = snapshot.data();
           Class.id = classID;
+          Class.startDate = Class.startDate.toDate().toString().slice(4, -42);
+          Class.endDate = Class.endDate.toDate().toString().slice(4, -42);
+          Class.deadline = Class.deadline.toDate().toString().slice(4, -42);
           var uids = [];
           Class.students.forEach(function(element){
             uids.push(element.UID);
