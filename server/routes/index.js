@@ -124,7 +124,7 @@ router.get('/forgot', isNotLoggedIn, getForgot);
 // user
 router.get('/profile', isLoggedIn, getProfile);
 router.post('/profile', isLoggedIn, postProfileEdit);
-router.get('/roster', isLoggedIn, getRoster);
+// router.get('/roster', isLoggedIn, getRoster);
 router.get('/events', getEvents);
 router.post('/events', postEditEventById);
 router.get('/e/edit/:eventid', getEditEventById);
