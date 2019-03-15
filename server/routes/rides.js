@@ -23,13 +23,7 @@ export const getRides = (req, res) => {
   const data = [];
   ridesRef.doc("current_rides").collection("cars").get().then((snapshot) => {
 
-    if (snapshot.size == 0){
-      res.render("rides.ejs", {
-        title: "Rides",
-        cars: null
-      });
-    }
-
+    if (snapshot.size != 0){
     snapshot.forEach(doc => {
       const car = doc.data().car;
 
@@ -50,7 +44,13 @@ export const getRides = (req, res) => {
       title: "Rides",
       cars: data
     });
-  });
+  } else {
+      res.render("rides.ejs", {
+        title: "Rides",
+        cars: null
+      });
+  }}
+  );
 };
 
 
@@ -175,7 +175,7 @@ export const updateRides = async (req, res) => {
         }
 
         //set the current rider id to be current car id
-        //await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
+        await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
 
         }
       }

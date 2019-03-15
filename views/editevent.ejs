@@ -20,11 +20,11 @@
             </div>
             <div class="col-lg-6 mb-2 text-left form-group">
                 <label for="date">Start Date</label>
-                <input value="<%= event.start %>" type="datetime-local" name="startDate" class="form-control date" required>
+                <input value="<%= event.startDate %>" type="datetime-local" name="startDate" class="form-control date" required>
             </div>
             <div class="col-lg-6 mb-2 text-left form-group">
                 <label for="date">End Date</label>
-                <input value="<%= event.end %>" type="datetime-local" name="endDate" class="form-control date" required>
+                <input value="<%= event.endDate %>" type="datetime-local" name="endDate" class="form-control date" required>
             </div>
           </div>
           <div class="row">
@@ -53,7 +53,7 @@
         <img class="card-img-top" src="<%= event.bannerURI %>">            
         <div class="card-body">
           <h4 class="card-title"><%= event.title %></h4>
-          <p class="card-text"><%= event.summary %></p>
+          <p class="card-text"><%= event.summary.replace("\"","").replace(/\\r/g, "").replace(/\\n/g, "<br/>") %></p>
         </div>
         <div class="card-footer">
           <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
