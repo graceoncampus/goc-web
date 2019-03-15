@@ -16,6 +16,6 @@ var config2 = {
 };
 firebase.initializeApp(config2);
 
-export default admin;
-// export const firestoreDB = admin.firestore();
+export const firebaseDB = admin.database();
 export const firestoreDB = firebase.firestore();
+export default admin;

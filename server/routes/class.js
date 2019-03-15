@@ -1,87 +1,122 @@
 ﻿import { lookupByUID } from '../lib';
-import async from 'async';
 import _ from 'lodash';
 import moment from 'moment';
 import marked from 'marked';
-import admin from 'firebase-admin';
+import { firestoreDB } from "../firebase"
 import formidable from 'formidable';
-var firebaseDB = admin.database();
-var classesRef = firebaseDB.ref("classes");
 
-export const getClasses = async (req, res) => {
-    const classes = await admin.database().ref('/classes').once('value');
-    const finalClasses = []
-    const claz = _.values(classes.val())
-    const keys = _.keys(classes.val());
-    let i = 0;
-    for (let c of claz) {
-        let push = c
-        const currentUid = req.user.uid
-        const allStudents = _.values(c.students);
-        push.details = push.details.replace(/\n/g, "<br/>");
-        push.isEnrolled = false;
-        push.id = keys[i]
-        i++;
-        push.dates = moment.unix(c.startDate).format('MMMM Do')+ ' - ' +moment.unix(c.endDate).format('MMMM Do');
-        for (const student in allStudents) {
-          if (allStudents.hasOwnProperty(student)) {
-            if (currentUid === allStudents[student].uid) {
-              push.isEnrolled = true;
-            }
+const FieldValue = require('firebase').firestore.FieldValue; //need this in order to use arrayUnion and arrayRemove
+
+var classesRef = firestoreDB.collection("classes"); //gets firestore reference to 'classes' subcollection
+
+/*
+* getClasses gets all the classes that are in the firestore database
+* and relevant information and sends it to be displayed
+* Used when accessing the graceoncampus.org/classes webpage
+*/
+export const getClasses = (req, res) => {
+    classesRef.get().then(snapshot => { // gets and waits for all the information in classesRef
+        const classes = []; // array of all classes
+        snapshot.forEach(doc => { // each class is a document inside the subcollection 'classes'
+          let iClass;
+          if(doc.exists){ // check if document(an individual class) exists
+              iClass = doc.data(); // get class information
+
+              // get relevant data and set fields in iClass, then push individual class to be part of array classes
+              const currentUid = req.user.uid
+              const allStudents = _.values(iClass.students);
+              iClass.details = iClass.details.replace(/\n/g, "<br/>");
+              iClass.isEnrolled = false;
+              iClass.id = doc.id;
+              iClass.dates = moment(iClass.startDate).format('MMMM Do') + ' - ' + moment(iClass.endDate).format('MMMM Do');
+              iClass.deadlineString = moment(iClass.deadline).format('MMMM Do');
+              for (const student in allStudents) {
+                if (allStudents.hasOwnProperty(student)) {
+                  if (currentUid === allStudents[student].uid) {
+                     iClass.isEnrolled = true;
+                  }
+                }
+              }
+              //add individual class to list of classes
+              classes.push(iClass);
           }
-        }
-        push.instructor = await lookupByUID(c.instructorUID)
-        push.deadlineString = moment.unix(c.deadline).format('MMMM Do')
-        finalClasses.push(push)
-    }
-    res.render('classes.ejs', {
-        classes: finalClasses,
-        title: 'Classes'
+        });
+        //render
+        res.render('classes.ejs', {
+          title: 'Classes',
+          classes
+        });
     });
 };
 
-export const getEditClassById = async (req, res) => {
-    var classID = req.param("classID");
-    const snapshot = await classesRef.child(classID).once('value');
-    let Class = snapshot.val();
-    Class.startDate = moment.unix(Class.startDate).format('YYYY-MM-DDThh:mm')
-    Class.endDate = moment.unix(Class.endDate).format('YYYY-MM-DDThh:mm')
-    Class.deadline = moment.unix(Class.deadline).format('YYYY-MM-DDThh:mm')
-    Class.id = classID
-    res.render('editclass.ejs', {
-        title: 'Edit Class',
-        Class
-    });
+/*
+* getEditClassById accesses a specific class based on their classID and passes
+* the information to be rendered when accessing graceoncampus.org/c/edit/[classID]
+* Problems with getEditClassById:
+*             - the dates aren't displayed in the edit page; have to manually reenter
+*               even if not changing the date information
+*                 - probably a conflicting Date format used between TimeStamp and what
+*                   used in editclass.ejs ??
+*/
+export const getEditClassById = (req, res) => {
+    const { classID } = req.params; // get classID
+    classesRef
+      .doc(classID)
+      .get()
+      .then(doc => { //doc is the specific class information
+          let Class;
+          if(doc.exists){
+              Class = doc.data();
+              // ***************possibly might need to format these dates
+              //Class.startDate = moment.unix(Class.startDate).format('YYYY-MM-DDThh:mm')
+              //Class.endDate = moment.unix(Class.endDate).format('YYYY-MM-DDThh:mm')
+              //Class.deadline = moment.unix(Class.deadline).format('YYYY-MM-DDThh:mm')
+              Class.id = classID
+              //render
+              res.render('editclass.ejs', {
+                  title: 'Edit Class',
+                  Class
+              });
+          }
+      });
 };
 
-export const postEditClassById = async (req, res) => {
-        var classID = req.param("classID");
-        var form = new formidable.IncomingForm();
-        form.parse(req, function(err, fields){
+/*
+* postEditClassById parses through the information given in an edit class
+* and edits that page. similar to postClass but with an already existing ID
+***********possibility of helper function that applies to both of them
+*/
+export const postEditClassById = (req, res) => {
+    const { classID } = req.params;
+    //get information filled out in form:
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields){
           const title = fields.title;
           const classTime = fields.classTime;
-          const startDate = Date.parse(fields.startDate)/1000;
+          const startDate = fields.startDate;
           const day = fields.day;
-          const deadline = Date.parse(fields.deadline)/1000;
-          const endDate = Date.parse(fields.endDate)/1000;
-          const instructorUID = fields.instructorUID;
+          const deadline = fields.deadline;
+          const endDate = fields.endDate;
+          const instructor = fields.instructor;
           const location = fields.location;
           const totalSpots = fields.totalSpots;
           const openSpots = totalSpots - Number(fields.numStudents);
           const details = fields.details;
-          classesRef.child(classID).update({
-            title,
-            classTime,
-            startDate,
-            day,
-            deadline,
-            endDate,
-            instructorUID,
-            location,
-            totalSpots,
-            openSpots,
-            details
+          //create new class with this information
+          classesRef.doc(classID).update({
+            "title": title,
+            "classTime": classTime,
+            "startDate": startDate,
+            "day": day,
+            "deadline": deadline,
+            "endDate": endDate,
+            "instructor": instructor,
+            "location": location,
+            "totalSpots": totalSpots,
+            "openSpots": openSpots,
+            "details": details
           }).then(() => {
+            //redirect to classes if successful
             res.redirect('/classes');
           })
         });
@@ -114,25 +149,56 @@ export const getClassById = (req, res) => {
     //     }
     // });
 };
-export const enrollStudent = async(req, res) => {
+/*
+enrollStudent gets the first and last names of the user as well as their uid.
+It appends a map of the student uid and name to the specific class and
+updates the number of open spots
+*/
+export const enrollStudent = (req, res) => {
     const classKey = req.body.id
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots - 1;
-    await admin.database().ref(`classes/${classKey}/students`).push({ uid: req.user.uid });
-    await admin.database().ref(`classes/${classKey}/openSpots`).set(newOpenSpots);
+    const fullName = req.user.firstName + " " + req.user.lastName;
+    const uid = req.user.uid;
+    // create a new map with uid and full name
+    // this is the format students are stored in their class student array
+    const unionVal = {
+      'uid': uid,
+      'name': fullName
+    };
+    classesRef.doc(classKey).update({
+      openSpots: newOpenSpots,
+      students: FieldValue.arrayUnion(unionVal) //appends to array if value doesn't exist already
+    }).then(() => {
+      console.log("success");
+    }).catch(err => console.log("error message: ", err.message));
     res.json('success')
 };
-export const unenrollStudent = async(req, res) => {
-    const uid = req.user.uid;
+
+/*
+unenrollStudent gets the user name and uid
+It makes sure the user is on the list and then takes it off the student list
+*/
+export const unenrollStudent = (req, res) => {
     const classKey = req.body.id
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots + 1;
-    await admin.database().ref(`classes/${classKey}/students`).orderByChild('uid').equalTo(uid).once('child_added', (snapshot) => {
-      snapshot.ref.remove();
-    });
-    await admin.database().ref(`classes/${classKey}/openSpots`).set(newOpenSpots)
+    const fullName = req.user.firstName + " " + req.user.lastName;
+    const uid = req.user.uid;
+    const unionVal = {
+      'uid': uid,
+      'name': fullName
+    };
+    classesRef.doc(classKey).update({
+      openSpots: newOpenSpots,
+      students: FieldValue.arrayRemove(unionVal)
+    }).then(() => {
+      console.log("success");
+    }).catch(err => console.log("error message: ", err.message));
     res.json('success')
 }
+
+/*A function that doesn't do much*/
 export const unsignupClassById = (req, res) => {
     var classID = req.param("classID");
     // ClassDB.findOneAndUpdate({ firebaseID: classID }, {
@@ -154,6 +220,8 @@ export const unsignupClassById = (req, res) => {
     //     }
     // });
 };
+
+/*A function that doesn't do much*/
 export const dropUserFromClass = (req, res) => {
     var classID = req.param("classID");
     var userid = req.param("userid");
@@ -177,67 +245,92 @@ export const dropUserFromClass = (req, res) => {
     // });
 };
 
-export const postClass = async(req, res) => {
+/*
+* postClass gets information and creates a new class from that information
+***********possibility of helper function that applies to both this and postEditClassById
+*/
+export const postClass = (req, res) => {
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields) {
         const title = fields.title;
         const location = fields.location;
-        const instructorUID = fields.instructorName;
+        const instructor = fields.instructorName;
         const openSpots = fields.capacity;
         const totalSpots = fields.capacity;
         const day = fields.day;
         const classTime = fields.time;
-        const deadline = Date.parse(fields.deadline)/1000;
-        const startDate = Date.parse(fields.startDate)/1000;;
-        const endDate = Date.parse(fields.endDate)/1000;
+        const startDate = fields.startDate;
+        const deadline = fields.deadline;
+        const endDate = fields.endDate;
         const details = fields.details;
-        var newClassRef = classesRef.push({
-            title,
-            location,
-            instructorUID,
-            openSpots,
-            totalSpots,
-            day,
-            classTime,
-            deadline,
-            startDate,
-            endDate,
-            details
+        const students = [];
+        var newClassRef = classesRef.doc(); //create new document under 'classes'
+        newClassRef.set({
+            title: title,
+            location: location,
+            instructor: instructor,
+            openSpots: openSpots,
+            totalSpots: totalSpots,
+            day: day,
+            classTime: classTime,
+            deadline: deadline,
+            startDate: startDate,
+            endDate: endDate,
+            details: details,
+            students: students
         }).then(() => {
+            //redirect to /classes if successful
             res.redirect('/classes');
         })
     });
 };
 
-export const getViewClassRosterById = async(req, res) => {
-  var classID = req.param("classID");
-  const snapshot = await classesRef.child(classID).once('value');
-  let Class = snapshot.val();
-  Class.startDate = moment.unix(Class.startDate).format('MMMM DD');
-  Class.endDate = moment.unix(Class.endDate).format('MMMM DD');
-  Class.deadline = moment.unix(Class.deadline).format('MMMM DD');
-  Class.id = classID;
-  var enrolledUsers = await classUsersFetch(Class.students);
-  res.render('viewClassRoster.ejs', {
-      title: 'View Class',
-      Class, enrolledUsers
-  });
+/*
+* getViewClassRosterById gets the information of the users enrolled in that class
+* 1. collect user uids
+* 2. use user uids to find each user information
+***************INEFFICIENT SEARCH: currently looping through every single user and comparing every uid
+***********************************there definitely should be an quicker way to do it
+*/
+export const getViewClassRosterById = (req, res) => {
+    var classID = req.params.classID;
+    var enrolledUsers = [];
+    let Class;
+    classesRef.doc(classID).get().then(function(snapshot){
+      if(snapshot.exists){
+          Class = snapshot.data();
+          Class.id = classID;
+          var uids = [];
+          Class.students.forEach(function(element){
+            uids.push(element.UID);
+          });
+          /*start of area that should be changed*/
+          firestoreDB.collection("users").get().then(snapshot =>{
+            snapshot.forEach(doc => {
+              let student;
+              if(doc.exists){
+                student = doc.data();
+                if (uids.includes(doc.id)){
+                  enrolledUsers.push(student);
+                }
+              }
+            })
+            res.render('viewClassRoster.ejs', {
+              title: 'View Class',
+              Class, enrolledUsers
+            });
+          }).catch(err => console.log(err.message));
+          /*end of area that should be changed*/
+      }else{
+        console.log("FAILED RIP RIP RIP");
+      }
+    }).catch(err=> console.log('hi', err.message));
 };
 
-const classUsersFetch = async(studentUids) => {
-  var usersRef = await firebaseDB.ref("users").once('value');
-  var users = usersRef.val();
-  var studentInfo = [];
-  if (studentUids != null) {
-    var Objkeys = Object.keys(studentUids);
-    for (var key in Objkeys) {
-        var thisUid = studentUids[Objkeys[key]].uid;
-        studentInfo.push(users[thisUid]);
-    }   
-}
-  return studentInfo;
-}
-
+/*
+* A function that doesn't do much
+* **********might be needed to implement if we add a delete button
+*/
 export const postDeleteClassById = function(req, res) {
     var classID = req.param("classID");
     // ClassDB.findOneAndRemove({firebaseID: classID}, function (err, result) {
