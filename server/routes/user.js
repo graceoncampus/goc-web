@@ -5,15 +5,18 @@ import _ from 'lodash';
 import common from '../lib';
 import admin from 'firebase-admin';
 import moment from 'moment'
+import { firestoreDB } from '../firebase';
+const usersRef = firestoreDB.collection("users");
+
 export const getProfile = (req, res) => {
     let user = req.user;
     user.bday = moment.unix(user.birthday).format('YYYY-MM-DD')
     res.render('profile.ejs', {
-        title: 'Profile', 
+        title: 'Profile',
         user: user
     });
 };
-export const postProfileEdit = async (req,res) => {    
+export const postProfileEdit = async (req,res) => {
     const {
         firstName,
         lastName,
@@ -24,11 +27,10 @@ export const postProfileEdit = async (req,res) => {
         major,
         address
     } = req.body;
-    const uid = req.user.uid;
+    const uid = req.user.id;
     const { email, permissions } = req.user;
     const bday = moment(birthday).unix();
-    const users = {};
-    users[`/users/${uid}`] = {
+    const usr = {
         email,
         permissions,
       firstName,
@@ -41,7 +43,7 @@ export const postProfileEdit = async (req,res) => {
       address
     };
     try {
-        await admin.database().ref().update(users)
+        await usersRef.doc(uid).update(usr);
         res.json('success')
     }
     catch (err) {
@@ -49,14 +51,14 @@ export const postProfileEdit = async (req,res) => {
     }
 };
 export const getRoster = async(req, res) => {
-    const users = await admin.database().ref('users').once('value');
+    const users = await usersRef.get();
     const userFinal = []
-    for (let user of _.values(users.val())) {
+    for (let user of _.values(users.data())) {
         user.bday = moment.unix(user.birthday).format('MMMM Do, YYYY');
         userFinal.push(user)
     }
     res.render('roster.ejs', {
-        title: 'Roster', 
+        title: 'Roster',
         users: userFinal, // get the user out of session and pass to template
     });
 };
