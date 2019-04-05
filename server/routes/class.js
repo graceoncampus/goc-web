@@ -291,6 +291,7 @@ export const postClass = (req, res) => {
 ***********************************there definitely should be an quicker way to do it
 */
 export const getViewClassRosterById = (req, res) => {
+  console.log("called");
     var classID = req.params.classID;
     var enrolledUsers = [];
     let Class;
@@ -303,7 +304,7 @@ export const getViewClassRosterById = (req, res) => {
           Class.deadline = Class.deadline.toDate().toString().slice(4, -42);
           var uids = [];
           Class.students.forEach(function(element){
-            uids.push(element.UID);
+            uids.push(element.uid);
           });
           /*start of area that should be changed*/
           firestoreDB.collection("users").get().then(snapshot =>{
@@ -312,6 +313,7 @@ export const getViewClassRosterById = (req, res) => {
               if(doc.exists){
                 student = doc.data();
                 if (uids.includes(doc.id)){
+                  console.log(doc);
                   enrolledUsers.push(student);
                 }
               }
@@ -333,11 +335,13 @@ export const getViewClassRosterById = (req, res) => {
 */
 export const postDeleteClassById = function(req, res) {
     const { classID } = req.params;
+    console.log(classID);
     classesRef.doc(classID).delete().then(function() {
         console.log("Document successfully deleted!");
     }).catch(function(error) {
         console.error("Error removing document: ", error);
     });
+    res.json('success')
     // ClassDB.findOneAndRemove({firebaseID: classID}, function (err, result) {
     //     if (!err) {
     //       firebaseDB.ref("events/" + result.firebaseID)
