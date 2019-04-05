@@ -11,6 +11,7 @@ export const getAnnouncements = (req, res) => {
       var formattedPost = replaceURLsWithLinks(post.post)
       formattedPost = formattedPost.replace(/\n/g, "<br/>");
       post.Post = formattedPost
+      post.date = moment.utc(post.date.toDate())
       finalPosts.push(post)
     });
     res.render('announcements.ejs', {
