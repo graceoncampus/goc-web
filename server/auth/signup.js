@@ -9,18 +9,19 @@ import {
 const invitedRef = firestoreDB.collection("invitedUsers");
 const usersRef = firestoreDB.collection("users");
 
-passport.use('signup', new CustomStrategy((req, done) => { 
+passport.use('signup', new CustomStrategy((req, done) => {
   const {
     firstName,
     lastName,
-    phoneNumber,
+    number,
     birthday,
-    grad,
+    gradyear,
     major,
     homeChurch,
     address,
     password,
   } = req.body
+
   const emailStr = req.body.email;
   const email = emailStr.toLowerCase();
   const permissions = {
@@ -37,15 +38,16 @@ passport.use('signup', new CustomStrategy((req, done) => {
     email: email || '',
     firstName: firstName || '',
     lastName: lastName || '',
-    phoneNumber: phoneNumber || '',
+    phoneNumber: number || '',
     birthday: bday || '',
-    grad: grad || '',
+    grad: gradyear || '',
     major: major || '',
     homeChurch: homeChurch || '',
     address: address || '',
     permissions: permissions
   }
 
+  console.log(usr.phoneNumber)
   usersRef.where("email", "==", email).get().then((snapshot) => {
     if(!snapshot.empty != 0){
       return done('That email is already registered.', false);
