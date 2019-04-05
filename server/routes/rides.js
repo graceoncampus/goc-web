@@ -144,7 +144,7 @@ export const updateRides = async (req, res) => {
               ],
             }
             let newCarRef = {};
-            if (row.drivername == "In progress"){
+            if (row.drivername == "IN PROGRESS"){
               await newRideRef.doc("0").set(car);
               newCarRef.id = "0";
             }
@@ -176,7 +176,7 @@ export const updateRides = async (req, res) => {
 
           //set the current rider id to be current car id
           if (row.rideruid){
-            await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey});
+            await firestoreDB.collection("users").doc(row.rideruid).update({currentCar: carKey}).catch(err => console.log("error message: ", err.message));
           }
         }
       }
