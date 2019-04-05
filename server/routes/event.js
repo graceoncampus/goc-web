@@ -17,13 +17,10 @@ const getEventFromDoc = (doc, rawSummary) => {
   let event;
   if (doc.exists) {
     event = doc.data();
-    const startdate = moment.unix(event.startDate.toDate())
-    const enddate = moment.unix(event.endDate.toDate())
+    const startdate = moment.utc(event.startDate.toDate())
+    const enddate = moment.utc(event.endDate.toDate())
+
     event.summary = replaceURLsWithLinks(event.summary);
-    event.startDate = event.startDate.toDate().toISOString();
-    event.endDate = event.endDate.toDate().toISOString();
-    event.startDate = event.startDate.replace(".000Z", "");
-    event.endDate = event.endDate.replace(".000Z", "");
     event.summary = !rawSummary
       ? event.summary.replace(/\\r/g, "").replace(/\\n/g, "<br/>")
       : event.summary.replace(/\\r/g, '\r').replace(/\\n/g, '\n');
@@ -71,11 +68,14 @@ export const postEditEventById = (req, res) => {
     const path = files.background.path;
     const title = fields.title;
     const location = fields.location;
-    const startdate = Date.parse(fields.startDate) / 1000;
-    const enddate = Date.parse(fields.endDate) / 1000;
+    console.log(fields.startDate)
+    const startDate = new Date(Date.parse(fields.startDate));
+    const endDate = new Date(Date.parse(fields.endDate));
     const summary = fields.summary;
-    if (path.size) {
+    console.log(path)
+    if (path) {
       cloudinary.v2.uploader.upload(path, function(e, result) {
+        if (eventid){
         eventsCollection
           .doc(eventid)
           .set({
@@ -84,12 +84,28 @@ export const postEditEventById = (req, res) => {
             bannerURI: result.secure_url,
             mobileImage: result.secure_url,
             summary,
-            startdate,
-            enddate
+            startDate,
+            endDate
           })
           .then(() => {
             res.redirect("/events");
           });
+        }
+        else{
+          eventsCollection
+            .add({
+              title,
+              location,
+              bannerURI: result.secure_url,
+              mobileImage: result.secure_url,
+              summary,
+              startDate,
+              endDate
+            })
+            .then(() => {
+              res.redirect("/events");
+            });
+        }
       });
     }
   });
@@ -97,6 +113,7 @@ export const postEditEventById = (req, res) => {
 
 export const postDeleteEventById = (req, res) => {
   const eventid = req.param("eventid");
+  console.log(eventid)
   eventsCollection
     .doc(eventid)
     .remove()

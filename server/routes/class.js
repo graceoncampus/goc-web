@@ -1,4 +1,4 @@
-﻿import { lookupByUID } from '../lib';
+import { lookupByUID } from '../lib';
 import _ from 'lodash';
 import moment from 'moment';
 import marked from 'marked';
@@ -23,7 +23,7 @@ export const getClasses = (req, res) => {
               iClass = doc.data(); // get class information
 
               // get relevant data and set fields in iClass, then push individual class to be part of array classes
-              const currentUid = req.user.uid
+              const currentUid = req.user.id
               const allStudents = _.values(iClass.students);
               iClass.details = iClass.details.replace(/\n/g, "<br/>");
               iClass.isEnrolled = false;
@@ -157,7 +157,7 @@ export const enrollStudent = (req, res) => {
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots - 1;
     const fullName = req.user.firstName + " " + req.user.lastName;
-    const uid = req.user.uid;
+    const uid = req.user.id;
     // create a new map with uid and full name
     // this is the format students are stored in their class student array
     const unionVal = {
@@ -182,7 +182,7 @@ export const unenrollStudent = (req, res) => {
     const numSpots = parseInt(req.body.openSpots)
     const newOpenSpots = numSpots + 1;
     const fullName = req.user.firstName + " " + req.user.lastName;
-    const uid = req.user.uid;
+    const uid = req.user.id;
     const unionVal = {
       'uid': uid,
       'name': fullName
