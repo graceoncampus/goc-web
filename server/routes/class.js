@@ -333,11 +333,13 @@ export const getViewClassRosterById = (req, res) => {
 */
 export const postDeleteClassById = function(req, res) {
     const { classID } = req.params;
+    console.log(classID);
     classesRef.doc(classID).delete().then(function() {
         console.log("Document successfully deleted!");
     }).catch(function(error) {
         console.error("Error removing document: ", error);
     });
+    res.json('success')
     // ClassDB.findOneAndRemove({firebaseID: classID}, function (err, result) {
     //     if (!err) {
     //       firebaseDB.ref("events/" + result.firebaseID)
