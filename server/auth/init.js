@@ -11,15 +11,17 @@ const init = () => {
     });
 
     passport.deserializeUser(function (uid, done) {
-        usersRef.doc(uid).get()
-        .then(function(usr) {
-            const userz = usr.data();
-            userz.id = uid
-            done(null, userz)
-        })
-        .catch(function (error) {
-            done(error, null)
-        });
+        if (uid) {
+           usersRef.doc(uid).get()
+            .then(function(usr) {
+                const userz = usr.data();
+                userz.id = uid
+                done(null, userz)
+            })
+            .catch(function (error) {
+                done(error, null)
+            }); 
+        }
     });
 };
 

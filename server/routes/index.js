@@ -86,7 +86,6 @@ import {
     post3On3
 } from './3on3.js';
 import firebaseLogin from '../auth/login';
-
 router.get('/', getRoot);
 router.get('/3on3', get3On3);
 router.post('/3on3', post3On3);
@@ -117,6 +116,7 @@ router.post('/login/redir/*', firebaseLogin.authenticate('login'), postLoginRedi
 router.get('/signup', isNotLoggedIn, getSignup);
 router.post('/signup', postSignup);
 router.get('/logout', isLoggedIn, getLogout);
+
 
 router.get('/invite', isLoggedIn, getInvite);
 router.post('/invitation', postInvite);
