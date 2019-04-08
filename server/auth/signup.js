@@ -49,7 +49,7 @@ passport.use('signup', new CustomStrategy((req, done) => {
 
   console.log(usr.phoneNumber)
   usersRef.where("email", "==", email).get().then((snapshot) => {
-    if(!snapshot.empty != 0){
+    if(!snapshot.empty){
       return done('That email is already registered.', false);
     }
     else{
