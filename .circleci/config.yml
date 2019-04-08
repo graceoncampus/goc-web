@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-job:
     docker:
-      - image: circleci/node:latest # primary container
+      - image: maloubobola/gcloud-node:latest # primary container
     steps:
       - checkout
       - restore_cache:
