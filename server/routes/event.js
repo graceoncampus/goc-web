@@ -1,48 +1,42 @@
-﻿import moment from "moment";
-import firebase from 'firebase';
-import { firestoreDB } from "../firebase";
-import cloudinary from "cloudinary";
-cloudinary.config({
-  cloud_name: "goc",
-  api_key: "328772992973127",
-  api_secret: "4Fsxb3XmB4IEpMTcPgj6cqIr3_w"
-});
-import formidable from "formidable";
-import { replaceURLsWithLinks } from "../lib";
-import _ from "lodash";
+import moment from 'moment';
+import cloudinary from 'cloudinary';
+import formidable from 'formidable';
+import admin from 'firebase-admin';
+import { promisify } from 'util';
+import { replaceURLsWithLinks } from '../lib';
 
-const eventsCollection = firestoreDB.collection("events");
+const eventsCollection = admin.firestore().collection('events');
 
 const getEventFromDoc = (doc, rawSummary) => {
   let event;
   if (doc.exists) {
     event = doc.data();
-    const startdate = moment.utc(event.startDate.toDate())
-    const enddate = moment.utc(event.endDate.toDate())
+    const startdate = moment.utc(event.startDate.toDate());
+    const enddate = moment.utc(event.endDate.toDate());
 
     event.summary = replaceURLsWithLinks(event.summary);
     event.summary = !rawSummary
-      ? event.summary.replace(/\\r/g, "").replace(/\\n/g, "<br/>")
+      ? event.summary.replace(/\\r/g, '').replace(/\\n/g, '<br/>')
       : event.summary.replace(/\\r/g, '\r').replace(/\\n/g, '\n');
-    event.formattedDate =
-      startdate.format("MMMM D") === startdate.format("MMMM D")
-        ? startdate.format("MMMM Do, h:mm A") + " - " + enddate.format("h:mm A")
-        : startdate.format("MMMM Do") + " - " + enddate.format("MMMM Do");
+    event.formattedDate = startdate.format('MMMM D') === enddate.format('MMMM D')
+      ? `${startdate.format('MMMM Do, h:mm A')} - ${enddate.format('h:mm A')}`
+      : `${startdate.format('MMMM Do')} - ${enddate.format('MMMM Do')}`;
     event.id = doc.id;
   }
   return event;
 };
 
-export const getEvents = (req, res) => {
-  eventsCollection.get().then(snapshot => {
-    const events = [];
-    snapshot.forEach(doc => {
+export const getEvents = async (req, res) => {
+  const events = [];
+  const eventsSnapshot = await eventsCollection.get();
+  if (!eventsSnapshot.empty) {
+    eventsSnapshot.forEach((doc) => {
       events.push(getEventFromDoc(doc));
     });
-    res.render("events.ejs", {
-      title: "Events",
-      events
-    });
+  }
+  res.render('events.ejs', {
+    title: 'Events',
+    events,
   });
 };
 
@@ -51,11 +45,11 @@ export const getEditEventById = (req, res) => {
   eventsCollection
     .doc(eventid)
     .get()
-    .then(doc => {
+    .then((doc) => {
       const event = getEventFromDoc(doc, true);
-      res.render("editevent.ejs", {
-        title: "Edit Event",
-        event
+      res.render('editevent.ejs', {
+        title: 'Edit Event',
+        event,
       });
     });
 };
@@ -63,60 +57,67 @@ export const getEditEventById = (req, res) => {
 export const postEditEventById = (req, res) => {
   // handle errors
   const { eventid } = req.params;
-  var form = new formidable.IncomingForm();
-  form.parse(req, function(err, fields, files) {
-    const path = files.background.path;
-    const title = fields.title;
-    const location = fields.location;
-    console.log(fields.startDate)
-    const startDate = new Date(Date.parse(fields.startDate));
-    const endDate = new Date(Date.parse(fields.endDate));
-    const summary = fields.summary;
-    console.log(path)
-    if (path) {
-      cloudinary.v2.uploader.upload(path, function(e, result) {
-        if (eventid){
-        eventsCollection
+  const form = new formidable.IncomingForm();
+  form.parse(req, async (err, fields, files) => {
+    let path;
+    if (files && files.background && files.background.path) {
+      ({ path } = files.background);
+    }
+    const {
+      title,
+      location,
+      startDate,
+      endDate,
+      summary,
+    } = fields;
+
+    let uri;
+    try {
+      if (path) {
+        const result = await promisify(cloudinary.v2.uploader.upload)(path);
+        if (result && result.secure_url) {
+          uri = result.secure_url;
+        }
+      }
+      if (eventid) {
+        await eventsCollection
           .doc(eventid)
-          .set({
+          .update({
             title,
             location,
-            bannerURI: result.secure_url,
-            mobileImage: result.secure_url,
+            bannerURI: uri,
+            mobileImage: uri,
             summary,
-            startDate,
-            endDate
-          })
-          .then(() => {
-            res.redirect("/events");
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
           });
-        }
-        else{
-          eventsCollection
-            .add({
-              title,
-              location,
-              bannerURI: result.secure_url,
-              mobileImage: result.secure_url,
-              summary,
-              startDate,
-              endDate
-            })
-            .then(() => {
-              res.redirect("/events");
-            });
-        }
-      });
+      } else {
+        await eventsCollection
+          .add({
+            title,
+            location,
+            bannerURI: uri,
+            mobileImage: uri,
+            summary,
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
+          });
+      }
+      res.redirect('/events');
+    } catch (e) {
+      res.status(500).json(e);
     }
   });
 };
 
-export const postDeleteEventById = (req, res) => {
-  const eventid = req.param("eventid");
-  console.log(eventid)
-  eventsCollection
-    .doc(eventid)
-    .remove()
-    .then(() => res.redirect("/events"))
-    .catch(() => res.redirect("/events"));
+export const postDeleteEventById = async (req, res) => {
+  const { eventid } = req.params;
+  try {
+    await eventsCollection
+      .doc(eventid)
+      .delete();
+    res.redirect('/events');
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };

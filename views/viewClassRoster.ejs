@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="css/loader.css"/>
 <%- include widgets/mainNav.ejs %>
 <div class="container py-8 my-8">
-  <h1><%= Class.title %></h1>
+  <h1><%= course.title %></h1>
     <div class="my-5">
     <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
       <div class="card">
@@ -12,22 +12,22 @@
               <tr>
 
                     <td>Emails:</td>
-                <% console.log(enrolledUsers); 
-                enrolledUsers.forEach(function(user) { %>
+                <% console.log(course.students); 
+                course.students.forEach(function(user) { %>
                     <tr>
                         <%= user.email %>,
                      </tr>
                   <% }); %>
               </tr>
               <div class="col-md-8 mx-auto px-4 py-5 my-3">
-                  <p><b>Instructor:</b> <%= Class.instructor %><p>
-                  <p><b>Location:</b> <%= Class.location %><p>
-                  <p><b>Dates:</b> <%= Class.startDate %> - <%= Class.endDate%><p>
-                  <p><b>Time:</b> <%= Class.classTime %><p>
-                  <p><b>Day of the Week:</b> <%= Class.day %><p>
-                  <p><b>Enroll by:</b> <%= Class.deadline %><p>
-                  <p><b>Spots Left:</b> <%= Class.openSpots %> / <%=Class.totalSpots%> <p>
-                  <p><%= Class.details %></p>
+                  <p><b>Instructor:</b> <%= course.instructor %><p>
+                  <p><b>Location:</b> <%= course.location %><p>
+                  <p><b>Dates:</b> <%= course.startDate %> - <%= course.endDate%><p>
+                  <p><b>Time:</b> <%= course.classTime %><p>
+                  <p><b>Day of the Week:</b> <%= course.day %><p>
+                  <p><b>Enroll by:</b> <%= course.deadline %><p>
+                  <p><b>Spots Left:</b> <%= course.openSpots %> / <%=course.totalSpots%> <p>
+                  <p><%= course.details %></p>
               </div>
           </div>
       </div>
@@ -42,10 +42,10 @@
                 </tr>
             </thead>
             <tbody>
-                <% enrolledUsers.forEach(function(user) { %>
+                <% course.students.forEach(function(user) { %>
                     <tr>
                         <td>
-                            <%= user.firstName %> <%= user.lastName %>
+                            <%= user.name %>
                         </td>
                         <td>
                             <%= user.grad %>

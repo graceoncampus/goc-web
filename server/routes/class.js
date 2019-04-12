@@ -1,82 +1,67 @@
-import { lookupByUID } from '../lib';
-import _ from 'lodash';
-import moment from 'moment';
-import marked from 'marked';
-import { firestoreDB } from "../firebase"
 import formidable from 'formidable';
+import admin from 'firebase-admin';
 
-const FieldValue = require('firebase').firestore.FieldValue; //need this in order to use arrayUnion and arrayRemove
-
-var classesRef = firestoreDB.collection("classes"); //gets firestore reference to 'classes' subcollection
+const { FieldValue } = admin.firestore; // need this in order to use arrayUnion and arrayRemove
+const classesRef = admin.firestore().collection('classes'); // gets firestore reference to 'classes' subcollection
 
 /*
 * getClasses gets all the classes that are in the firestore database
 * and relevant information and sends it to be displayed
 * Used when accessing the graceoncampus.org/classes webpage
 */
-export const getClasses = (req, res) => {
-    classesRef.get().then(snapshot => { // gets and waits for all the information in classesRef
-        const classes = []; // array of all classes
-        snapshot.forEach(doc => { // each class is a document inside the subcollection 'classes'
-          let iClass;
-          if(doc.exists){ // check if document(an individual class) exists
-              iClass = doc.data(); // get class information
-
-              // get relevant data and set fields in iClass, then push individual class to be part of array classes
-              const currentUid = req.user.id
-              const allStudents = _.values(iClass.students);
-              iClass.details = iClass.details.replace(/\n/g, "<br/>");
-              iClass.isEnrolled = false;
-              iClass.id = doc.id;
-              //iClass.dates = moment(iClass.startDate).format('MMMM Do') + ' - ' + moment(iClass.endDate).format('MMMM Do');
-              //iClass.deadlineString = moment(iClass.deadline).format('MMMM Do');
-              iClass.dates = iClass.startDate.toDate().toString().slice(4, -47) + ' - ' + iClass.endDate.toDate().toString().slice(4, -47);
-              iClass.deadlineString = iClass.deadline.toDate().toString().slice(4, -47);
-              for (const student in allStudents) {
-                if (allStudents.hasOwnProperty(student)) {
-                  if (currentUid === allStudents[student].uid) {
-                     iClass.isEnrolled = true;
-                  }
-                }
-              }
-              //add individual class to list of classes
-              classes.push(iClass);
+export const getClasses = async (req, res) => {
+  try {
+    const classes = await classesRef.get();
+    const courses = [];
+    if (!classes.empty) {
+      classes.forEach((doc) => {
+        if (doc.exists) {
+          const course = doc.data();
+          course.isEnrolled = false;
+          if (course.students && course.students.find(s => s.UID === req.user.id)) {
+            course.isEnrolled = true;
           }
-        });
-        //render
-        res.render('classes.ejs', {
-          title: 'Classes',
-          classes
-        });
+          course.details = course.details.replace(/\n/g, '<br/>');
+          course.id = doc.id;
+          course.dates = `${course.startDate.toDate().toString().slice(4, -47)} - ${course.endDate.toDate().toString().slice(4, -47)}`;
+          course.deadlineString = course.deadline.toDate().toString().slice(4, -47);
+          courses.push(course);
+        }
+      });
+    }
+    res.render('classes.ejs', {
+      title: 'Classes',
+      classes: courses,
     });
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };
 
 /*
 * getEditClassById accesses a specific class based on their classID and passes
 * the information to be rendered when accessing graceoncampus.org/c/edit/[classID]
 */
-export const getEditClassById = (req, res) => {
-    const { classID } = req.params; // get classID
-    classesRef
+export const getEditClassById = async (req, res) => {
+  const { classID } = req.params; // get classID
+  try {
+    const courseDoc = await classesRef
       .doc(classID)
-      .get()
-      .then(doc => { //doc is the specific class information
-          let Class;
-          if(doc.exists){
-              Class = doc.data();
-              Class.startDate = Class.startDate.toDate().toISOString().replace(".000Z", "");
-              Class.endDate = Class.endDate.toDate().toISOString().replace(".000Z", "");
-              Class.deadline = Class.deadline.toDate().toISOString().replace(".000Z", "");
-              console.log(Class.startDate);
-              console.log(Class.endDate);
-              Class.id = classID
-              //render
-              res.render('editclass.ejs', {
-                  title: 'Edit Class',
-                  Class
-              });
-          }
+      .get();
+    if (courseDoc.exists) {
+      const course = courseDoc.data();
+      course.startDate = course.startDate.toDate().toISOString().replace('.000Z', '');
+      course.endDate = course.endDate.toDate().toISOString().replace('.000Z', '');
+      course.deadline = course.deadline.toDate().toISOString().replace('.000Z', '');
+      course.id = courseDoc.id;
+      res.render('editclass.ejs', {
+        title: 'Edit Class',
+        Class: course,
       });
+    }
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };
 
 /*
@@ -85,202 +70,163 @@ export const getEditClassById = (req, res) => {
 ***********possibility of helper function that applies to both of them
 */
 export const postEditClassById = (req, res) => {
-    const { classID } = req.params;
-    //get information filled out in form:
-    var form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields){
-          const title = fields.title;
-          const classTime = fields.classTime;
-          const startDate = new Date(fields.startDate);
-          const day = fields.day;
-          const deadline = new Date(fields.deadline);
-          const endDate = new Date(fields.endDate);
-          const instructor = fields.instructor;
-          const location = fields.location;
-          const totalSpots = fields.totalSpots;
-          const openSpots = totalSpots - Number(fields.numStudents);
-          const details = fields.details;
-          //create new class with this information
-          classesRef.doc(classID).update({
-            "title": title,
-            "classTime": classTime,
-            "startDate": startDate,
-            "day": day,
-            "deadline": deadline,
-            "endDate": endDate,
-            "instructor": instructor,
-            "location": location,
-            "totalSpots": totalSpots,
-            "openSpots": openSpots,
-            "details": details
-          }).then(() => {
-            //redirect to classes if successful
-            res.redirect('/classes');
-          })
-        });
+  const { classID } = req.params;
+  // get information filled out in form:
+  const form = new formidable.IncomingForm();
+  form.parse(req, async (err, fields) => {
+    const {
+      title,
+      location,
+      instructorName: instructor,
+      capacity: totalSpots,
+      day,
+      time: classTime,
+      numStudents,
+      startDate,
+      deadline,
+      endDate,
+      details,
+    } = fields;
+    try {
+      await classesRef.doc(classID).update({
+        title,
+        location,
+        instructor,
+        openSpots: totalSpots - Number(numStudents),
+        totalSpots,
+        day,
+        classTime,
+        deadline: new Date(deadline),
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        details,
+      });
+      res.redirect('/classes');
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  });
 };
 export const getClassById = (req, res) => {
-    var classID = req.param("classID");
-    // ClassDB.findOne({firebaseID: classID}, function (err, result) {
-    //     if (err) {
-    //         res.render('error.ejs', {title: 'Error', message: "Specified class does not exist." });
-    //     }
-    //     else {
-    //         var instructor = result.instructorUID
-    //         if (!common.isAlphaOrParen) {
-    //             instructor = common.lookupByUID(result.instructorUID)
-    //         }
-    //         var enrolled = _.any(result.enrolledUsers, function (v) {
-    //             return v === req.user.firebaseID;
-    //         });
-    //         result.instructor = instructor;
-    //         var enrolledUsers = common.joinUserIds(result.enrolledUsers);
-    //         res.render('class.ejs', {
-    //             Class: result,
-    //             enrolled: enrolled,
-    //             enrolledUsers: enrolledUsers,
-    //             instructor: instructor,
-    //             deadlineString: moment.unix(result.deadline).format('MMMM Do'),
-    //             formattedText: marked(result.details),
-    //             title: result.title,
-    //         });
-    //     }
-    // });
+  const classID = req.param('classID');
+  // ClassDB.findOne({firebaseID: classID}, function (err, result) {
+  //     if (err) {
+  //         res.render('error.ejs', {title: 'Error', message: "Specified class does not exist." });
+  //     }
+  //     else {
+  //         var instructor = result.instructorUID
+  //         if (!common.isAlphaOrParen) {
+  //             instructor = common.lookupByUID(result.instructorUID)
+  //         }
+  //         var enrolled = _.any(result.enrolledUsers, function (v) {
+  //             return v === req.user.firebaseID;
+  //         });
+  //         result.instructor = instructor;
+  //         var enrolledUsers = common.joinUserIds(result.enrolledUsers);
+  //         res.render('class.ejs', {
+  //             Class: result,
+  //             enrolled: enrolled,
+  //             enrolledUsers: enrolledUsers,
+  //             instructor: instructor,
+  //             deadlineString: moment.unix(result.deadline).format('MMMM Do'),
+  //             formattedText: marked(result.details),
+  //             title: result.title,
+  //         });
+  //     }
+  // });
 };
 /*
 enrollStudent gets the first and last names of the user as well as their uid.
 It appends a map of the student uid and name to the specific class and
 updates the number of open spots
 */
-export const enrollStudent = (req, res) => {
-    const classKey = req.body.id
-    const numSpots = parseInt(req.body.openSpots)
-    const newOpenSpots = numSpots - 1;
-    const fullName = req.user.firstName + " " + req.user.lastName;
-    const uid = req.user.id;
-    // create a new map with uid and full name
-    // this is the format students are stored in their class student array
-    const unionVal = {
-      'uid': uid,
-      'name': fullName
-    };
-    classesRef.doc(classKey).update({
+export const enrollStudent = async (req, res) => {
+  const classKey = req.body.id;
+  const numSpots = parseInt(req.body.openSpots, 10);
+  const newOpenSpots = numSpots - 1;
+  const fullName = `${req.user.firstName} ${req.user.lastName}`;
+  const uid = req.user.id;
+  // create a new map with uid and full name
+  // this is the format students are stored in their class student array
+  const unionVal = {
+    uid,
+    name: fullName,
+  };
+  try {
+    await classesRef.doc(classKey).update({
       openSpots: newOpenSpots,
-      students: FieldValue.arrayUnion(unionVal) //appends to array if value doesn't exist already
-    }).then(() => {
-      console.log("success");
-    }).catch(err => console.log("error message: ", err.message));
-    res.json('success')
+      students: FieldValue.arrayUnion(unionVal),
+    });
+    res.json('success');
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };
 
 /*
 unenrollStudent gets the user name and uid
 It makes sure the user is on the list and then takes it off the student list
 */
-export const unenrollStudent = (req, res) => {
-    const classKey = req.body.id
-    const numSpots = parseInt(req.body.openSpots)
-    const newOpenSpots = numSpots + 1;
-    const fullName = req.user.firstName + " " + req.user.lastName;
-    const uid = req.user.id;
-    const unionVal = {
-      'uid': uid,
-      'name': fullName
-    };
-    classesRef.doc(classKey).update({
+export const unenrollStudent = async (req, res) => {
+  const classKey = req.body.id;
+  const numSpots = parseInt(req.body.openSpots, 10);
+  const newOpenSpots = numSpots + 1;
+  const fullName = `${req.user.firstName} ${req.user.lastName}`;
+  const uid = req.user.id;
+  const unionVal = {
+    uid,
+    name: fullName,
+  };
+  try {
+    await classesRef.doc(classKey).update({
       openSpots: newOpenSpots,
-      students: FieldValue.arrayRemove(unionVal)
-    }).then(() => {
-      console.log("success");
-    }).catch(err => console.log("error message: ", err.message));
-    res.json('success')
-}
-
-/*A function that doesn't do much*/
-export const unsignupClassById = (req, res) => {
-    var classID = req.param("classID");
-    // ClassDB.findOneAndUpdate({ firebaseID: classID }, {
-    //     $pull: { "enrolledUsers": req.user.firebaseID }
-    // }, function (err, c) {
-    //     if (err) {
-    //         res.render('error.ejs', {title: 'Error', message: "Specified class does not exist." });
-    //     }
-    //     else {
-    //       classesRef.child(classID)
-    //         .update({
-    //           enrolledUsers: c.enrolledUsers.slice()
-    //         })
-    //         .then(function () {
-    //           res.redirect('/c/' + classID);
-    //         }, function (error) {
-    //           res.redirect('/c/' + classID);
-    //         });
-    //     }
-    // });
+      students: FieldValue.arrayRemove(unionVal),
+    });
+    res.json('success');
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };
-
-/*A function that doesn't do much*/
-export const dropUserFromClass = (req, res) => {
-    var classID = req.param("classID");
-    var userid = req.param("userid");
-    // ClassDB.findOneAndUpdate({firebaseID: classID}, {
-    //     $pull: { "enrolledUsers": userid }
-    // }, function (err, c) {
-    //     if (err) {
-    //         res.render('error.ejs', {title: 'Error', message: "Specified class does not exist." });
-    //     }
-    //     else {
-    //         classesRef.child(classID)
-    //           .update({
-    //             enrolledUsers: c.enrolledUsers
-    //           })
-    //           .then(function () {
-    //             res.redirect('/c/' + classID);
-    //           }, function (error) {
-    //             res.redirect('/c/' + classID);
-    //           });
-    //     }
-    // });
-};
-
 /*
 * postClass gets information and creates a new class from that information
 ***********possibility of helper function that applies to both this and postEditClassById
 */
 export const postClass = (req, res) => {
-    var form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields) {
-        const title = fields.title;
-        const location = fields.location;
-        const instructor = fields.instructorName;
-        const openSpots = fields.capacity;
-        const totalSpots = fields.capacity;
-        const day = fields.day;
-        const classTime = fields.time;
-        const startDate = new Date(fields.startDate);
-        const deadline = new Date (fields.deadline);
-        const endDate = new Date(fields.endDate);
-        const details = fields.details;
-        const students = [];
-        var newClassRef = classesRef.doc(); //create new document under 'classes'
-        newClassRef.set({
-            title: title,
-            location: location,
-            instructor: instructor,
-            openSpots: openSpots,
-            totalSpots: totalSpots,
-            day: day,
-            classTime: classTime,
-            deadline: deadline,
-            startDate: startDate,
-            endDate: endDate,
-            details: details,
-            students: students
-        }).then(() => {
-            //redirect to /classes if successful
-            res.redirect('/classes');
-        })
-    });
+  const form = new formidable.IncomingForm();
+  form.parse(req, async (err, fields) => {
+    if (err) res.status(500).json('could not parse fields');
+    const {
+      title,
+      location,
+      instructorName: instructor,
+      capacity: totalSpots,
+      day,
+      time: classTime,
+      startDate,
+      deadline,
+      endDate,
+      details,
+    } = fields;
+    try {
+      await classesRef.add({
+        title,
+        location,
+        instructor,
+        openSpots: totalSpots,
+        totalSpots,
+        day,
+        classTime,
+        deadline: new Date(deadline),
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        details,
+        students: [],
+      });
+      res.redirect('/classes');
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  });
 };
 
 /*
@@ -290,67 +236,53 @@ export const postClass = (req, res) => {
 ***************INEFFICIENT SEARCH: currently looping through every single user and comparing every uid
 ***********************************there definitely should be an quicker way to do it
 */
-export const getViewClassRosterById = (req, res) => {
-  console.log("called");
-    var classID = req.params.classID;
-    var enrolledUsers = [];
-    let Class;
-    classesRef.doc(classID).get().then(function(snapshot){
-      if(snapshot.exists){
-          Class = snapshot.data();
-          Class.id = classID;
-          Class.startDate = Class.startDate.toDate().toString().slice(4, -42);
-          Class.endDate = Class.endDate.toDate().toString().slice(4, -42);
-          Class.deadline = Class.deadline.toDate().toString().slice(4, -42);
-          var uids = [];
-          Class.students.forEach(function(element){
-            uids.push(element.uid);
-          });
-          /*start of area that should be changed*/
-          firestoreDB.collection("users").get().then(snapshot =>{
-            snapshot.forEach(doc => {
-              let student;
-              if(doc.exists){
-                student = doc.data();
-                if (uids.includes(doc.id)){
-                  console.log(doc);
-                  enrolledUsers.push(student);
-                }
-              }
-            })
-            res.render('viewClassRoster.ejs', {
-              title: 'View Class',
-              Class, enrolledUsers
-            });
-          }).catch(err => console.log(err.message));
-          /*end of area that should be changed*/
-      }else{
-        console.log("FAILED RIP RIP RIP");
-      }
-    }).catch(err=> console.log('hi', err.message));
+export const getViewClassRosterById = async (req, res) => {
+  const { classID } = req.params;
+  if (!classID) res.status(500).json('No ID');
+  try {
+    const classSnapshot = await classesRef.doc(classID).get();
+    if (classSnapshot.exists) {
+      const course = classSnapshot.data();
+      course.id = classSnapshot.id;
+      course.startDate = course.startDate.toDate().toString().slice(4, -42);
+      course.endDate = course.endDate.toDate().toString().slice(4, -42);
+      course.deadline = course.deadline.toDate().toString().slice(4, -42);
+      const userDataPromises = course.students.reduce((result, student) => {
+        if (student.UID) result.push(admin.firestore().collection('users').doc(student.UID).get());
+        return result;
+      }, []);
+      const userData = await Promise.all(userDataPromises);
+      userData.forEach((student) => {
+        const { id } = student;
+        const data = student.data();
+        const idx = course.students.findIndex(s => s.UID === id);
+        if (idx > -1) {
+          course.students[idx] = {
+            ...course.students[idx],
+            ...data,
+          };
+        }
+      });
+      res.render('viewClassRoster.ejs', {
+        title: 'View Class',
+        course,
+      });
+    } res.status(500).json('No such class exists');
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };
 
 /*
 * Deletes the class given an id
 */
-export const postDeleteClassById = function(req, res) {
-    const { classID } = req.params;
-    console.log(classID);
-    classesRef.doc(classID).delete().then(function() {
-        console.log("Document successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing document: ", error);
-    });
-    res.json('success')
-    // ClassDB.findOneAndRemove({firebaseID: classID}, function (err, result) {
-    //     if (!err) {
-    //       firebaseDB.ref("events/" + result.firebaseID)
-    //         .remove()
-    //         .then(function () {
-    //           res.redirect('/classes');
-    //         }, function (error) {
-    //           res.redirect('/classes');
-    //         });
-    //     }
-    // });
+export const postDeleteClassById = async (req, res) => {
+  const { classID } = req.params;
+  if (!classID) res.status(500).json('No ID');
+  try {
+    await classesRef.doc(classID).delete();
+    res.json('success');
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };
