@@ -75,7 +75,7 @@
   $('#form').submit(function(e) {
     e.preventDefault();
     $('#invite').html('<div class="loader">Loading...</div>')
-    $.post('/ridesNotify', $('#form').serialize(), function() {
+    $.post('/rides/notify', $('#form').serialize(), function() {
       $('#invite').addClass('success')
       $('#invite').html('Notified&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
     })

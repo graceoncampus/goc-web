@@ -1,22 +1,27 @@
-var passport = require('passport');
-var admin = require('firebase-admin');
+import admin from 'firebase-admin';
+
+const passport = require('passport');
+
+const usersRef = admin.firestore().collection('users');
 
 const init = () => {
-    passport.serializeUser(function (uid, done) {
-        done(null, uid);
-    });
+  passport.serializeUser((uid, done) => {
+    done(null, uid);
+  });
 
-    passport.deserializeUser(function (uid, done) {
-        admin.database().ref('users/' + uid).once('value')
-        .then(function(usr) {
-            const userz = usr.val();
-            userz.uid = uid
-            done(null, userz)
+  passport.deserializeUser((uid, done) => {
+    if (uid) {
+      usersRef.doc(uid).get()
+        .then((usr) => {
+          const userz = usr.data();
+          userz.id = uid;
+          done(null, userz);
         })
-        .catch(function (error) {
-            done(error, null)
+        .catch((error) => {
+          done(error, null);
         });
-    });
+    }
+  });
 };
 
 export default init;

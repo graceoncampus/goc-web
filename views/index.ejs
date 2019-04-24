@@ -38,10 +38,10 @@ Grace on Campus - Christian Fellowship at UCLA
         <% carousels.forEach(function(v,i){ %>
             <% if (i===0) { %>
                 <div class="carousel-item active">
-                    <% if (v.URI) { %>
-                    <a href="<%= v.URI %>"><img class="d-block w-100" src="<%= v.imageURI %>" alt="<%= v.headline %>"></a>
+                    <% if (v.uri) { %>
+                    <a href="<%= v.uri %>"><img class="d-block w-100" src="<%= v.image %>" alt="<%= v.headline %>"></a>
                     <% } else { %>
-                    <img class="d-block w-100" src="<%= v.imageURI %>" alt="<%= v.headline %>">
+                    <img class="d-block w-100" src="<%= v.image %>" alt="<%= v.headline %>">
                     <% } %>
                     <div class="carousel-caption">
                         <h1>
@@ -53,10 +53,10 @@ Grace on Campus - Christian Fellowship at UCLA
                 </div>
             <% } else { %>
                 <div class="lazy carousel-item">
-                    <% if (v.URI) { %>
-                    <a href="<%= v.URI %>"><img class="d-block w-100" data-src="<%= v.imageURI %>" alt="<%= v.headline %>"></a>
+                    <% if (v.uri) { %>
+                    <a href="<%= v.uri %>"><img class="d-block w-100" data-src="<%= v.image %>" alt="<%= v.headline %>"></a>
                     <% } else { %>
-                    <img class="d-block w-100" data-src="<%= v.imageURI %>" alt="<%= v.headline %>">
+                    <img class="d-block w-100" data-src="<%= v.image %>" alt="<%= v.headline %>">
                     <% } %>
                     <div class="lazy carousel-caption">
                         <h1>

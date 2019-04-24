@@ -1,99 +1,69 @@
-﻿import express from 'express';
-const router = express();
+import express from 'express';
 
+import { isLoggedIn, isNotLoggedIn } from '../lib';
+import { getAnnouncements } from './announcements';
+import { getCalendar, updateCalendar } from './calendar';
 import {
-    isLoggedIn,
-    isNotLoggedIn
-} from '../lib';
+  getLogin,
+  getLoginRedirect,
+  postLogin,
+  postLoginRedirect,
+  getSignup,
+  postSignup,
+  getInvite,
+  postInvite,
+  getForgot,
+  getLogout,
+} from './auth';
 import {
-    getAnnouncements
-} from './announcements'
+  getEvents,
+  getEditEventById,
+  postEditEventById,
+  postDeleteEventById,
+} from './event';
 import {
-    getCalendar,
-    updateCalendar
-} from './calendar'
+  getClassById,
+  getClasses,
+  getEditClassById,
+  postClass,
+  postEditClassById,
+  postDeleteClassById,
+  enrollStudent,
+  unenrollStudent,
+  getViewClassRosterById,
+} from './class';
 import {
-    postNotify,
-    postRidesNotify
-} from './notifications'
+  getRoot,
+  postNewVisitor,
+  getLeadership,
+  getAbout,
+  getConnect,
+  getCarousels,
+  postCarousel,
+  getEditCarouselById,
+  postEditCarouselById,
+  rmCarouselById,
+  get404,
+} from './home';
 import {
-    getLogin,
-    getLoginRedirect,
-    postLogin,
-    postLoginRedirect,
-    getSignup,
-    postSignup,
-    getInvite,
-    postInvite,
-    getForgot,
-    getLogout
-} from './auth.js';
+  getSermons,
+  postSermon,
+  getEditSermonById,
+  postEditSermonById,
+} from './sermon';
+import { getProfile, postProfileEdit } from './user';
 import {
-    getEvents,
-    postEvent,
-    getEditEventById,
-    postEditEventById,
-    postDeleteEventById
-} from './event.js';
-import {
-    getClassById,
-    getClasses,
-    getEditClassById,
-    postClass,
-    postEditClassById,
-    postDeleteClassById,
-    enrollStudent,
-    unenrollStudent,
-    getViewClassRosterById
-} from './class.js';
-import {
-    getRoot,
-    postNewVisitor,
-    getLeadership,
-    getAbout,
-    getConnect,
-    getCarousels,
-    postCarousel,
-    getEditCarouselById,
-    postEditCarouselById,
-    rmCarouselById,
-    get404
-} from './home.js';
-import {
-    getSermons,
-    postSermon,
-    getEditSermonById,
-    postEditSermonById
-} from './sermon.js';
-import {
-    getProfile,
-    postProfileEdit,
-    postRoster,
-    getRoster,
-    getUserById
-} from './user.js';
-import {
-    getRides,
-    getRidesSignup,
-    updateRides
-} from './rides.js';
-import {
-    getPostsPaginated,
-    getPosts,
-    getPost
-} from './blog.js';
-import {
-    get3On3,
-    post3On3
-} from './3on3.js';
+  getRides, getRidesSignup, updateRides, notifyRiders,
+} from './rides';
+import { getPosts, getPost } from './blog';
 import firebaseLogin from '../auth/login';
 
+const router = express();
+
 router.get('/', getRoot);
-router.get('/3on3', get3On3);
-router.post('/3on3', post3On3);
-router.get('/announcements', isLoggedIn, getAnnouncements)
-router.get('/calendar', getCalendar)
-router.post('/calendar/update', isLoggedIn, updateCalendar)
+router.get('/announcements', isLoggedIn, getAnnouncements);
+router.get('/calendar', getCalendar);
+router.post('/calendar/update', isLoggedIn, updateCalendar);
 
 router.post('/newvisitor', postNewVisitor);
 router.get('/leadership', getLeadership);
@@ -103,18 +73,23 @@ router.get('/connect', getConnect);
 router.get('/rides', getRides);
 router.get('/rides/signup', getRidesSignup);
 router.post('/rides/update', updateRides);
+router.post('/rides/notify', notifyRiders);
 // router.post('/rides/delete', rides.delete);
 
 router.get('/carousels', isLoggedIn, getCarousels);
 router.post('/carousels', isLoggedIn, postCarousel);
-router.get('/carousels/edit/:cid',isLoggedIn, getEditCarouselById);
-router.post('/carousels/edit/:cid',isLoggedIn, postEditCarouselById);
-router.get('/carousels/rm/:rmid',isLoggedIn, rmCarouselById);
+router.get('/carousels/edit/:cid', isLoggedIn, getEditCarouselById);
+router.post('/carousels/edit/:cid', isLoggedIn, postEditCarouselById);
+router.get('/carousels/rm/:cid', isLoggedIn, rmCarouselById);
 
 router.get('/login', isNotLoggedIn, getLogin);
 router.post('/login', firebaseLogin.authenticate('login'), postLogin);
 router.get('/login/redir/*', isNotLoggedIn, getLoginRedirect);
-router.post('/login/redir/*', firebaseLogin.authenticate('login'), postLoginRedirect);
+router.post(
+  '/login/redir/*',
+  firebaseLogin.authenticate('login'),
+  postLoginRedirect,
+);
 router.get('/signup', isNotLoggedIn, getSignup);
 router.post('/signup', postSignup);
 router.get('/logout', isLoggedIn, getLogout);
@@ -125,9 +100,9 @@ router.get('/forgot', isNotLoggedIn, getForgot);
 // user
 router.get('/profile', isLoggedIn, getProfile);
 router.post('/profile', isLoggedIn, postProfileEdit);
-router.get('/roster', isLoggedIn, getRoster);
+// router.get('/roster', isLoggedIn, getRoster);
 router.get('/events', getEvents);
-router.post('/events', postEvent);
+router.post('/events', postEditEventById);
 router.get('/e/edit/:eventid', getEditEventById);
 router.post('/e/edit/:eventid', postEditEventById);
 router.post('/e/delete/:eventid', postDeleteEventById);
@@ -147,11 +122,9 @@ router.get('/sermons', getSermons);
 router.post('/sermons', postSermon);
 router.get('/sermons/edit/:sermonid', getEditSermonById);
 router.post('/sermons/edit/:sermonid', postEditSermonById);
-router.post('/notifications', postNotify);
-router.post('/ridesNotify', postRidesNotify);
 
-//blog
-router.get('/blog/:postID', getPost)
+// blog
+router.get('/blog/:postID', getPost);
 router.get('/blog/', getPosts);
 router.get('/blog/page/:page', getPosts);
 
