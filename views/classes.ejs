@@ -43,12 +43,16 @@
                 <a href="/c/edit/<%= Class.id %>">Edit</a><br/>
               </div>
             <% } %>
-            <% if (Class.isEnrolled && (user && !(user.permissions.admin || user.permissions.classes))) { %>
+          <% if (user && (user.permissions.admin || user.permissions.classes)) { %>
+            <a href="/c/view/<%= Class.id %>">View Class Information</a><br/>
+            <% } %>
+            <% if (Class.isEnrolled/*&& (user && !(user.permissions.admin ||user.permissions.classes))*/) { %>
               <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="unenroll(this)" class="float-right btn-primary col-lg-3 mt-3 red">Unenroll</button>
-              <% } else if (Class.openSpots > 0 && (user && !(user.permissions.admin || user.permissions.classes))) { %>
+              <%} else if (Class.openSpots > 0 && (user/* && !(user.permissions.admin || user.permissions.classes)*/)) { %>
                 <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="enroll(this)" class="float-right btn-primary col-lg-3 mt-3">Enroll</button>
-              <% } else if (user && (user.permissions.admin || user.permissions.classes)) { %>
-                <a href="/c/view/<%= Class.id %>">View Class Information</a><br/>
+              <% } %>
+              <% if (user && (user.permissions.admin || user.permissions.classes)) { %>
+                <button newBut= "<%= Class.id %>" onClick="deleteButton(this)" class="float-left btn-primary col-lg-3 mt-3">Delete</button>
                 <% } %>
           </div>
         </div>
@@ -116,6 +120,14 @@
       $.post('/classes/unenroll', { openSpots: openSpots, id: id }, function(data) {
           if(data==='success') location.reload()
       }, 'json');
+    }
+    function deleteButton(claz) {
+      if(confirm("Are you sure you want to delete this class?")){
+      var id = claz.getAttribute("newBut");
+        $.post(`/c/delete/${id}`, {}, function(data) {
+            if(data==='success') location.reload()
+        }, 'json');
+      }
     }
 </script>
 </html>

@@ -2,20 +2,16 @@
 ## Installation
 
 1. Install [Node.js](https://nodejs.org/en/download/)
-2. Install [MongoDB](https://www.mongodb.com/download-center?jmp=nav#community)
-3. Initialize MongoDB:
- * [Mac](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#run-mongodb)
- * [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#run-mongodb)
-4. Install packages
+2. Install packages
 ```shell
 cd goc-web
-npm i
+yarn
 ```
-5. :wink:
+3. :wink:
  move the two config files to `/server/config/`
+ copy .env.example into .env and fill out env variables
 
 ## Developing
 ```shell
-./env.sh or env.bat
 npm run dev
 ```
