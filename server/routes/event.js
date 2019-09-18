@@ -11,8 +11,8 @@ const getEventFromDoc = (doc, rawSummary) => {
   let event;
   if (doc.exists) {
     event = doc.data();
-    const startdate = moment.utc(event.startDate.toDate());
-    const enddate = moment.utc(event.endDate.toDate());
+    const startdate = moment(event.startDate.toDate());
+    const enddate = moment(event.endDate.toDate());
 
     event.summary = replaceURLsWithLinks(event.summary);
     event.summary = !rawSummary
