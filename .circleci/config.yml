@@ -26,7 +26,7 @@ jobs:
     steps:
       - run:
           name: Deploy
-          command: ssh -v $GOC_USER@$GOC_IP "cd $GOC_DIR; git pull; echo $firebase_config | base64 --decode > server/config/firebase.json; echo $google_config | base64 --decode > server/config/$google_file_name; echo $env_file | base64 --decode > .env; pm2 stop $GOC_APP_NAME; yarn; yarn run prod; pm2 restart $GOC_APP_NAME; node ./devscripts/update-sermons.js"
+          command: ssh -v $GOC_USER@$GOC_IP "cd $GOC_DIR; git pull; echo $firebase_config | base64 --decode > server/config/firebase.json; echo $google_config | base64 --decode > server/config/$google_file_name; echo $env_file | base64 --decode > .env; yarn; yarn run prod; pm2 reload $GOC_APP_NAME"
 workflows:
    version: 2
    build-deploy:
