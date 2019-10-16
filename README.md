@@ -12,6 +12,8 @@ yarn
  copy .env.example into .env and fill out env variables
 
 ## Developing
+
+To start dev server on local machine, run the below and check `localhost:3000`
 ```shell
-npm run dev
+yarn && yarn start
 ```
