@@ -6,8 +6,13 @@
   <h1>Classes</h1>
 </div>
 <div class="container">
+  <% if (!user) { %>
+    <div class="col-md-8 mx-auto px-4 pt-5 mt-3">
+        <h4 class="text-center">You must be logged in in order to enroll in classes.</h4>
+    </div>
+  <% } %>
   <div class="row">
-    <div class="col-md-8 mx-auto px-4 py-5 my-3">
+    <div class="col-md-8 mx-auto px-4 py-4 my-3">
       <% classes.forEach(function(Class){ %>
         <div class="card w-100 mb-4">
           <div class="card-body">
@@ -32,7 +37,7 @@
             <h6 class="card-subtitle my-2 text-muted">Spots available:
               <%= Class.openSpots %>
             </h6>
-            <h6 class="card-subtitle mb-2 text-muted">Enroll by:
+            <h6 class="card-subtitle my-2 text-muted">Enroll by:
               <%= Class.deadlineString %>
             </h6>
             <p class="card-text mt-4">

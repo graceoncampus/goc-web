@@ -11,7 +11,7 @@ export const getSermons = async (req, res) => {
     const snapshot = await sermonRef.orderBy('date', 'desc').get();
     if (!snapshot.empty) {
       sermons = snapshot.docs.map(s => ({
-        datestring: moment(s.data().date).format('M/D/YY'),
+        datestring: moment(s.data().date.toDate()).format('M/D/YY'),
         ...s.data(),
       }));
     }
