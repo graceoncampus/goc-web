@@ -5,7 +5,7 @@
 <%- include widgets/mainNav.ejs %>
 <div class="container my-5 py-5">
 	<div class="col-lg-4 col-md-7 mx-auto text-center">
-		<h1 class="mb-5">Welcome Back</h1>
+		<h1 class="mb-5">Welcome</h1>
 		<div class="mb-2 alert alert-danger"></div>
 		<form id="form">
 			<div class="text-left form-group">
@@ -37,10 +37,10 @@
 		};
 		firebase.initializeApp(config);
 	});
-	
+
 	$('#form').submit(function(e){
 		$('#login').html('<div class="loader">Loading...</div>')
-		$('.alert').hide() 
+		$('.alert').hide()
 		$('.alert').html('')
     	e.preventDefault();
 		var email = $('#email').val()
@@ -58,8 +58,8 @@
 						$('html, body').animate({
 							scrollTop: $(".alert").offset().top
 						}, 750);
-						$('.alert').show() 
-						$('.alert').html(data) 
+						$('.alert').show()
+						$('.alert').html(data)
 					}
 					else {
 						$('#login').addClass('success')
@@ -73,7 +73,7 @@
 			$('#login').html('Log In')
 			var errorCode = error.code;
 			var errorMessage = error.message;
-			$('.alert').show() 
+			$('.alert').show()
 			$('.alert').html(errorMessage);
 		});
 	});
