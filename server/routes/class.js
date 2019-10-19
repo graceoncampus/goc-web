@@ -1,5 +1,6 @@
 import formidable from 'formidable';
 import admin from 'firebase-admin';
+import moment from 'moment';
 
 const { FieldValue } = admin.firestore; // need this in order to use arrayUnion and arrayRemove
 const classesRef = admin.firestore().collection('classes'); // gets firestore reference to 'classes' subcollection
@@ -18,13 +19,15 @@ export const getClasses = async (req, res) => {
         if (doc.exists) {
           const course = doc.data();
           course.isEnrolled = false;
-          if (course.students && course.students.find(s => s.UID === req.user.id)) {
-            course.isEnrolled = true;
+          if (req.user) {
+            if (course.students && course.students.find(s => (s.uid === req.user.id || s.UID === req.user.id ))) {
+              course.isEnrolled = true;
+            }
           }
           course.details = course.details.replace(/\n/g, '<br/>');
           course.id = doc.id;
-          course.dates = `${course.startDate.toDate().toString().slice(4, -47)} - ${course.endDate.toDate().toString().slice(4, -47)}`;
-          course.deadlineString = course.deadline.toDate().toString().slice(4, -47);
+          course.dates = `${moment(course.startDate.toDate()).format('M/D/YY')} - ${moment(course.endDate.toDate()).format('M/D/YY')}`;
+          course.deadlineString = moment(course.deadline.toDate()).format('M/D/YY');
           courses.push(course);
         }
       });
