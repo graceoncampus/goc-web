@@ -49,7 +49,7 @@ const sendDriverEmail = (car, date, emailMessage) => {
   ) {
     const { name, email } = car.driver;
     const carRiders = car.riders;
-    const formattedDate = moment.unix(date).format('MM/DD');
+    const formattedDate = moment(date).format('M/D/YY');
     const message = `Hi ${
       name
     }! :)\n\n`
@@ -170,7 +170,7 @@ export const updateRides = async (req, res) => {
       batch.set(newCarRef, {
         driver: car.driver,
       });
-      if (car.driver.sendEmail) sendDriverEmail(car, new Date(date), emailMessage);
+      if (car.driver.sendEmail) sendDriverEmail(car, date, emailMessage);
       car.riders.forEach((rider) => {
         if (rider.uid) {
           batch.update(admin.firestore().collection('users').doc(rider.uid), {
