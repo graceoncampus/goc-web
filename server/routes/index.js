@@ -65,7 +65,7 @@ router.post('/calendar/update', isLoggedIn, updateCalendar);
 router.post('/newvisitor', postNewVisitor);
 // router.get('/leadership', getLeadership);
 router.get('/about', getAbout);
-router.get('/connect', getConnect);
+router.get('/smallgroups', getConnect);
 
 router.get('/rides', getRides);
 router.get('/rides/signup', getRidesSignup);
