@@ -86,7 +86,7 @@
 }
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:not([disabled]):not(.disabled).active, .btn-primary:not([disabled]):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     background-color: #ae956b;
-    opacity: 0.5;
+    opacity: 0.7;
     cursor: pointer;
 }
 .btn-primary.outline {
@@ -120,7 +120,7 @@ a {
 a:hover {
     text-decoration: none;
     color: #ae956b;
-    opacity: 0.5;
+    opacity: 0.7;
 }
 hr {
     border-color: #ecedef
@@ -129,7 +129,7 @@ hr {
 .overlay {
     background: no-repeat center;
     background-size: cover;
-    height: 20rem;
+    height: 26rem;
     width: 100%;
     text-align: center;
 }
@@ -248,40 +248,65 @@ p {
         .hamburger--spring.is-active .hamburger-inner::after {
           top: 0;
           transition: top 0.2s cubic-bezier(0.33333, 0, 0.66667, 0.33333), transform 0.13s 0.22s cubic-bezier(0.215, 0.61, 0.355, 1);
-          transform: translate3d(0, 10px, 0) rotate(-45deg); }
+          transform: translate3d(0, 10px, 0) rotate(-45deg);
+        }
 
 .navbar {
     min-height: 1rem;
-    border-bottom: 1px solid #ecedef;
     text-align: center;
+    position: fixed;
+    top: 0;
+    z-index:10;
+    background: transparent;
+    width:100%;
+    transform: translateY(0);
+    transition: background-color 250ms linear, transform .8s, padding-bottom .8s;
 }
+
+.navbar.scrolled {
+    background-color: rgba(0,0,0,.75)!important;
+    padding-bottom: 0;
+    transform: translateY(-8px);
+    transition: background-color 250ms linear, transform .8s, padding-bottom .8s;
+
+}
+
+.navbar.static {
+    background-color: rgba(0,0,0,.75)!important;
+    padding-bottom: 0;
+    transform: translateY(-8px);
+  }
 
 .navbar-toggler {
     padding: .25rem 0 .25rem .75rem;
 }
 .nav-link {
     text-transform: uppercase;
-    color: #3a3f4b!important;
+    color: #fff!important;
 }
 .nav-link:hover {
-    color: #ad946c!important;
+    opacity: 0.7;
 }
 .active > a {
     color: #ad946c!important;
 }
+.navbar-nav > li{
+    padding-left:10px;
+    padding-right:10px;
+}
 /* Footer */
 footer {
     padding: 4rem 0 3rem;
-    border-top: 1px solid #ecedef;
+    background-color: rgba(0,0,0,.05) !important;
     margin-top: 2rem;
 }
 footer .card {
     border: 1px solid #0a2a44;
-    opacity: 0.4;
+    opacity: 1;
     transition: opacity .4s;
 }
 footer .card:hover {
-    opacity: 1
+    opacity: .7;
 }
 .custom-file-control, .custom-file-control::before {
     line-height: 2;
@@ -314,7 +339,7 @@ footer .card:hover {
             rgba(0, 0, 0, 0.5),
             rgba(0, 0, 0, 0.5)
     ),
-    url(../images/about.jpg);
+    url(../images/large.jpg);
 }
 
 #our-beliefs {
@@ -412,7 +437,8 @@ small {
     }
 }
 .card {
-    border: 1px solid #ae956b;
+    background: rgba(0,0,0,.01);
+    border: 1px solid rgba(0,0,0,.08);
 }
 #leadership {
     background-image: linear-gradient(
@@ -607,4 +633,10 @@ thead td {
 }
 .hidden {
    list-style-type: none;
+}
+.bannerContainer {
+    position: relative;
+}
+.carousel {
+    top:0;
 }

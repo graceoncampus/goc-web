@@ -7,20 +7,26 @@
 </div>
 
 <div class="container py-5 my-5">
-    <% posts.forEach(function(post) { %>
-        <div class="mx-auto col-md-8">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <img class="mb-2 float-left mr-3 img-fluid rounded-circle" src="/images/notification-icon.png"/>
-                    <div>
-                    <h5 class="mb-0"><%= post.title %></h5>
-                    <label class="mb-3"><%= post.date %></label>
-                    <p><%- post.Post %></p>
+    <% if (posts.length < 1) { %>
+        <div class="mx-auto col-md-8 text-center">
+            <h1>No new announcements!</h1>
+        </div>
+    <% } else { %>
+        <% posts.forEach(function(post) { %>
+            <div class="mx-auto col-md-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <img class="mb-2 float-left mr-3 img-fluid rounded-circle" src="/images/notification-icon.png"/>
+                        <div>
+                        <h5 class="mb-0"><%= post.title %></h5>
+                        <label class="mb-3"><%= post.date %></label>
+                        <p><%- post.Post %></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    <% }) %>
+        <% }) %>
+    <% } %>
 </div>
 <%- include widgets/footer.ejs %>
 </html>
