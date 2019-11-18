@@ -1,8 +1,8 @@
 <footer>
     <div class="container">
         <div class="row">
-            <div class="mb-4 col-3 text-dark">
-                <h5 class="pb-1">Grace on Campus</h5>
+            <div class="mb-4 col-lg-3 col-sm-6 text-dark">
+                <h5 class="pb-1"><b>Grace on Campus</b></h5>
                 <h6><i class="icon ion-clock"></i>&nbsp;&nbsp;&nbsp;Fridays at 7pm</h6>
                 <h6><i class="icon ion-ios-location" style="margin-left:2.5px"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="https://goo.gl/maps/cX1To" target="_blank">Broad Art Center 2160E</a></h6>
                 <h4><a class="mr-3" rel="noopener" href="https://www.facebook.com/GOCatUCLA" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Facebook</span><i class="icon ion-social-facebook"></i></a>
@@ -11,8 +11,8 @@
                 <a class="mr-3" rel="noopener" href="https://graceoncampusucla.wordpress.com/" target="blank"><span class="sr-only">Grace on Campus Christian Fellowship Blog</span><i class="icon ion-social-wordpress"></i></a></h4>
 
             </div>
-            <div class="mb-4 col-3 text-dark">
-                <h5 class="pb-1">Student Contact</h5>
+            <div class="mb-4 col-lg-3 col-sm-6 text-dark">
+                <h5 class="pb-1"><b>Student Contact</b></h5>
                 <h6>Caleb Ting</h6>
                 <h6><i class="icon ion-ios-telephone"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="tel:+16265322555">(626) 532-2555</a></h6>
                 <h6 class="mb-3">
@@ -45,6 +45,7 @@
         $('nav > div > ul > li > a[href="'+pathname.match(reg)+'"]').parent().addClass('active');
         $('.hamburger').click(function() {
           $('.hamburger').toggleClass("is-active");
+          $('.navbar').toggleClass("ham-is-active");
         });
     });
     $(window).scroll(function(){
