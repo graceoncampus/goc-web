@@ -64,7 +64,7 @@
     line-height: 19px;
 }
 .form-control:focus {
-    border: 1px solid #ae956b;
+    border: 1px solid #539ab9;
 }
 .form-control.red {
     border: 1px solid #b40a34!important;
@@ -76,7 +76,7 @@
     font-family: 'Akkurat';
     font-size: 12px;
     text-transform: uppercase;
-    background-color: #ae956b;
+    background-color: #539ab9;
     border-radius: 6px;
     padding: 18px 15px;
     width: 100%;
@@ -85,14 +85,14 @@
     letter-spacing: 1px;
 }
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:not([disabled]):not(.disabled).active, .btn-primary:not([disabled]):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
-    background-color: #ae956b;
+    background-color: #539ab9;
     opacity: 0.7;
     cursor: pointer;
 }
 .btn-primary.outline {
     background-color: #fff;
-    border: 1px solid #ae956b;
-    color: #ae956b;
+    border: 1px solid #539ab9;
+    color: #539ab9;
 }
 .small {
     height: 42px;
@@ -114,12 +114,12 @@ label {
     line-height: 1.1rem;
 }
 a {
-    color: #ae956b;
+    color: #539ab9;
     transition: all .3s;
 }
 a:hover {
     text-decoration: none;
-    color: #ae956b;
+    color: #539ab9;
     opacity: 0.7;
 }
 hr {
@@ -129,7 +129,7 @@ hr {
 .overlay {
     background: no-repeat center;
     background-size: cover;
-    height: 26rem;
+    height: 28rem;
     width: 100%;
     text-align: center;
 }
@@ -158,7 +158,6 @@ body{
     font-size: 1em;
 }
 
-
 h1,
 h2,
 h3,
@@ -180,8 +179,10 @@ h6, .h6 {
     line-height: 1.3em
 }
 p {
-    font-size: 20px;
+    font-size: 16px;
     line-height: 24px;
+    font-family: 'Akkurat', sans-serif;
+    /* font-family: -apple-system, 'Helvetica Neue', sans-serif; */
 }
 
 /* Navigation Bar */
@@ -215,7 +216,7 @@ p {
     .hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
       width: 28px;
       height: 2px;
-      background-color: #3a3f4b;
+      background-color: #fff;
       border-radius: 4px;
       position: absolute;
       transition-property: transform;
@@ -237,7 +238,6 @@ p {
         .hamburger--spring .hamburger-inner::after {
           top: 14px;
           transition: top 0.2s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1), transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19); }
-
       .hamburger--spring.is-active .hamburger-inner {
         transition-delay: 0.22s;
         background-color: transparent; }
@@ -257,14 +257,14 @@ p {
     position: fixed;
     top: 0;
     z-index:10;
-    background: transparent;
+    background: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,0) 100%);
     width:100%;
     transform: translateY(0);
     transition: background-color 250ms linear, transform .8s, padding-bottom .8s;
 }
 
 .navbar.scrolled {
-    background-color: rgba(0,0,0,.75)!important;
+    background-color: rgba(0,0,0,.6)!important;
     padding-bottom: 0;
     transform: translateY(-8px);
     transition: background-color 250ms linear, transform .8s, padding-bottom .8s;
@@ -272,7 +272,7 @@ p {
 }
 
 .navbar.static {
-    background-color: rgba(0,0,0,.75)!important;
+    background: rgba(0,0,0,.7)!important;
     padding-bottom: 0;
     transform: translateY(-8px);
   }
@@ -280,6 +280,7 @@ p {
 .navbar-toggler {
     padding: .25rem 0 .25rem .75rem;
 }
+
 .nav-link {
     text-transform: uppercase;
     color: #fff!important;
@@ -288,17 +289,22 @@ p {
     opacity: 0.7;
 }
 .active > a {
-    color: #ad946c!important;
+    color: #539ab9!important;
 }
 .navbar-nav > li{
     padding-left:10px;
     padding-right:10px;
 }
+.navbar.ham-is-active {
+    background-color: rgba(0,0,0,.6)
+}
+
 /* Footer */
 footer {
     padding: 4rem 0 3rem;
     background-color: rgba(0,0,0,.05) !important;
     margin-top: 2rem;
+
 }
 footer .card {
     border: 1px solid #0a2a44;
@@ -323,7 +329,7 @@ footer .card:hover {
     line-height: 19px
 }
 .custom-file-control:active {
-    border-color: #ad946c;
+    border-color: #539ab9;
 }
 .custom-file-control {
     border: 1px solid #dfe0e3;
@@ -364,7 +370,7 @@ footer .card:hover {
     height: 100%;
 }
 .rtTooltip {
-    border: 1px solid #ae956b;
+    border: 1px solid #539ab9;
 }
 .rtTooltipBrandLink {
     visibility: hidden;
@@ -494,7 +500,7 @@ thead td {
     url(../images/roster.jpg);
 }
 .list {
-    list-style: none
+    list-style: none;
 }
 .sticky-top {
     top: 15px;
@@ -519,13 +525,13 @@ thead td {
     }
 }
 #sermon-list ul {
-    list-style: none
+    padding-left: 0;
 }
 .sticky-top {
     top: 15px;
 }
 .rtTooltip {
-    border: 1px solid #ae956b;
+    border: 1px solid #539ab9;
 }
 .rtTooltipBrandLink {
     visibility: hidden;
@@ -540,6 +546,13 @@ thead td {
 .rtTooltipHeader {
     font-family: 'Akkurat';
     border-bottom: 1px solid #ecedef
+}
+.dropdown-menu {
+    border: transparent;
+    background: rgba(0, 0, 0, 0.3);
+}
+.dropdown-item {
+    color: #fff;
 }
 .dropdown-item > a:first-child {
     color: #212529;
