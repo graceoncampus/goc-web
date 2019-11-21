@@ -4,11 +4,16 @@
 </head>
 <body>
 <%- include widgets/mainNav.ejs %>
-<div class="container four-oh-four">
-    <h1>Our shepherd can't find the page you're looking for!</h1>
-    <img src="images/chrisgee.jpg" class="img-responsive">
-    <a href="/" class="btn-default">Go home</a>
+<div class="container my-5 py-5">
+    <div class="mx-auto py-3 text-center">
+        <h1>We can't find the page you're looking for!</h1>
+        <a href="/" class="btn-default">HOME</a>
+    </div>
+
 </div>
 <%- include widgets/footer.ejs %>
 </body>
+<script>
+$('nav').toggleClass('static');
+</script>
 </html>

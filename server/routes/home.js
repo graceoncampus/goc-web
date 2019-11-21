@@ -66,9 +66,9 @@ export const getAbout = (req, res) => {
     user: req.user,
   });
 };
-export const getConnect = (req, res) => {
-  res.render('connect.ejs', {
-    title: 'Connect',
+export const getSG = (req, res) => {
+  res.render('smallgroup.ejs', {
+    title: 'Small Groups',
   });
 };
 export const getCarousels = async (req, res) => {
