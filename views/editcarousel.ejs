@@ -9,11 +9,11 @@
       <form class="w-100" action="/carousels/edit/<%= carousel.id %>" enctype="multipart/form-data" method="post">
           <div class="text-left form-group">
               <label for="uri">Link </label>
-              <input id="uri" type="text" class="form-control" placeholder="/" name="uri">
+              <input id="uri" value="<%= carousel.uri %>" type="text" class="form-control" placeholder="/" name="uri">
           </div>
           <div class="text-left form-group">
               <label for="rank">Rank </label>
-              <input id="rank" type="number" class="form-control" placeholder="0" name="rank">
+              <input id="rank" value="<%= carousel.rank %>"type="number" class="form-control" placeholder="0" name="rank">
           </div>
           <label class="mb-5 custom-file">
             <input type="file" name="background" class="custom-file-input">
