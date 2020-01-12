@@ -21,6 +21,9 @@ import {
   postEditEventById,
   postDeleteEventById,
 } from './event';
+import{
+  getSmallGroups,
+}from './smallgroups';
 import {
   getClassById,
   getClasses,
@@ -37,7 +40,6 @@ import {
   postNewVisitor,
   // getLeadership,
   getAbout,
-  getSG,
   getCarousels,
   postCarousel,
   getEditCarouselById,
@@ -65,7 +67,7 @@ router.post('/calendar/update', isLoggedIn, updateCalendar);
 router.post('/newvisitor', postNewVisitor);
 // router.get('/leadership', getLeadership);
 router.get('/about', getAbout);
-router.get('/smallgroups', getSG);
+router.get('/smallgroups', getSmallGroups);
 
 router.get('/rides', getRides);
 router.get('/rides/signup', getRidesSignup);

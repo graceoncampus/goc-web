@@ -66,11 +66,6 @@ export const getAbout = (req, res) => {
     user: req.user,
   });
 };
-export const getSG = (req, res) => {
-  res.render('smallgroup.ejs', {
-    title: 'Small Groups',
-  });
-};
 export const getCarousels = async (req, res) => {
   let carousels = [];
   const snapshot = await carouselRef.orderBy('rank').get();
