@@ -1,3 +1,5 @@
+// TODO: delete updateCalendar
+
 import GoogleSpreadsheet from 'google-spreadsheet';
 import { promisify } from 'util';
 import admin from 'firebase-admin';
@@ -17,6 +19,12 @@ export const getCalendar = (req, res) => {
     }
   });
 };
+
+export const getCalendarResources = (req, res) => {
+  res.status(200);
+  res.json({ key: process.env.CALENDAR_API_KEY, email: process.env.CALENDAR_EMAIL });
+  res.end();
+}
 
 export const updateCalendar = async (req, res) => {
   const re1 = /https:\/\/docs\.google\.com\/spreadsheets\/d\//g;
