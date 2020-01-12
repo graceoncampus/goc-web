@@ -40,7 +40,6 @@ import {
   postNewVisitor,
   // getLeadership,
   getAbout,
-  //getSmallGroups,
   getCarousels,
   postCarousel,
   getEditCarouselById,
