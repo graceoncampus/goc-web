@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<%- include widgets/header.ejs %>   
+<%- include widgets/header.ejs %>
 <link rel="stylesheet" href="/css/loader.css"/>
 <%- include widgets/mainNav.ejs %>
     <div class="container my-5 py-5">
@@ -52,7 +52,7 @@
                 <button type="submit" id="update" class="btn btn-primary mb-2">Update</button>
             </div>
         </form>
-        
+
     </div>
 </div>
 <%- include widgets/footer.ejs %>
@@ -74,5 +74,6 @@
             }
         }, 'json');
     });
+    $('nav').toggleClass('static');
 </script>
 </html>

@@ -11,8 +11,12 @@
         <% if (!cars) { %>
             <p class="px-3 px-sm-0 mb-5">Rides for church this Sunday haven't been posted yet. Please check again later!</p>
         <% } %>
-        <h5 class="px-3 px-sm-0 mb-5">If you would like a ride to church, sign up
-            <a href="/rides/signup" target="_blank">here</a>.</h5>
+        <div class="px-5 mb-3 text-center">
+            <h1 class="mb-4">Sign up for a ride to church</h1>
+            <p class="mb-0">As a ministry of Grace Community Church, we provide rides to our church every Sunday.</p>
+            <p>See you there!</p>
+            <a href="/rides/signup" target="_blank" class="btn btn-primary mb-5 col-sm-3">Sign Up</a>
+        </div>
         <% if (cars) { %>
             <table class="table table-striped">
                     <tr>
