@@ -2,7 +2,7 @@ import express from 'express';
 
 import { isLoggedIn, isNotLoggedIn } from '../lib';
 import { getAnnouncements } from './announcements';
-import { getCalendar, updateCalendar } from './calendar';
+import { getCalendar, updateCalendar, getCalendarResources } from './calendar';
 import {
   getLogin,
   getLoginRedirect,
@@ -61,6 +61,7 @@ router.get('/', getRoot);
 router.get('/announcements', isLoggedIn, getAnnouncements);
 router.get('/calendar', getCalendar);
 router.post('/calendar/update', isLoggedIn, updateCalendar);
+router.get('/calendar/resources', getCalendarResources);
 
 router.post('/newvisitor', postNewVisitor);
 // router.get('/leadership', getLeadership);
