@@ -3,9 +3,9 @@
 <%- include widgets/header.ejs %>
 <link rel="stylesheet" href="/css/loader.css"/>
 <%- include widgets/mainNav.ejs %>
-<div class="container my-5 py-5">
+<div class="container my-4 py-4">
 	<div class="col-lg-4 col-md-7 mx-auto text-center">
-		<h1 class="mb-5">Welcome</h1>
+		<h1 class="my-4 pt-4">Welcome!</h1>
 		<div class="mb-2 alert alert-danger"></div>
 		<form id="form">
 			<div class="text-left form-group">
@@ -77,5 +77,6 @@
 			$('.alert').html(errorMessage);
 		});
 	});
+	$('nav').toggleClass('static');
 </script>
 </html>
