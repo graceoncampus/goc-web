@@ -40,15 +40,12 @@ export const getSmallGroups = async (req, res) => {
         res.status(500).json(e);
     }*/
     try {
-      console.log("STARTED");
       const msg = await sgRef.doc('men').collection('men_sgs').get();
       const menSgs = [];
-      console.log("REQUEST GOTTEN");
         if (!msg.empty) {
           msg.forEach((doc) => {
             if (doc.exists) {
               const course = doc.data();
-              console.log("HI!" + course.leader_name);
               menSgs.push(course);
             }
           });
