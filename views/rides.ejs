@@ -8,8 +8,8 @@
 </div>
 <div class="container px-0 px-sm-3 my-5">
     <div class="col-lg-10 px-0 px-sm-3 mx-auto">
-        <% if (!cars) { %>
-            <p class="px-3 px-sm-0 mb-5">Rides for church this Sunday haven't been posted yet. Please check again later!</p>
+        <% if (!cars || cars.length <= 0) { %>
+            <p class="text-center px-3 px-sm-0 mb-5 pb-3">Rides for church this Sunday haven't been posted yet. Please check again later!</p>
         <% } %>
         <div class="px-5 mb-3 text-center">
             <h1 class="mb-4">Sign up for a ride to church</h1>
@@ -17,7 +17,7 @@
             <p>See you there!</p>
             <a href="/rides/signup" target="_blank" class="btn btn-primary mb-5 col-sm-3">Sign Up</a>
         </div>
-        <% if (cars) { %>
+        <% if (cars && cars.length > 0) { %>
             <table class="table table-striped">
                     <tr>
                         <td>Driver</td>
