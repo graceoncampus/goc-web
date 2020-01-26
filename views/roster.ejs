@@ -5,50 +5,56 @@
         <div class="overlay" id="roster">
             <h1>Roster</h1>
         </div>
-        <div class="p-4 p-sm-5">
-            <div id="roster-list" class="row">
-                <div class="col-lg-4 mb-5">
-                    <input type="text" class="sticky-top w-100 search form-control" placeholder="Search by name, major, home church, or address">
-                </div>
-                <ul class="list col-lg-8">
-                    <% users.forEach(function(v){ %>
-                        <div class="w-100 mb-5">
-                            <li>
-                                <div class="card w-100">
-                                    <div class="card-body">
-                                        <div class="row d-flex align-items-center">
-                                            <div class="text-center col-5 mx-auto col-sm-4 col-md-3 col-lg-2">
-                                                <img class="img-fluid rounded-circle" src="/images/sample.png" />
-                                            </div>
-                                            <div class="text-center my-3 text-sm-left col-sm-3 col-md-4 col-lg-4">
-                                                <h4 class="mb-1 name">
-                                                    <%= v.firstName %> <span class="lastName"><%= v.lastName %></span>
-                                                </h4>
-                                                <label>
-                                                    Class of <span class="year"><%= v.grad %></span><% if (v.major!=='') { %>
-                                                    , <span class="major"><%= v.major %></span>
-                                                <% } %>
-                                                </label>
-                                            </div>
-                                            <div class="col-sm-5 col-md-5 col-lg-6">
-                                                <label>Email</label><h6 class="email"><%= v.email %></h6>
-                                                <label class="phone">Phone Number</label><h6><%= v.phoneNumber %></h6>
-                                                <% if (v.homeChurch!=='') { %>
-                                                    <label>Home Church</label><h6 class="church"><%= v.homeChurch %></h6>
-                                                <% } %>
-                                                <% if (v.address!=='') { %>
-                                                    <label>Address</label><h6 class="address"><%= v.address %></h6>
-                                                <% } %>
+        <% if (user && (user.permissions.admin || user.permissions.roster)) { %>
+            <div class="p-4 p-sm-5">
+                <div id="roster-list" class="row">
+                    <div class="col-lg-4 mb-5">
+                        <input type="text" class="w-100 search form-control" placeholder="Search by name, major, home church, or address">
+                    </div>
+                    <ul class="list col-lg-8">
+                        <% users.forEach(function(v){ %>
+                            <div class="w-100 mb-2">
+                                <li>
+                                    <div class="card w-100">
+                                        <div class="card-body">
+                                            <div class="row d-flex align-items-center">
+                                                <div class="text-center col-5 mx-auto col-sm-4 col-md-3 col-lg-2">
+                                                    <img class="img-fluid rounded-circle" src="/images/sample.png" />
+                                                </div>
+                                                <div class="text-center my-3 text-sm-left col-sm-3 col-md-4 col-lg-4">
+                                                    <h4 class="mb-1 name">
+                                                        <%= v.firstName %> <span class="lastName"><%= v.lastName %></span>
+                                                    </h4>
+                                                    <label>
+                                                        Class of <span class="year"><%= v.grad %></span><% if (v.major!=='') { %>
+                                                        , <span class="major"><%= v.major %></span>
+                                                    <% } %>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-5 col-md-5 col-lg-6">
+                                                    <label>Email</label><h6 class="email"><%= v.email %></h6>
+                                                    <label class="phone">Phone Number</label><h6><%= v.phoneNumber %></h6>
+                                                    <% if (v.homeChurch!=='') { %>
+                                                        <label>Home Church</label><h6 class="church"><%= v.homeChurch %></h6>
+                                                    <% } %>
+                                                    <% if (v.address!=='') { %>
+                                                        <label>Address</label><h6 class="address"><%= v.address %></h6>
+                                                    <% } %>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                        </div>
-                    <% }) %>
-                </ul>
+                                </li>
+                            </div>
+                        <% }) %>
+                    </ul>
+                </div>
             </div>
-        </div>
+        <% } else { %>
+            <div class="p-4 p-sm-5 mx-auto col-md-8 text-center">
+                <h2>You do not have the necessary permissions to view this page.</h2>
+            </div>
+        <% } %>
 
         <%- include widgets/footer.ejs %>
         <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
@@ -62,12 +68,12 @@
                 var i = 1;
                 $('.next').on('click', function(){
                     i++;
-                    listObj.show(i, 3); 
+                    listObj.show(i, 3);
                 })
 
                 $('.prev').on('click', function(){
                     i--;
-                    listObj.show(i, 3); 
+                    listObj.show(i, 3);
                 })
             })
         </script>

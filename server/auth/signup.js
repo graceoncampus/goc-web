@@ -29,6 +29,7 @@ passport.use('signup', new CustomStrategy((req, done) => {
     events: 0,
     classes: 0,
     rides: 0,
+    roster: 0,
   };
   const bday = (birthday && birthday !== '')
     ? moment(birthday, 'MM/DD/YYYY').unix()
