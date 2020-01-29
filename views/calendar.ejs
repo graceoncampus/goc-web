@@ -1,62 +1,27 @@
 <!doctype html>
 <html lang="en">
 <%- include widgets/header.ejs %>
-<link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
-<link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
 
+
+<!-- importing all the packages -->
 <script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
 <script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
 <script src='https://unpkg.com/@fullcalendar/google-calendar@4.3.0/main.min.js'></script>
-
 <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
 <script src='https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'></script>
+<link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
 
 
-<style>
-  #calendar-content {
-   max-width: 900px;
-   margin: 0 auto;
-  }
-  #calendar {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.5)
-    ),
-    url(../images/calendar.jpg);
-    margin-bottom: 30px
-  }
-
-  /* overidding library css  */
-  .fc td.fc-today{
-    border-style: none;
-  }
-  .fc td, .fc th{
-    border-style: none;
-  }
-  .fc-button {
-    font-family: Akkurat, sans-serif;
-    padding: .3em;
-    font-size: 1em;
-  }
-  .tooltip {
-    opacity: 100;
-    font-size: .8rem;
-    margin: 10px;
-    white-space: pre-wrap;
-  }
-  
-</style>
-
-
+<!-- our code -->
+<link href='/css/calendar.css' rel='stylesheet' />
 <script src='/js/calendar.js'></script>
+
 
 
 <%- include widgets/mainNav.ejs %>
 <div class="overlay" id="calendar">
     <h1><%= title%></h1>
 </div>
-
 <div id='calendar-content'></div>
-
-
 <%- include widgets/footer.ejs %>

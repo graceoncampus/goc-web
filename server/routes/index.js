@@ -2,7 +2,7 @@ import express from 'express';
 
 import { isLoggedIn, isNotLoggedIn } from '../lib';
 import { getAnnouncements } from './announcements';
-import { getCalendar, updateCalendar, getCalendarResources } from './calendar';
+import { getCalendar, getCalendarResources } from './calendar';
 import {
   getLogin,
   getLoginRedirect,
@@ -60,7 +60,6 @@ const router = express();
 router.get('/', getRoot);
 router.get('/announcements', isLoggedIn, getAnnouncements);
 router.get('/calendar', getCalendar);
-router.post('/calendar/update', isLoggedIn, updateCalendar);
 router.get('/calendar/resources', getCalendarResources);
 
 router.post('/newvisitor', postNewVisitor);
