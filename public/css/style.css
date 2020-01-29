@@ -485,13 +485,6 @@ thead td {
     letter-spacing: 0.5;
     color: #848895
 }
-#calendar {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.5)
-    ),
-    url(../images/calendar.jpg);
-}
 #roster {
     background-image: linear-gradient(
             rgba(0, 0, 0, 0.5),

@@ -10,37 +10,43 @@ document.addEventListener('DOMContentLoaded', function() {
         googleCalendarApiKey: res.key,
         events: res.email,
         
-        plugins: [ 'dayGrid', 'googleCalendar', 'timeGrid' ],
+        plugins: [ 'dayGrid', 'googleCalendar' ],
         header: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth'
+          right: 'prev,next today',
         },
     
         timeFormat: 'H:mm-{H:mm}',
-      //   defaultView: 'timeGridWeek',
         nowIndicator: true,
-        // //weekNumbers: true,
+
+        // //week numbers calculation
+        // weekNumbers: true,
+        // weekLabel: "Week",
+
     
-        // // eventRender : function(event, element) {
-        // //   element[0].title = event.title;
-        // // },
+         eventRender: function(info) {
+          var location =  "";
+          if(info.event.extendedProps.location != null) 
+            location =  "Location: " + info.event.extendedProps.location;
+          var description = "";
+          if(info.event.extendedProps.description != null) 
+            description = "Description: " + info.event.extendedProps.description;
+
+
+          var tooltip = new Tooltip(info.el, {
+            title: location + description,
+            placement: 'left',
+            trigger: 'hover',
+            container: 'body'
+          });
+        },
+
+          eventColor: '#539ab9;',
+
     
-        // eventRender: function(info) {
-        //   var tooltip = new Tooltip(info.el, {
-        //     title: info.event.extendedProps.description,
-        //     //placement: 'top',
-        //     //trigger: 'hover',
-        //     //container: 'body'
-        //   });
-        // },
-    
-    
-    
-        // eventClick: function(info) {
-        //   info.jsEvent.preventDefault();
-        //   alert("Location: " + info.event.extendedProps.location + "\nDescription: " + info.event.extendedProps.description);
-        // }
+        eventClick: function(info) {
+          info.jsEvent.preventDefault();
+          //alert("Location: " + info.event.extendedProps.location + "\nDescription: " + info.event.extendedProps.description);
+        }
       });
       calendar.render();
     });
