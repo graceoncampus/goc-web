@@ -1,0 +1,37 @@
+/* calendar title bar */
+#calendar {
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+        ),
+        url(../images/calendar.jpg);
+    margin-bottom: 30px
+}
+
+/* fullcalendar */
+#calendar-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tooltip {
+    font-size: .8rem;
+    margin: 10px;
+    /* want to have newlines in popup text */
+    white-space: pre-wrap;
+    /* bootstrap sets opacity to 0 by default */
+    opacity: 100;  
+}
+
+/* overidding library css to remove lines */
+.fc td.fc-today{
+    border-style: none;
+}
+.fc td, .fc th{
+    border-style: none;
+}
+.fc-button {
+    font-family: Akkurat, sans-serif;
+    padding: .3em;
+    font-size: 1em;
+}

@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
+      //initate fullcalendar
       var calendar = new FullCalendar.Calendar(calendarEl, {
         googleCalendarApiKey: res.key,
         events: res.email,
@@ -17,16 +18,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
         timeFormat: 'H:mm-{H:mm}',
         nowIndicator: true,
+        eventColor: '#539ab9;',
 
         // //week numbers calculation
         // weekNumbers: true,
         // weekLabel: "Week",
 
-    
-         eventRender: function(info) {
+        
+        //when hovering over events
+        eventRender: function(info) {
+          //only display if there is location/description for the event
           var location =  "";
           if(info.event.extendedProps.location != null) 
             location =  "Location: " + info.event.extendedProps.location;
+          if(location != "") location += '\n\n';
           var description = "";
           if(info.event.extendedProps.description != null) 
             description = "Description: " + info.event.extendedProps.description;
@@ -40,9 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         },
 
-          eventColor: '#539ab9;',
-
-    
+        //disables default behavior, which redirects to another website when clicked
         eventClick: function(info) {
           info.jsEvent.preventDefault();
           //alert("Location: " + info.event.extendedProps.location + "\nDescription: " + info.event.extendedProps.description);
