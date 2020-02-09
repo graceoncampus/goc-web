@@ -1,10 +1,33 @@
 ﻿<!doctype html>
 <html lang="en">
+
+<!-- importing calendar packages (TO DO: remove outsourcing) -->
+<script src='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/google-calendar@4.3.0/main.min.js'></script>
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script src='https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'></script>
+<link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
+
+
+
+
+
+<!-- start displaying things -->
 <%- include widgets/header.ejs %>
 <%- include widgets/mainNav.ejs %>
 <div class="overlay" id="events">
   <h1>Events</h1>
 </div>
+
+<!-- calendar code and css -->
+<link href='/css/calendar.css' rel='stylesheet' />
+<script src='/js/calendar.js'></script>
+<!-- display calendar -->
+<div id='calendar-content'></div>
+
+
 <div class="container py-5 my-5">
   <% if(user && (user.permissions.admin || user.permissions.events)){ %>
     <h1 class="mb-2">Add a new event</h1>
