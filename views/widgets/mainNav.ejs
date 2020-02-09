@@ -38,7 +38,9 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="/announcements"><small>Announcements</small></a>
-                        <!-- <a class="dropdown-item" href="/roster">Roster</a> -->
+                        <% if (user && (user.permissions.admin || user.permissions.roster)) { %>
+                            <a class="dropdown-item" href="/roster"><small>Roster</small></a>
+                        <% } %>
                         <a class="dropdown-item" href="/profile"><small>Edit Profile</small></a>
                         <a class="dropdown-item" href="/invite"><small>Invite user</small></a>
                         <a class="dropdown-item" href="/logout"><small>Log out</small></a>
