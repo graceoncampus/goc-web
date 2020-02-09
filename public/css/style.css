@@ -429,6 +429,7 @@ small {
             rgba(0, 0, 0, 0.5)
     ),
     url(../images/events.jpg);
+    margin-bottom: 30px
 }
 #blog {
     background-image: linear-gradient(

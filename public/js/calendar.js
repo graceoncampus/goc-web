@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar-content');
 
-  $.getJSON('/calendar/resources', res => {
+  $.getJSON('/events/resources', res => {
       if (!res || !res.key || !res.email) {
         return;
       }
