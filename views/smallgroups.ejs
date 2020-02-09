@@ -17,27 +17,25 @@
                 <hr>
                 <p>Awesome! Here are the small group leader blurbs. Feel free to contact any of the leaders about joining.</p>
                 </p>
-                <% if (user) { %>
-                    <button data-toggle="collapse" data-target="#demo" class="mt-1 btn outline btn-primary">Men</button>
-                    <div id="demo" class="collapse">
-                      <iframe src="/docs/sgl-men.pdf" width="100%" height="500px">
-                      </iframe>
-                    </div>
-                    <br></br>
-                    <button data-toggle="collapse" data-target="#demo1" class="mt-1 btn outline btn-primary">Women</button>
-                    <div id="demo1" class="collapse">
-                      <iframe src="/docs/sgl-women.pdf" width="100%" height="500px">
-                      </iframe>
-                    </div>
-                  <% }else{ %>
-                  <div class="row">
+                <button data-toggle="collapse" data-target="#demo" class="mt-1 btn outline btn-primary">Men</button>
+                <div id="demo" class="collapse">
+                  <iframe src="/docs/sgl-men.pdf" width="100%" height="500px">
+                    </iframe>
+                </div>
+                <br></br>
+                <button data-toggle="collapse" data-target="#demo1" class="mt-1 btn outline btn-primary">Women</button>
+                <div id="demo1" class="collapse">
+                <iframe src="/docs/sgl-women.pdf" width="100%" height="500px">
+                  </iframe>
+                </div>
+                  <!--<div class="row">
                     <div class="col">
                         <a class="mt-1 btn outline btn-primary" href="/docs/sgl-men.pdf" target="_blank">Men</a>
                     </div>
                     <div class="col">
                         <a class="mt-1 btn outline btn-primary" href="/docs/sgl-women.pdf" target="_blank">Women</a>
-                    </div>
-                </div><% } %>
+                    </div>-->
+                </div>
             </div>
         </div>
     </div>  

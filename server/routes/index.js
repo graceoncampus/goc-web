@@ -38,7 +38,7 @@ import {
 import {
   getRoot,
   postNewVisitor,
-  // getLeadership,
+  getBeliefs,
   getAbout,
   getCarousels,
   postCarousel,
@@ -65,7 +65,7 @@ router.get('/calendar', getCalendar);
 router.post('/calendar/update', isLoggedIn, updateCalendar);
 
 router.post('/newvisitor', postNewVisitor);
-// router.get('/leadership', getLeadership);
+router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
 router.get('/smallgroups', getSmallGroups);
 
