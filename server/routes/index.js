@@ -44,6 +44,7 @@ import {
   rmCarouselById,
   get404,
   getSmallGroups,
+  postSGInterest,
 } from './home';
 import {
   getSermons
@@ -65,7 +66,9 @@ router.post('/calendar/update', isLoggedIn, updateCalendar);
 router.post('/newvisitor', postNewVisitor);
 router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
+
 router.get('/smallgroups', getSmallGroups);
+router.post('/sginterest', postSGInterest)
 
 router.get('/rides', getRides);
 router.get('/rides/signup', getRidesSignup);
