@@ -48,7 +48,7 @@ import {
 import {
   getSermons
 } from './sermon';
-import { getProfile, postProfileEdit } from './user';
+import { getProfile, postProfileEdit, getRoster } from './user';
 import {
   getRides, getRidesSignup, updateRides, notifyRiders,
 } from './rides';
@@ -96,8 +96,8 @@ router.get('/forgot', isNotLoggedIn, getForgot);
 // user
 router.get('/profile', isLoggedIn, getProfile);
 router.post('/profile', isLoggedIn, postProfileEdit);
-// router.get('/roster', isLoggedIn, getRoster);
 
+router.get('/roster', isLoggedIn, getRoster);
 
 //events page
 router.get('/events', getEvents);
