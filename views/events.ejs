@@ -27,7 +27,7 @@
 <!-- display calendar -->
 <div id='calendar-content'></div>
 
-
+<!-- users with admin can add a new event -->
 <div class="container py-5 my-5">
   <% if(user && (user.permissions.admin || user.permissions.events)){ %>
     <h1 class="mb-2">Add a new event</h1>
@@ -72,6 +72,8 @@
     <hr class="my-5" />
   <% } %>
 
+
+  <!-- display all the events -->
   <% var i = 0 %>
     <% if (events.length == 0) { %>
       <div class="text-center">

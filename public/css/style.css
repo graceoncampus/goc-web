@@ -369,23 +369,7 @@ footer .card:hover {
     width: 100%;
     height: 100%;
 }
-.rtTooltip {
-    border: 1px solid #539ab9;
-}
-.rtTooltipBrandLink {
-    visibility: hidden;
-}
-.rtTooltipBody {
-    font-family: 'Arnhem';
-    font-size: 10px!important;
-}
-.rtTooltipFooter {
-    font-family: 'Akkurat'
-}
-.rtTooltipHeader {
-    font-family: 'Akkurat';
-    border-bottom: 1px solid #ecedef
-}
+
 #classes {
     background-image: linear-gradient(
             rgba(0, 0, 0, 0.5),
@@ -423,6 +407,7 @@ footer .card:hover {
 small {
     font-family: "Akkurat"
 }
+
 #events {
     background-image: linear-gradient(
             rgba(0, 0, 0, 0.5),
@@ -524,23 +509,7 @@ thead td {
 .sticky-top {
     top: 15px;
 }
-.rtTooltip {
-    border: 1px solid #539ab9;
-}
-.rtTooltipBrandLink {
-    visibility: hidden;
-}
-.rtTooltipBody {
-    font-family: 'Arnhem';
-    font-size: 10px!important;
-}
-.rtTooltipFooter {
-    font-family: 'Akkurat'
-}
-.rtTooltipHeader {
-    font-family: 'Akkurat';
-    border-bottom: 1px solid #ecedef
-}
+
 .dropdown-menu {
     border: transparent;
     background: rgba(0, 0, 0, 0.3);
@@ -554,40 +523,6 @@ thead td {
 }
 .badge {
     display: none;
-}
-.calendar-month {
-    cursor: pointer;
-    color: #007bff;
-}
-.btn-link {
-    cursor:pointer;
-}
-.calendar-table thead td {
-    border-top: none;
-    width: calc( 100% / 3);
-    vertical-align: middle;
-}
-.calendar-table .btn {
-    padding: .1em;
-    cursor:pointer;
-}
-.js-cal-option:hover, .js-cal-years:hover {
-    text-decoration: none;
-}
-.js-cal-option {
-    padding-right: 0.1em;
-}
-.calendar-table .btn-group > .btn {
-    color: black;
-}
-.js-cal-option {
-    margin-right: 0.5em;
-}
-.js-cal-option:hover {
-    color: #007bff!important;
-}
-.js-cal-years:hover {
-    cursor: default
 }
 .date:hover {
     cursor: pointer;
