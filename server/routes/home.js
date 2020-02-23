@@ -60,6 +60,11 @@ export const getBeliefs = (req, res) => {
     title: 'Our Beliefs',
   });
 };
+export const getSmallGroups = (req, res) => {
+  res.render('smallgroups.ejs', {
+    title: 'Small Groups',
+  });
+};
 export const getAbout = (req, res) => {
   res.render('about.ejs', {
     title: 'About',
