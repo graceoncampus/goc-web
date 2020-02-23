@@ -21,9 +21,6 @@ import {
   postEditEventById,
   postDeleteEventById,
 } from './event';
-import{
-  getSmallGroups,
-}from './smallgroups';
 import {
   getClassById,
   getClasses,
@@ -46,6 +43,7 @@ import {
   postEditCarouselById,
   rmCarouselById,
   get404,
+  getSmallGroups,
 } from './home';
 import {
   getSermons
