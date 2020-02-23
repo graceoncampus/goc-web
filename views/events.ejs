@@ -21,11 +21,90 @@
   <h1>Events</h1>
 </div>
 
+
+
+
+  <!-- display all the events -->
+  <div class="container py-5 my-5">
+    <% var i = 0 %>
+      <% if (events.length == 0) { %>
+        <div class="text-center">
+          <h4>No upcoming events!</h4>
+        </div>
+      <% } %>
+      <% events.forEach(function(event) { %>
+        <% if (i===0) { %>
+          <% i=1 %>
+          <div class="card-deck">
+            <div class="card">
+              <img class="card-img-top" src="<%= event.bannerURI %>">
+              <div class="card-body">
+                <h4 class="card-title"><%= event.title %></h4>
+                <p class="card-text"><%- event.summary %></p>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
+                <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
+                <% if(user && (user.permissions.admin || user.permissions.events)) { %>
+                  <a href="/e/edit/<%= event.id %>">Edit</a><br/>
+                  <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
+                <% } %>
+              </div>
+            </div>
+            <br/>
+          </div>
+        <%  } else if (i===2) { %>
+          <% i=0 %>
+          <div class="card">
+            <img class="card-img-top" src="<%= event.bannerURI %>">
+            <div class="card-body">
+              <h4 class="card-title"><%= event.title %></h4>
+              <p class="card-text"><%- event.summary %></p>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
+              <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
+              <% if(user && (user.permissions.admin || user.permissions.events)) { %>
+                <a href="/e/edit/<%= event.id %>">Edit</a><br/>
+                <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
+              <% } %>
+            </div>
+          </div>
+          <br/>
+      <% } else { %>
+        <% i = 2 %>
+        <div class="card">
+          <img class="card-img-top" src="<%= event.bannerURI %>">
+          <div class="card-body">
+            <h4 class="card-title"><%= event.title %></h4>
+            <p class="card-text"><%- event.summary %></p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
+            <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
+            <% if(user && (user.permissions.admin || user.permissions.events)) { %>
+                <a href="/e/edit/<%= event.id %>">Edit</a><br/>
+                <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
+              <% } %>
+          </div>
+        </div>
+        <br/>
+      <% } %>
+    <% }) %>
+  </div>
+</div>
+
+
+
+
 <!-- calendar code and css -->
 <link href='/css/calendar.css' rel='stylesheet' />
 <script src='/js/calendar.js'></script>
 <!-- display calendar -->
 <div id='calendar-content'></div>
+
+
+
 
 <!-- users with admin can add a new event -->
 <div class="container py-5 my-5">
@@ -71,74 +150,6 @@
       </form>
     <hr class="my-5" />
   <% } %>
-
-
-  <!-- display all the events -->
-  <% var i = 0 %>
-    <% if (events.length == 0) { %>
-      <div class="text-center">
-        <h4>No upcoming events!</h4>
-      </div>
-    <% } %>
-    <% events.forEach(function(event) { %>
-      <% if (i===0) { %>
-        <% i=1 %>
-        <div class="card-deck">
-          <div class="card">
-            <img class="card-img-top" src="<%= event.bannerURI %>">
-            <div class="card-body">
-              <h4 class="card-title"><%= event.title %></h4>
-              <p class="card-text"><%- event.summary %></p>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
-              <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
-              <% if(user && (user.permissions.admin || user.permissions.events)) { %>
-                <a href="/e/edit/<%= event.id %>">Edit</a><br/>
-                <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
-              <% } %>
-            </div>
-          </div>
-          <br/>
-        </div>
-      <%  } else if (i===2) { %>
-        <% i=0 %>
-        <div class="card">
-          <img class="card-img-top" src="<%= event.bannerURI %>">
-          <div class="card-body">
-            <h4 class="card-title"><%= event.title %></h4>
-            <p class="card-text"><%- event.summary %></p>
-          </div>
-          <div class="card-footer">
-            <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
-            <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
-            <% if(user && (user.permissions.admin || user.permissions.events)) { %>
-              <a href="/e/edit/<%= event.id %>">Edit</a><br/>
-              <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
-            <% } %>
-          </div>
-        </div>
-        <br/>
-    <% } else { %>
-      <% i = 2 %>
-      <div class="card">
-        <img class="card-img-top" src="<%= event.bannerURI %>">
-        <div class="card-body">
-          <h4 class="card-title"><%= event.title %></h4>
-          <p class="card-text"><%- event.summary %></p>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
-          <small class="text-muted"><b>Where: </b><%= event.location %></small><br/>
-          <% if(user && (user.permissions.admin || user.permissions.events)) { %>
-              <a href="/e/edit/<%= event.id %>">Edit</a><br/>
-              <a href="" onclick="$.post('/e/delete/<%= event.id %>');">Delete</a>
-            <% } %>
-        </div>
-      </div>
-      <br/>
-    <% } %>
-  <% }) %>
 </div>
 
 
