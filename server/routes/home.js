@@ -25,6 +25,34 @@ export const getRoot = async (req, res) => {
   });
 };
 
+export const postSGInterest = async (req, res) => {
+  const sheetData = {
+    Timestamp: new Date(),
+    Name: req.body.name,
+    Email: req.body.email,
+  };
+  try {
+    const data = {
+      to: 'kyledeguzman@ucla.edu',
+      from: 'gocwebteam@gmail.com',
+      subject: 'Small Group Interest',
+      text:
+        `${'Hi Kyle, '
+          + '\n\n'
+          + "There's a person named "}${
+          sheetData.Name
+        } interested in small group. It would be great if you could follow up with them!\n`
+        + `Their email is: ${sheetData.Email}\n\n`
+        + 'Thanks,\n'
+        + 'GOC Web Team',
+    };
+    mailgun.messages().send(data);
+  } catch (e) {
+    console.error(e);
+  }
+  res.redirect('/');
+};
+
 export const postNewVisitor = async (req, res) => {
   const sheetData = {
     Timestamp: new Date(),
