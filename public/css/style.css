@@ -659,20 +659,10 @@ thead td {
 .carousel {
     top:0;
 }
-.edit-resources-container {
-    text-align: center;
-}
-.add-resources-category {
-    cursor: pointer;
-    margin: 5px 0;
-}
 .submit-resources {
     margin: 5px 0;
 }
-textarea.resource-descs, textarea.resource-urls {
-    width: 400px;
-    height: 150px;
-}
-.category-container {
-    cursor: pointer;
+textarea.resource-descs {
+    width: 700px;
+    height: 400px;
 }
