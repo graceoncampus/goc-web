@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<link rel="stylesheet" href="css/loader.css"/>
+<%- include widgets/mainNav.ejs %>
+<div class="overlay" id="resources">
+    <h1>Resources</h1>
+</div>
+<div class="container px-0 px-sm-3 my-5">
+  <form class="edit-resources-form" action="/resources/edit" method="post">
+    <h2>Edit Resources</h2>
+    <div class="categories">
+      <textarea class="resource-descs" name="markdown"><%= resources %></textarea>
+    </div>
+    <div>
+      <input type="submit" class="btn btn-primary mb-5 col-sm-3 submit-resources">
+    </div>
+  </form>
+</div>
+<%- include widgets/footer.ejs %>
+</html>
