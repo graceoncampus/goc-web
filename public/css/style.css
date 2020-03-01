@@ -72,17 +72,19 @@
 .red {
     background-color: #b40a34!important;
 }
+
+/* buttons! */
 .btn-primary {
     font-family: 'Akkurat';
     font-size: 12px;
     text-transform: uppercase;
     background-color: #539ab9;
-    border-radius: 6px;
-    padding: 18px 15px;
+    border-radius: 5px;
+    padding: 12px 15px;
     width: 100%;
-    height: 50px;
+    height: 40px;
     border: none;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 }
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:not([disabled]):not(.disabled).active, .btn-primary:not([disabled]):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     background-color: #539ab9;
@@ -113,9 +115,16 @@ label {
     font-size: .9rem;
     line-height: 1.1rem;
 }
+
+
+/* GENERAL TEXT */
 a {
     color: #539ab9;
     transition: all .3s;
+    font-family: 'Akkurat';
+    text-decoration: none;
+    background-color: transparent;
+    touch-action: manipulation;
 }
 a:hover {
     text-decoration: none;
@@ -182,7 +191,7 @@ p {
     font-size: 16px;
     line-height: 24px;
     font-family: 'Akkurat', sans-serif;
-    /* font-family: -apple-system, 'Helvetica Neue', sans-serif; */
+    margin-bottom: 1rem;
 }
 
 /* Navigation Bar */
