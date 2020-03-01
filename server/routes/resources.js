@@ -28,10 +28,14 @@ export const getEditResources = async (req, res) => {
     console.error(e);
   }
 
-  res.render('resourcesEdit.ejs', {
-    title: 'Edit Resources',
-    resources
-  });
+  if (req.user && req.user.permissions.resources) {
+    res.render('resourcesEdit.ejs', {
+      title: 'Edit Resources',
+      resources
+    });
+  } else {
+    res.redirect('/');
+  }
 };
 
 export const postEditResources = async (req, res) => {
