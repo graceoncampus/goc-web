@@ -50,7 +50,7 @@ export const postSGInterest = async (req, res) => {
   } catch (e) {
     console.error(e);
   }
-  res.redirect('/');
+  res.redirect('/smallgroups');
 };
 
 export const postNewVisitor = async (req, res) => {
