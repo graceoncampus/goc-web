@@ -43,9 +43,9 @@
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "build-server": "./node_modules/.bin/babel -d ./build ./server -s --copy-files",
-    "build": "SET NODE_ENV=production npm run clean && npm run build-server",
+    "build": "NODE_ENV=production npm run clean && npm run build-server",
     "start": "node ./build/index.js",
     "dev": "babel-watch --watch views ./server/index.js",
-    "prod": "SET NODE_ENV=production npm run build "
+    "prod": "NODE_ENV=production npm run build "
   }
 }
