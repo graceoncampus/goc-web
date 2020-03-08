@@ -15,15 +15,24 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  About
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/about"><small>ABOUT</small></a>
+                    <a class="dropdown-item" href="/ourbeliefs"><small>OUR BELIEFS</small></a>
+                    <a class="dropdown-item" href="/smallgroups"><small>SMALL GROUPS</small></a>
+                    <a class="dropdown-item" href="/blog"><small>BLOG</small></a>
+                </div>
+              </li>
             <li class="nav-item"><a href="/sermons" class="nav-link">Sermons</a></li>
-            <li class="nav-item"><a href="/smallgroups" class="nav-link">Small Groups</a></li>
-            <!-- <li class="nav-item"><a href="/leadership" class="nav-link">Leadership</a></li> -->
             <li class="nav-item"><a href="/classes" class="nav-link">Classes</a></li>
             <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
             <!-- <li class="nav-item"><a href="/calendar" class="nav-link">Calendar</a></li> -->
             <li class="nav-item"><a href="/events" class="nav-link">Events</a></li>
             <li class="nav-item"><a href="/rides" class="nav-link">Rides</a></li>
+            <li class="nav-item"><a href="/resources" class="nav-link">Resources</a></li>
         </ul>
         <ul class="navbar-nav">
             <% if(user) { %>
@@ -32,13 +41,13 @@
                         <%= user.firstName %> <%= user.lastName %>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="/announcements">Announcements</a>
+                        <a class="dropdown-item" href="/announcements"><small>Announcements</small></a>
                         <% if (user && (user.permissions.admin || user.permissions.roster)) { %>
-                            <a class="dropdown-item" href="/roster">Roster</a>
+                            <a class="dropdown-item" href="/roster"><small>Roster</small></a>
                         <% } %>
-                        <a class="dropdown-item" href="/invite">Invite user</a>
-                        <a class="dropdown-item" href="/profile">Edit Profile</a>
-                        <a class="dropdown-item" href="/logout">Log out</a>
+                        <a class="dropdown-item" href="/profile"><small>Edit Profile</small></a>
+                        <a class="dropdown-item" href="/invite"><small>Invite user</small></a>
+                        <a class="dropdown-item" href="/logout"><small>Log out</small></a>
                     </div>
                 </li>
             <% } else { %>

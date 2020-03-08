@@ -344,10 +344,13 @@ small {
     url(../images/sermons.jpg);
 }
 
+#resources {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ), url(../images/resources.jpg);
+}
 
-
-
-/* Miscellanous */
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f9f9f9
 }
@@ -476,4 +479,11 @@ thead td {
 }
 .carousel {
     top:0;
+}
+.submit-resources {
+    margin: 5px 0;
+}
+textarea.resource-descs {
+    width: 700px;
+    height: 400px;
 }
