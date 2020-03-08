@@ -35,15 +35,16 @@ import {
 import {
   getRoot,
   postNewVisitor,
-  // getLeadership,
+  getBeliefs,
   getAbout,
-  getSG,
   getCarousels,
   postCarousel,
   getEditCarouselById,
   postEditCarouselById,
   rmCarouselById,
   get404,
+  getSmallGroups,
+  postSGInterest,
 } from './home';
 import {
   getSermons
@@ -68,9 +69,11 @@ router.get('/calendar', getCalendar);
 router.post('/calendar/update', isLoggedIn, updateCalendar);
 
 router.post('/newvisitor', postNewVisitor);
-// router.get('/leadership', getLeadership);
+router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
-router.get('/smallgroups', getSG);
+
+router.get('/smallgroups', getSmallGroups);
+router.post('/sginterest', postSGInterest)
 
 router.get('/rides', getRides);
 router.get('/rides/signup', getRidesSignup);
