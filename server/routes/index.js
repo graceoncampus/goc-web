@@ -35,15 +35,16 @@ import {
 import {
   getRoot,
   postNewVisitor,
-  // getLeadership,
+  getBeliefs,
   getAbout,
-  getSG,
   getCarousels,
   postCarousel,
   getEditCarouselById,
   postEditCarouselById,
   rmCarouselById,
   get404,
+  getSmallGroups,
+  postSGInterest,
 } from './home';
 import {
   getSermons
@@ -53,6 +54,11 @@ import {
   getRides, getRidesSignup, updateRides, notifyRiders,
 } from './rides';
 import { getPosts, getPost } from './blog';
+import {
+  getResources,
+  getEditResources,
+  postEditResources,
+} from './resources';
 import firebaseLogin from '../auth/login';
 
 const router = express();
@@ -62,9 +68,11 @@ router.get('/announcements', isLoggedIn, getAnnouncements);
 
 
 router.post('/newvisitor', postNewVisitor);
-// router.get('/leadership', getLeadership);
+router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
-router.get('/smallgroups', getSG);
+
+router.get('/smallgroups', getSmallGroups);
+router.post('/sginterest', postSGInterest)
 
 router.get('/rides', getRides);
 router.get('/rides/signup', getRidesSignup);
@@ -128,6 +136,11 @@ router.get('/sermons', getSermons);
 router.get('/blog/:postID', getPost);
 router.get('/blog/', getPosts);
 router.get('/blog/page/:page', getPosts);
+
+// resources
+router.get('/resources', getResources);
+router.get('/resources/edit', getEditResources);
+router.post('/resources/edit', postEditResources);
 
 router.use(get404);
 
