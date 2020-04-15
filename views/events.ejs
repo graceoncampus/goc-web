@@ -10,20 +10,12 @@
 <link href='https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css' rel='stylesheet' />
 <link href='https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css' rel='stylesheet' />
 
-
-
-
-
 <!-- start displaying things -->
 <%- include widgets/header.ejs %>
 <%- include widgets/mainNav.ejs %>
 <div class="overlay" id="events">
   <h1>Events</h1>
 </div>
-
-
-
-
   <!-- display all the events -->
   <div class="container py-5 my-5">
     <% var i = 0 %>
@@ -94,17 +86,11 @@
   </div>
 </div>
 
-
-
-
 <!-- calendar code and css -->
 <link href='/css/calendar.css' rel='stylesheet' />
 <script src='/js/calendar.js'></script>
 <!-- display calendar -->
 <div id='calendar-content'></div>
-
-
-
 
 <!-- users with admin can add a new event -->
 <div class="container py-5 my-5">
@@ -151,7 +137,6 @@
     <hr class="my-5" />
   <% } %>
 </div>
-
 
 <%- include widgets/footer.ejs %>
 </html>
