@@ -122,12 +122,6 @@ export const postDeleteEventById = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
 export const getCalendarResources = (req, res) => {
   res.status(200);
   res.json({ key: process.env.CALENDAR_API_KEY, email: process.env.CALENDAR_EMAIL });

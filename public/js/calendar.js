@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
           if(info.event.extendedProps.description != null) 
             description = "Description: " + info.event.extendedProps.description;
 
-
           var tooltip = new Tooltip(info.el, {
             title: location + description,
             placement: 'left',
