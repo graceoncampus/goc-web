@@ -2,7 +2,6 @@ import express from 'express';
 
 import { isLoggedIn, isNotLoggedIn } from '../lib';
 import { getAnnouncements } from './announcements';
-import { getCalendar, updateCalendar } from './calendar';
 import {
   getLogin,
   getLoginRedirect,
@@ -20,6 +19,7 @@ import {
   getEditEventById,
   postEditEventById,
   postDeleteEventById,
+  getCalendarResources,
 } from './event';
 import {
   getClassById,
@@ -65,8 +65,7 @@ const router = express();
 
 router.get('/', getRoot);
 router.get('/announcements', isLoggedIn, getAnnouncements);
-router.get('/calendar', getCalendar);
-router.post('/calendar/update', isLoggedIn, updateCalendar);
+
 
 router.post('/newvisitor', postNewVisitor);
 router.get('/ourbeliefs', getBeliefs);
@@ -105,12 +104,17 @@ router.get('/forgot', isNotLoggedIn, getForgot);
 // user
 router.get('/profile', isLoggedIn, getProfile);
 router.post('/profile', isLoggedIn, postProfileEdit);
+
 router.get('/roster', isLoggedIn, getRoster);
+
+//events page
 router.get('/events', getEvents);
 router.post('/events', postEditEventById);
+router.get('/events/resources', getCalendarResources);
 router.get('/e/edit/:eventid', getEditEventById);
 router.post('/e/edit/:eventid', postEditEventById);
 router.post('/e/delete/:eventid', postDeleteEventById);
+
 // classes
 router.get('/classes', getClasses);
 router.get('/c/:classID', getClassById);
