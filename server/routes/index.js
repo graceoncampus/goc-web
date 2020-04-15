@@ -128,6 +128,7 @@ router.post('/c/edit/:classID', postEditClassById);
 router.get('/c/view/:classID', getViewClassRosterById);
 // sermons
 router.get('/sermons', getSermons);
+router.get('/sermons/page/:page', getSermons);
 
 // blog
 router.get('/blog/:postID', getPost);
