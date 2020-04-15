@@ -13,7 +13,7 @@
     opacity: 100;  
 }
 
-/* overidding library css to remove lines */
+/* overidding fullcalendar library css to remove lines */
 .fc td.fc-today{
     border-style: none;
 }

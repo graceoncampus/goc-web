@@ -30,14 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
           //only display if there is location/description for the event
           var location =  "";
           if(info.event.extendedProps.location != null) 
-            location =  "Location: " + info.event.extendedProps.location;   
+            location =  "Location: " + info.event.extendedProps.location;
+          if(location != "") location += '\n\n';
           var description = "";
-          if(info.event.extendedProps.description != null) {
-            if(location != "") location += '\n\n';
+          if(info.event.extendedProps.description != null) 
             description = "Description: " + info.event.extendedProps.description;
-          }
-            
-
 
           var tooltip = new Tooltip(info.el, {
             title: location + description,
