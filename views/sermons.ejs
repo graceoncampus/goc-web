@@ -14,6 +14,7 @@
                 </div>
                 <ul class="list col-lg-8">
                     <% sermons.forEach(function(v){ %>
+                        <!--<% if(v.page === currentPage) { %>-->
                         <div class="w-100 mb-3">
                             <li>
                                 <div class="card w-100">
@@ -39,47 +40,68 @@
                                 </div>
                             </li>
                         </div>
-                        <% }) %>
-                </ul>
-                <div class="text-right col-12 col-md-4 float-right"><ul class="pagination"></ul></div>
+                        <!--<% } %>-->
+                    <% }) %>
+                </ul> 
+                <nav class="mt-5" aria-label="Sermon Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <% if (previousPage!==null) { %>
+                            <li class="page-item"><a class="page-link" href="/sermons/page/<%= previousPage %>">Previous</a></li>
+                        <% } else { %>
+                            <li class="page-item disabled" tabindex="-1"><a class="page-link" >Previous</a></li>
+                        <% } %>
+                        <% if (pages.length) { %>
+                            <% pages.forEach(function(page) { %>
+                                <% if (currentPage === page) { %>
+                                    <li class="page-item active"><a style="color:#fff!important"  class="page-link" href="/sermons/page/<%= page %>"><%= page %></a></li>
+                                <% } else { %>
+                                    <li class="page-item"><a class="page-link" href="/sermons/page/<%=page%>"><%= page %></a></li>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
+                        <% if (nextPage!==null) { %>
+                            <li class="page-item"><a class="page-link" href="/sermons/page/<%= nextPage %>">Next</a></li>
+                        <% } else { %>
+                            <li class="page-item disabled" tabindex="-1"><a class="page-link" >Next</a></li>
+                        <% } %>
+                    </ul>
+                </nav>            
             </div>
         </div>
         <%- include widgets/footer.ejs %>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-            <script>
-                var refTagger = {
-                    settings: {
-                        bibleVersion: "ESV",
-                        caseInsensitive: !false,
-                        dropShadow: false,
-                        roundCorners: true,
-                        socialSharing: [],
-                        customStyle: {
-                            heading: {
-                                backgroundColor: "#fff"
-                            },
-                            body: {
-                                moreLink: {
-                                    color: "#539ab9",
-                                    fontFamily: "Akkurat"
-                                }
+        <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+        <script>
+            var refTagger = {
+                settings: {
+                    bibleVersion: "ESV",
+                    caseInsensitive: !false,
+                    dropShadow: false,
+                    roundCorners: true,
+                    socialSharing: [],
+                    customStyle: {
+                        heading: {
+                            backgroundColor: "#fff"
+                        },
+                        body: {
+                            moreLink: {
+                                color: "#539ab9",
+                                fontFamily: "Akkurat"
                             }
                         }
                     }
+                }
+            };
+            (function (d, t) {
+                var g = d.createElement(t),
+                    s = d.getElementsByTagName(t)[0];
+                g.src = "//api.reftagger.com/v2/RefTagger.js";
+                s.parentNode.insertBefore(g, s);
+            }(document, "script"));
+            $(document).ready(function () {
+                var options = {
+                    valueNames: ['title', 'speaker', 'passage'],
                 };
-                (function (d, t) {
-                    var g = d.createElement(t),
-                        s = d.getElementsByTagName(t)[0];
-                    g.src = "//api.reftagger.com/v2/RefTagger.js";
-                    s.parentNode.insertBefore(g, s);
-                }(document, "script"));
-                $(document).ready(function () {
-                    var options = {
-                        valueNames: ['title', 'speaker', 'passage'],
-                        page: 7,
-                        pagination: true,
-                    };
-                    var hackerList = new List('sermon-list', options);
-                })
-            </script>
+                var hackerList = new List('sermon-list', options);
+            })
+        </script>
 </html>
