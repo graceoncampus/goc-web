@@ -115,9 +115,6 @@ router.get('/e/edit/:eventid', getEditEventById);
 router.post('/e/edit/:eventid', postEditEventById);
 router.post('/e/delete/:eventid', postDeleteEventById);
 
-
-
-
 // classes
 router.get('/classes', getClasses);
 router.get('/c/:classID', getClassById);

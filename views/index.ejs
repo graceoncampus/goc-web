@@ -78,6 +78,29 @@ Grace on Campus - Christian Fellowship at UCLA
     </div>
 </div>
 <section class="bannerContainer">
+    <div class="container py-4 my-4">
+        <h1 class="text-center">Important Announcements!</h1>
+        <% if (posts.length < 1) { %>
+            <div class="mx-auto col-md-8 text-center">
+                <h1>No new announcements!</h1>
+            </div>
+        <% } else { %>
+            <% posts.forEach(function(post) { %>
+                <div class="mx-auto col-md-8">
+                    <div class="card mb-4" style="border-color: red; border-width: 2px;">
+                        <div class="card-body">
+                            <img class="mb-2 float-left mr-3 img-fluid rounded-circle" src="/images/notification-icon.png"/>
+                            <div>
+                            <h5 class="mb-0"><%= post.title %></h5>
+                            <label class="mb-3"><%= post.date %></label>
+                            <p><%- post.Post %></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
     <div class="pt-5 container">
         <div class="row">
             <div class="col-xs-12 col-md-6 mb-2">
