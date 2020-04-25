@@ -22,10 +22,14 @@ export const updateCalendar = async (req, res) => {
   const re1 = /https:\/\/docs\.google\.com\/spreadsheets\/d\//g;
   const re2 = /\/.*/g;
   const sheetID = req.body.sheetURL.replace(re1, '').replace(re2, '');
-  const calendarSheet = new GoogleSpreadsheet(sheetID);
+//  const calendarSheet = new GoogleSpreadsheet(sheetID);
+  const calendarDoc = new GoogleSpreadsheet(sheetID);
   const events = {};
   try {
-    await promisify(calendarSheet.useServiceAccountAuth)(creds);
+//    await promisify(calendarSheet.useServiceAccountAuth)(creds); //TODO RM
+    await promisify(calendarDoc.useServiceAccountAuth)(creds);
+    await calendarDoc.loadInfo();
+    const calendarSheet = calendarDoc.sheetsByIndex[0];
     const rows = await promisify(calendarSheet.getRows)(1);
     const eventHeaders = ['event1', 'event2', 'event3'];
     rows.forEach((row) => {
