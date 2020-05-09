@@ -115,7 +115,6 @@ export const updateRides = async (req, res) => {
 
   try {
     await deleteRides();
-//  await promisify(ridesSheet.useServiceAccountAuth)(creds);
     await promisify(ridesSheetDoc.useServiceAccountAuth)(creds);
     await ridesSheetDoc.loadInfo();
     const ridesSheet = ridesSheetDoc.sheetsByIndex[0];
