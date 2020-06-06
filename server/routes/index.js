@@ -2,7 +2,6 @@ import express from 'express';
 
 import { isLoggedIn, isNotLoggedIn } from '../lib';
 import { getAnnouncements } from './announcements';
-import { getCalendar, updateCalendar } from './calendar';
 import {
   getLogin,
   getLoginRedirect,
@@ -20,6 +19,7 @@ import {
   getEditEventById,
   postEditEventById,
   postDeleteEventById,
+  getCalendarResources,
 } from './event';
 import {
   getClassById,
@@ -35,37 +35,44 @@ import {
 import {
   getRoot,
   postNewVisitor,
-  // getLeadership,
+  getBeliefs,
   getAbout,
-  getSG,
   getCarousels,
   postCarousel,
   getEditCarouselById,
   postEditCarouselById,
   rmCarouselById,
   get404,
+  getSmallGroups,
+  postSGInterest,
 } from './home';
 import {
   getSermons
 } from './sermon';
-import { getProfile, postProfileEdit } from './user';
+import { getProfile, postProfileEdit, getRoster } from './user';
 import {
   getRides, getRidesSignup, updateRides, notifyRiders,
 } from './rides';
 import { getPosts, getPost } from './blog';
+import {
+  getResources,
+  getEditResources,
+  postEditResources,
+} from './resources';
 import firebaseLogin from '../auth/login';
 
 const router = express();
 
 router.get('/', getRoot);
 router.get('/announcements', isLoggedIn, getAnnouncements);
-router.get('/calendar', getCalendar);
-router.post('/calendar/update', isLoggedIn, updateCalendar);
+
 
 router.post('/newvisitor', postNewVisitor);
-// router.get('/leadership', getLeadership);
+router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
-router.get('/smallgroups', getSG);
+
+router.get('/smallgroups', getSmallGroups);
+router.post('/sginterest', postSGInterest)
 
 router.get('/rides', getRides);
 router.get('/rides/signup', getRidesSignup);
@@ -97,12 +104,17 @@ router.get('/forgot', isNotLoggedIn, getForgot);
 // user
 router.get('/profile', isLoggedIn, getProfile);
 router.post('/profile', isLoggedIn, postProfileEdit);
-// router.get('/roster', isLoggedIn, getRoster);
+
+router.get('/roster', isLoggedIn, getRoster);
+
+//events page
 router.get('/events', getEvents);
 router.post('/events', postEditEventById);
+router.get('/events/resources', getCalendarResources);
 router.get('/e/edit/:eventid', getEditEventById);
 router.post('/e/edit/:eventid', postEditEventById);
 router.post('/e/delete/:eventid', postDeleteEventById);
+
 // classes
 router.get('/classes', getClasses);
 router.get('/c/:classID', getClassById);
@@ -122,6 +134,11 @@ router.get('/sermons/page/:page', getSermons);
 router.get('/blog/:postID', getPost);
 router.get('/blog/', getPosts);
 router.get('/blog/page/:page', getPosts);
+
+// resources
+router.get('/resources', getResources);
+router.get('/resources/edit', getEditResources);
+router.post('/resources/edit', postEditResources);
 
 router.use(get404);
 
