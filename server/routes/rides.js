@@ -101,8 +101,7 @@ export const updateRides = async (req, res) => {
   const re1 = /https:\/\/docs\.google\.com\/spreadsheets\/d\//g;
   const re2 = /\/.*/g;
   const sheetID = req.body.sheetURL.replace(re1, '').replace(re2, '');
-  const ridesSheetDoc = new GoogleSpreadsheet(sheetID);
-
+  const ridesSheet = new GoogleSpreadsheet(sheetID);
 
   const {
     emailMessage,
@@ -115,9 +114,7 @@ export const updateRides = async (req, res) => {
 
   try {
     await deleteRides();
-    await promisify(ridesSheetDoc.useServiceAccountAuth)(creds);
-    await ridesSheetDoc.loadInfo();
-    const ridesSheet = ridesSheetDoc.sheetsByIndex[0];
+    await promisify(ridesSheet.useServiceAccountAuth)(creds);
     const rows = await promisify(ridesSheet.getRows)(1, {});
     let i = 0;
     let len = rows.length;
