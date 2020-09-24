@@ -15,7 +15,11 @@
     "express": "^4.17.1",
     "firebase-admin": "^7.4.0",
     "formidable": "^1.2.1",
+<<<<<<< Updated upstream
     "google-spreadsheet": "^3.0.11",
+=======
+    "google-spreadsheet": "^3.0.13",
+>>>>>>> Stashed changes
     "gulp": "^3.9.1",
     "gulp-brotli": "^1.2.2",
     "gulp-gzip": "^1.4.2",

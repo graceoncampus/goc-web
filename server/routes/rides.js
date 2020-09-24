@@ -1,5 +1,5 @@
 import moment from 'moment';
-import GoogleSpreadsheet from 'google-spreadsheet';
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 import { promisify } from 'util';
 import admin from 'firebase-admin';
 import creds from '../config/goc-form-ca6452f3be85.json';
@@ -102,7 +102,10 @@ export const updateRides = async (req, res) => {
   const re2 = /\/.*/g;
   const sheetID = req.body.sheetURL.replace(re1, '').replace(re2, '');
   const ridesSheetDoc = new GoogleSpreadsheet(sheetID);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
   const {
     emailMessage,

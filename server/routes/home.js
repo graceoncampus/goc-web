@@ -1,12 +1,23 @@
 import cloudinary from 'cloudinary';
+<<<<<<< Updated upstream
 import { GoogleSpreadsheet } from 'google-spreadsheet';
+=======
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+>>>>>>> Stashed changes
 import formidable from 'formidable';
 import admin from 'firebase-admin';
 import { promisify } from 'util';
 import creds from '../config/goc-form-ca6452f3be85.json';
 import { mailgun } from '../lib';
 import { mailgunimport, replaceURLsWithLinks } from '../lib'; //remove replaceURL after CORONAVIRUS
+<<<<<<< Updated upstream
 const newVisitorSheetDoc = new GoogleSpreadsheet(process.env.NEW_VISITOR_SHEET);
+=======
+
+const newVisitorSheetDoc = new GoogleSpreadsheet(process.env.NEW_VISITOR_SHEET);
+//const newVisitorSheet = new GoogleSpreadsheet(process.env.NEW_VISITOR_SHEET);
+const doc = new GoogleSpreadsheet('<the sheet ID from the url>');
+>>>>>>> Stashed changes
 const carouselRef = admin.firestore().collection('carousels');
 
 // FOR CORONAVIRUS UPDATE
