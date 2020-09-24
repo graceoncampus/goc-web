@@ -102,11 +102,6 @@ export const updateRides = async (req, res) => {
   const re2 = /\/.*/g;
   const sheetID = req.body.sheetURL.replace(re1, '').replace(re2, '');
   const ridesSheetDoc = new GoogleSpreadsheet(sheetID);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-
   const {
     emailMessage,
     date,
