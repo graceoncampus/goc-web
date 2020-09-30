@@ -24,6 +24,9 @@ jobs:
     machine:
         enabled: true
     steps:
+      - add_ssh_keys:
+          fingerprints:
+              - "45:3d:c6:95:10:f4:da:24:93:05:ec:0c:42:3a:f9:d0"
       - run:
           name: Deploy
           command: ssh -v $GOC_USER@$GOC_IP "cd $GOC_DIR; git pull; echo $firebase_config | base64 --decode > server/config/firebase.json; echo $google_config | base64 --decode > server/config/$google_file_name; echo $env_file | base64 --decode > .env; yarn; yarn run prod; pm2 reload $GOC_APP_NAME"
