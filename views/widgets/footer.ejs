@@ -3,31 +3,51 @@
 
 <footer>
     <div class="container">
-        <div class="row">
-            <div class="mb-4 col-lg-3 col-sm-6 text-dark">
-                <h5 class="pb-1"><b>Grace on Campus</b></h5>
-                <h6><ion-icon name="time-outline"></ion-icon>&nbsp;&nbsp;&nbsp; Fridays at 7pm</h6>
-                <h6><ion-icon name="location-outline"></ion-icon>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="https://goo.gl/maps/cX1To" target="_blank">Broad Art Center 2160E</a></h6>
-                <h4><a class="mr-3" rel="noopener" href="https://www.facebook.com/GOCatUCLA" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Facebook</span><ion-icon name="logo-facebook"></ion-icon></a>
+        <div class="center">
+            <h2>
+                <a class="mr-3" rel="noopener" href="https://www.facebook.com/GOCatUCLA" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Facebook</span><ion-icon name="logo-facebook"></ion-icon></a>
                 <a class="mr-3" rel="noopener" href="https://www.instagram.com/goc_ucla/" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Instagram</span><ion-icon name="logo-instagram"></ion-icon></a>
                 <a class="mr-3" rel="noopener" href="https://vimeo.com/user32835937" target="_blank"><span class="sr-only">Grace on Campus Christian Fellowship Vimeo</span><ion-icon name="logo-vimeo"></ion-icon></a>
-                <a class="mr-3" rel="noopener" href="https://graceoncampusucla.wordpress.com/" target="blank"><span class="sr-only">Grace on Campus Christian Fellowship Blog</span><ion-icon name="logo-wordpress"></ion-icon></i></a></h4>
-
-            </div>
-            <div class="mb-4 col-lg-3 col-sm-6 text-dark">
-                <h5 class="pb-1"><b>Student Contact</b></h5>
-                <h6>Caleb Ting</h6>
-                <h6><ion-icon name="call-outline"></ion-icon>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="tel:+16265322555">(626) 532-2555</a></h6>
-                <h6 class="mb-3">
-                    <ion-icon name="mail-outline"></ion-icon></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="mailto:gocateam@gmail.com" target="_blank">gocateam@gmail.com</a>
-                </h6>
-            </div>
-            <div class="col py-3 px-5 mx-4">
-                <div class="float-right">
+                <a rel="noopener" href="https://graceoncampusucla.wordpress.com/" target="blank"><span class="sr-only">Grace on Campus Christian Fellowship Blog</span><ion-icon name="logo-wordpress"></ion-icon></i></a>
+            </h2>
+            <div class="mt-4 mb-5">
                 <a rel="noopener" target="_blank" href="https://gracechurch.org">
                     <img alt="Grace Community Church Logo" style="max-width: 200px" class="img-fluid" src="https://www.gracechurch.org/Content/images/gcc-logo-2014@2x.png" />
                 </a>
-                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+
+            <div class="col-lg-4 text-dark">
+                <h5 class="pb-1"><b>Grace on Campus</b></h5>
+                <h6><ion-icon name="time-outline"></ion-icon>&nbsp;&nbsp;&nbsp; Fridays at 7pm</h6>
+                <h6><ion-icon name="location-outline"></ion-icon>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="https://www.facebook.com/groups/gocucla" target="_blank">Zoom</a></h6>
+                <!-- <h6><ion-icon name="location-outline"></ion-icon>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="https://goo.gl/maps/cX1To" target="_blank">Broad Art Center 2160E</a></h6> -->
+                <br/>
+                <h5 class="pb-1"><b>Student Contact</b></h5>
+                <h6><ion-icon name="person-outline"></ion-icon>&nbsp;&nbsp;&nbsp;&nbsp;Phillip Ko</h6>
+                <h6><ion-icon name="call-outline"></ion-icon>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="tel:+15106127862">(510) 612-7862</a></h6>
+                <h6><ion-icon name="mail-outline"></ion-icon></i>&nbsp;&nbsp;&nbsp;&nbsp;<a rel="noopener" href="mailto:gocateam@gmail.com" target="_blank">gocateam@gmail.com</a></h6>
+                <br/>
+            </div>
+            <div class="col-lg-4 d-md-block">
+                <h5 class="pb-1"><b>New to GOC?</b></h5>
+                <h6>We'd love to get in touch with you!</h6>
+                <form action="/newvisitor" method="post">
+                    <div>
+                        <div>
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required placeholder="Enter name">
+                        </div>
+                        <div>
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" required placeholder="Enter email">
+                        </div>
+                        <div>
+                            <button type="submit" style="margin-top:6px" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
