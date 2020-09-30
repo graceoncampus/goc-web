@@ -33,6 +33,12 @@ import {
   getViewClassRosterById,
 } from './class';
 import {
+  getSmallGroups,
+  postSGInterest,
+  getSmallGroupsMen,
+  getSmallGroupsWomen,
+} from './smallgroups'
+import {
   getRoot,
   postNewVisitor,
   getBeliefs,
@@ -43,8 +49,6 @@ import {
   postEditCarouselById,
   rmCarouselById,
   get404,
-  getSmallGroups,
-  postSGInterest,
 } from './home';
 import {
   getSermons
@@ -72,6 +76,8 @@ router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
 
 router.get('/smallgroups', getSmallGroups);
+router.get('/smallgroups/men', getSmallGroupsMen);
+router.get('/smallgroups/women', getSmallGroupsWomen);
 router.post('/sginterest', postSGInterest)
 
 router.get('/rides', getRides);
