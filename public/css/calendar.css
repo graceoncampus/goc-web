@@ -10,7 +10,7 @@
     /* want to have newlines in popup text */
     white-space: pre-wrap;
     /* bootstrap sets opacity to 0 by default */
-    opacity: 100;  
+    opacity: 100;
 }
 
 /* overidding fullcalendar library css to remove lines */

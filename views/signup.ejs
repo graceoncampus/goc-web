@@ -65,35 +65,35 @@
                 <button type="submit" id="signup" class="btn btn-primary mb-2">Sign Up</button>
             </div>
         </form>
-        
+
     </div>
 </div>
 <%- include widgets/footer.ejs %>
 <script>
 $(document).ready(function() {
-    $('.alert').hide(); 
+    $('.alert').hide();
 })
 $('#form').submit( function(e) {
     $('#signup').html('<div class="loader">Loading...</div>')
-    $('.alert').hide() 
-    $('.alert').html('') 
+    $('.alert').hide()
+    $('.alert').html('')
     e.preventDefault();
     if ($("#password").val()!==$("#confirmPassword").val()){
-        $('.alert').html('Passwords do not match') 
-        $('.alert').show() 
+        $('.alert').html('Passwords do not match')
+        $('.alert').show()
         $('html, body').animate({
             scrollTop: $(".alert").offset().top
         }, 750);
             if (!$('#confirmPassword').hasClass('red')) $('#confirmPassword').addClass('red')
             $("#password").keyup(function() {
             if ($("#password").val()===$("#confirmPassword").val()) {
-                if ($('.alert').html() === 'Passwords do not match') $('.alert').hide() 
+                if ($('.alert').html() === 'Passwords do not match') $('.alert').hide()
                 if ($('#confirmPassword').hasClass('red')) $('#confirmPassword').removeClass('red')
             }
         })
         $("#confirmPassword").keyup(function() {
             if ($("#password").val()===$("#confirmPassword").val()) {
-                if ($('.alert').html() === 'Passwords do not match') $('.alert').hide() 
+                if ($('.alert').html() === 'Passwords do not match') $('.alert').hide()
                 if ($('#confirmPassword').hasClass('red')) $('#confirmPassword').removeClass('red')
             }
         })
@@ -105,8 +105,8 @@ $('#form').submit( function(e) {
                 $('html, body').animate({
                     scrollTop: $(".alert").offset().top
                 }, 750);
-                $('.alert').show() 
-                $('.alert').html(data) 
+                $('.alert').show()
+                $('.alert').html(data)
             }
             else {
                 $('#signup').addClass('success')
@@ -116,5 +116,6 @@ $('#form').submit( function(e) {
         }, 'json');
     }
 });
+$('nav').toggleClass('static');
 </script>
 </html>

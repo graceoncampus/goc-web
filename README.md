@@ -15,5 +15,5 @@ yarn
 
 To start dev server on local machine, run the below and check `localhost:3000`
 ```shell
-yarn && yarn start
+yarn build && yarn start
 ```

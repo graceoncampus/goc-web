@@ -1,7 +1,7 @@
 footer {
     padding: 4rem 0 3rem;
-    background-color: rgba(0,0,0,.05) !important;
-    margin-top: 2rem;
+    background-color: #f6f6f6 !important;
+    /* margin-top: 2rem; */
 
 }
 footer .card {
