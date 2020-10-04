@@ -595,3 +595,6 @@ textarea.resource-descs {
     background-color: var(--main_button_color);
     border-color: var(--main_button_color);
 }
+.dark {
+    background-color: #3f3f3f;
+}
