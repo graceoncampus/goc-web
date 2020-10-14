@@ -35,8 +35,6 @@ import {
 import {
   getSmallGroups,
   postSGInterest,
-  getSmallGroupsMen,
-  getSmallGroupsWomen,
 } from './smallgroups'
 import {
   getRoot,
@@ -76,8 +74,6 @@ router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
 
 router.get('/smallgroups', getSmallGroups);
-router.get('/smallgroups/men', getSmallGroupsMen);
-router.get('/smallgroups/women', getSmallGroupsWomen);
 router.post('/sginterest', postSGInterest)
 
 router.get('/rides', getRides);
