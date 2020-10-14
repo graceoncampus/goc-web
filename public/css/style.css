@@ -297,22 +297,6 @@ p {
     url(../images/small.jpg);
 }
 
-#small-group-men {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.5)
-    ),
-    url(../images/small-men.jpg);
-}
-
-#small-group-women {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.5)
-    ),
-    url(../images/small-women.jpg);
-}
-
 #Cover {
     background-image: linear-gradient(
             rgba(0, 0, 0, 0.5),

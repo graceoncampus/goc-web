@@ -33,15 +33,3 @@ export const getSmallGroups = (req, res) => {
     title: 'Small Groups',
   });
 };
-
-export const getSmallGroupsMen = (req, res) => {
-  res.render('smallgroupsMen.ejs', {
-    title: 'Men\'s Small Groups',
-  });
-};
-
-export const getSmallGroupsWomen = (req, res) => {
-  res.render('smallgroupsWomen.ejs', {
-    title: 'Women\'s Small Groups',
-  });
-};
