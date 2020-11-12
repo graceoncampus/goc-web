@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import creds from '../config/goc-form-ca6452f3be85.json';
 import { mailgun } from '../lib';
 
+
 const newVisitorSheet = new GoogleSpreadsheet(process.env.NEW_VISITOR_SHEET);
 const carouselRef = admin.firestore().collection('carousels');
 
@@ -21,7 +22,7 @@ export const getRoot = async (req, res) => {
   }
   res.render('index.ejs', {
     title: 'Grace on Campus',
-    carousels,
+    carousels
   });
 };
 
@@ -91,11 +92,6 @@ export const postNewVisitor = async (req, res) => {
 export const getBeliefs = (req, res) => {
   res.render('beliefs.ejs', {
     title: 'Our Beliefs',
-  });
-};
-export const getSmallGroups = (req, res) => {
-  res.render('smallgroups.ejs', {
-    title: 'Small Groups',
   });
 };
 export const getAbout = (req, res) => {
