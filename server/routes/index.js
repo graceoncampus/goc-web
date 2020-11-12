@@ -49,6 +49,9 @@ import {
 import {
   getSermons
 } from './sermon';
+import {
+  getTeams,
+} from './ministryteams'
 import { getProfile, postProfileEdit, getRoster } from './user';
 import {
   getRides, getRidesSignup, updateRides, notifyRiders,
@@ -134,6 +137,9 @@ router.get('/blog/page/:page', getPosts);
 router.get('/resources', getResources);
 router.get('/resources/edit', getEditResources);
 router.post('/resources/edit', postEditResources);
+
+//ministry teams
+router.get('/ministryteams', getTeams);
 
 router.use(get404);
 

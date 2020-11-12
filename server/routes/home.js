@@ -25,6 +25,11 @@ export const getRoot = async (req, res) => {
   });
 };
 
+export const getTeams = (req, res) => {
+  res.render('ministryteams.ejs', {
+    title: "Ministry Teams"
+  });
+};
 export const postSGInterest = async (req, res) => {
   const sheetData = {
     Timestamp: new Date(),
