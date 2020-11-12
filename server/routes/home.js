@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import creds from '../config/goc-form-ca6452f3be85.json';
 import { mailgun } from '../lib';
 
+
 const newVisitorSheet = new GoogleSpreadsheet(process.env.NEW_VISITOR_SHEET);
 const carouselRef = admin.firestore().collection('carousels');
 
@@ -21,36 +22,8 @@ export const getRoot = async (req, res) => {
   }
   res.render('index.ejs', {
     title: 'Grace on Campus',
-    carousels,
+    carousels
   });
-};
-
-export const postSGInterest = async (req, res) => {
-  const sheetData = {
-    Timestamp: new Date(),
-    Name: req.body.name,
-    Email: req.body.email,
-  };
-  try {
-    const data = {
-      to: 'kyledeguzman@ucla.edu',
-      from: 'gocwebteam@gmail.com',
-      subject: 'Small Group Interest',
-      text:
-        `${'Hi Kyle, '
-          + '\n\n'
-          + "There's a person named "}${
-          sheetData.Name
-        } interested in small group. It would be great if you could follow up with them!\n`
-        + `Their email is: ${sheetData.Email}\n\n`
-        + 'Thanks,\n'
-        + 'GOC Web Team',
-    };
-    mailgun.messages().send(data);
-  } catch (e) {
-    console.error(e);
-  }
-  res.redirect('/smallgroups');
 };
 
 export const postNewVisitor = async (req, res) => {
@@ -86,11 +59,6 @@ export const postNewVisitor = async (req, res) => {
 export const getBeliefs = (req, res) => {
   res.render('beliefs.ejs', {
     title: 'Our Beliefs',
-  });
-};
-export const getSmallGroups = (req, res) => {
-  res.render('smallgroups.ejs', {
-    title: 'Small Groups',
   });
 };
 export const getAbout = (req, res) => {

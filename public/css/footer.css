@@ -1,0 +1,14 @@
+footer {
+    padding: 4rem 0 3rem;
+    background-color: #f6f6f6 !important;
+    /* margin-top: 2rem; */
+
+}
+footer .card {
+    border: 1px solid #0a2a44;
+    opacity: 1;
+    transition: opacity .4s;
+}
+footer .card:hover {
+    opacity: .7;
+}

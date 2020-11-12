@@ -3,18 +3,16 @@ import admin from 'firebase-admin';
 import moment from 'moment';
 
 const { FieldValue } = admin.firestore; // need this in order to use arrayUnion and arrayRemove
-const classesRef = admin.firestore().collection('classes'); // gets firestore reference to 'classes' subcollection
+const classesRef = admin.firestore().collection('classes'); // set classesRef to be the classes database
 
-/*
-* getClasses gets all the classes that are in the firestore database
-* and relevant information and sends it to be displayed
-* Used when accessing the graceoncampus.org/classes webpage
-*/
+
+// display classes to /classes
 export const getClasses = async (req, res) => {
   try {
     const classes = await classesRef.get();
     const courses = [];
     if (!classes.empty) {
+      //extract information from each class and reformat fields if needed
       classes.forEach((doc) => {
         if (doc.exists) {
           const course = doc.data();
@@ -32,6 +30,7 @@ export const getClasses = async (req, res) => {
         }
       });
     }
+    //send class data to ejs for display
     res.render('classes.ejs', {
       title: 'Classes',
       classes: courses,
@@ -41,10 +40,8 @@ export const getClasses = async (req, res) => {
   }
 };
 
-/*
-* getEditClassById accesses a specific class based on their classID and passes
-* the information to be rendered when accessing graceoncampus.org/c/edit/[classID]
-*/
+
+//ADMINS: display class editing page for /c/edit/[classID]
 export const getEditClassById = async (req, res) => {
   const { classID } = req.params; // get classID
   try {
@@ -72,6 +69,8 @@ export const getEditClassById = async (req, res) => {
 * and edits that page. similar to postClass but with an already existing ID
 ***********possibility of helper function that applies to both of them
 */
+
+//ADMINS: post changes after editing class information
 export const postEditClassById = (req, res) => {
   const { classID } = req.params;
   // get information filled out in form:
@@ -80,10 +79,10 @@ export const postEditClassById = (req, res) => {
     const {
       title,
       location,
-      instructorName: instructor,
-      capacity: totalSpots,
+      instructor,
+      totalSpots,
       day,
-      time: classTime,
+      classTime,
       numStudents,
       startDate,
       deadline,
@@ -95,7 +94,7 @@ export const postEditClassById = (req, res) => {
         title,
         location,
         instructor,
-        openSpots: totalSpots - Number(numStudents),
+        openSpots: totalSpots - numStudents,
         totalSpots,
         day,
         classTime,
@@ -103,7 +102,9 @@ export const postEditClassById = (req, res) => {
         startDate: new Date(startDate),
         endDate: new Date(endDate),
         details,
+        students: [],
       });
+      //redirect to /classes afterwards
       res.redirect('/classes');
     } catch (e) {
       res.status(500).json(e);
