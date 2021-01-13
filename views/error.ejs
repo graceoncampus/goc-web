@@ -1,0 +1,23 @@
+﻿<!doctype html>
+<html lang="en">
+	<%- include widgets/header.ejs %>	
+	<%- include widgets/mainNav.ejs %>
+<div class="container">
+	<div class="page-header text-center">
+		<h1><span class="fa fa-anchor"></span> Error</h1>
+		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+	</div>
+	<div class="row">
+		<!-- LOCAL INFORMATION -->
+		<div class="col-sm-6">
+			<div class="well">
+				<% if (message) { %>
+				<div class="alert alert-danger">
+				  <%= message %>
+				</div>
+				<% } %>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

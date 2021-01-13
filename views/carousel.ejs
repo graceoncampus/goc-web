@@ -1,0 +1,80 @@
+﻿<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div id="carousel" class="overlay">
+    <h1>Carousel</h1>
+</div>
+<div class="container py-5 my-5">
+		<h1 class="mb-2">Add a new slide to the carousel</h1>
+    <form action="/carousels" class="row my-5 w-100" enctype="multipart/form-data" method="post">
+      <div class="col-md-4 mb-2">
+        <input type="text" name="uri" class="w-100 form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInputName2" placeholder="Link">
+      </div>
+      <div class="col-md-2 mb-2">
+        <input id="rank" type="number" class="w-100 form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Rank" name="rank">
+      </div>
+      <div class="col-md-4 mb-2">
+        <label class="mb-2 mr-sm-4 mb-sm-0 custom-file">
+          <input type="file" name="background" class="custom-file-input" required>
+          <span class="text-left custom-file-control"></span>
+        </label>
+      </div>
+      <div class="col-md-2 mb-2">
+          <button type="submit" class="btn btn-primary small">Submit</button>
+      </div>
+    </form>
+<% var i = 0 %>
+  <% carousels.forEach(function(carousel) { %>
+    <% if (i===0) { %>
+      <% i = 1 %>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <div class="card w-100">
+            <img class="card-img-top" src="<%= carousel.image %>">            
+            <div class="card-body">
+              <p class="card-text"><b>Rank:</b> <%= carousel.rank %></p>
+              <p class="card-text"><b>Link:</b> <%= carousel.uri %></p>
+            </div>
+            <div class="card-footer text-right">
+              <a href="/carousels/edit/<%= carousel.id %>">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <a href="/carousels/rm/<%= carousel.id %>">Delete</a>
+            </div>
+          </div>
+        </div>
+    <%  } else if (i===1) { %>
+      <% i = 2 %>
+      <div class="col-md-4">
+        <div class="card w-100">
+          <img class="card-img-top" src="<%= carousel.image %>">            
+          <div class="card-body">
+            <p class="card-text"><b>Rank:</b> <%= carousel.rank %></p>
+            <p class="card-text"><b>Link:</b> <%= carousel.uri %></p>
+          </div>
+          <div class="card-footer text-right">
+            <a href="/carousels/edit/<%= carousel.id %>">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/carousels/rm/<%= carousel.id %>">Delete</a>
+          </div>
+        </div>
+      </div>
+    <% } else { %>
+      <% i = 0 %>
+      <div class="col-md-4">
+        <div class="card w-100">
+          <img class="card-img-top" src="<%= carousel.image %>">            
+          <div class="card-body">
+            <p class="card-text"><b>Rank:</b> <%= carousel.rank %></p>
+            <p class="card-text"><b>Link:</b> <%= carousel.uri %></p>
+          </div>
+          <div class="card-footer text-right">
+            <a href="/carousels/edit/<%= carousel.id %>">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="/carousels/rm/<%= carousel.id %>">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  <% }) %>
+</div>
+<%- include widgets/footer.ejs %>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<link rel="stylesheet" href="/css/loader.css"/>
+<%- include widgets/mainNav.ejs %>
+<div class="container my-4 py-4">
+	<div class="col-lg-4 col-md-7 mx-auto text-center">
+		<h1 class="my-4 pt-4">Welcome!</h1>
+		<div class="mb-2 alert alert-danger"></div>
+		<form id="form">
+			<div class="text-left form-group">
+				<label for="email">Email</label>
+				<input id="email" type="email" class="form-control" placeholder="Email" name="email" required>
+			</div>
+			<div class="mb-5 text-left form-group">
+				<label class="text-left" for="password">Password</label>
+				<input id="password" type="password" class="form-control" placeholder="Password" name="password" required>
+			</div>
+			<button id="login" type="submit" class="btn btn-primary mb-2">Log in</button>
+		</form>
+		<a href="/forgot"><p class="mb-2">Forgot Password?</p></a>
+		<a href="/signup" class="btn outline btn-primary">Sign Up</a>
+	</div>
+</div>
+<%- include widgets/footer.ejs %>
+<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+<script>
+	$(document).ready(function() {
+		$('.alert').hide();
+		var config = {
+			apiKey: "AIzaSyC5FN_4EfqAcIoPOOVzTXeze-afOVS_YZo",
+			authDomain: "goc-app-6efe2.firebaseapp.com",
+			databaseURL: "https://goc-app-6efe2.firebaseio.com",
+			projectId: "goc-app-6efe2",
+			storageBucket: "goc-app-6efe2.appspot.com",
+			messagingSenderId: "44635103582"
+		};
+		firebase.initializeApp(config);
+	});
+
+	$('#form').submit(function(e){
+		$('#login').html('<div class="loader">Loading...</div>')
+		$('.alert').hide()
+		$('.alert').html('')
+    	e.preventDefault();
+		var email = $('#email').val()
+		var password = $('#password').val()
+		firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+			firebase.auth().currentUser.getIdToken(true)
+			.then(function(idToken) {
+				<% if (locals.redirect) { %>
+					$.post('/login<%= redirect %>', { token: idToken }, function(data) {
+				<% } else { %>
+					$.post('/login', { token: idToken }, function(data) {
+				<% } %>
+					if (!data || !data.redirect) {
+						$('#login').html('Log In')
+						$('html, body').animate({
+							scrollTop: $(".alert").offset().top
+						}, 750);
+						$('.alert').show()
+						$('.alert').html(data)
+					}
+					else {
+						$('#login').addClass('success')
+						$('#login').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+						window.location.assign(data.redirect || "/");
+					}
+				}, 'json');
+			})
+		})
+		.catch(function(error) {
+			$('#login').html('Log In')
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			$('.alert').show()
+			$('.alert').html(errorMessage);
+		});
+	});
+	$('nav').toggleClass('static');
+</script>
+</html>

@@ -1,0 +1,62 @@
+﻿<!doctype html>
+<html lang="en">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<div class="container py-8 my-8">
+    <div class="my-5">
+	  <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
+		<% var numStudents = 0 %>
+		<% if(Class.students != null) {numStudents = Object.keys(Class.students).length} %>
+        <h1 class="mb-2">Edit Class</h1>
+        <form action="/c/edit/<%= Class.id %>" class="w-100" enctype="multipart/form-data" method="post">
+          <div class="mt-5 form">
+			  <div class="row">
+				<div class="col-md-6">
+              	<label for="date">Title</label>
+				 <input type="text" value="<%= Class.title %>" name="title" class="form-control" placeholder="Title" required>
+				 <br>
+			  	<label for="date">Instructor</label>
+			  	<input type="text" value="<%= Class.instructor %>" name="instructor" class="form-control" placeholder="Instructor" required>
+				<br>
+				<label for="date">Location</label>
+				<input type="text" value="<%= Class.location %>" name="location" class="form-control" placeholder="Location" required>
+				<br>
+		      	<label for="date">Day</label>
+				<input type="text" value="<%= Class.day %>" name="day" class="form-control" placeholder="day" required>
+				<br>
+		      	<label for="date">Time</label>
+		      	<input type="text" value="<%= Class.classTime %>" name="classTime" class="form-control" placeholder="Time" required>
+			  </div>
+			  <div class="col-md-6">
+				<label for="date">Capacity</label>
+				<input type="text" value="<%= Class.totalSpots %>" name="totalSpots" class="form-control" placeholder="totalSpots" required>
+				<br>
+                <label for="date">Start date/time</label>
+				<input value="<%= Class.startDate %>" type="datetime-local" name="startDate" class="form-control date" required>
+				<br>
+                <label for="date">End date/time</label>
+				<input value="<%= Class.endDate %>" type="datetime-local" name="endDate" class="form-control date" required>
+				<br>
+                <label for="date">Deadline/time</label>
+				<input value="<%= Class.deadline %>" type="datetime-local" name="deadline" class="form-control date" required>
+				<br>
+                <label for="summary">Description of Class</label>
+				<textarea class="form-control" placeholder="Details" name="details" required><%= Class.details %></textarea>
+				<input type='hidden' name='numStudents' value="<%= numStudents %>" required>
+               </div>
+		  </div>
+		</div>
+          <div class="row">
+            <div class="mx-auto col-md-6 mt-4 mb-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+            </div>
+          </div>
+        </form>
+      <% } %>
+  </div>
+
+<br/>
+</div>
+</html>

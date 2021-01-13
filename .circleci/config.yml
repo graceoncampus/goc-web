@@ -1,0 +1,43 @@
+version: 2
+jobs:
+  build-job:
+    docker:
+      - image: circleci/node:latest # primary container
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: build
+          command: yarn run build
+  deploy-job:
+    machine:
+        enabled: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+              - "45:3d:c6:95:10:f4:da:24:93:05:ec:0c:42:3a:f9:d0"
+      - run:
+          name: Deploy
+          command: ssh -v $GOC_USER@$GOC_IP "cd $GOC_DIR; git pull; echo $firebase_config | base64 --decode > server/config/firebase.json; echo $google_config | base64 --decode > server/config/$google_file_name; echo $env_file | base64 --decode > .env; yarn; yarn run prod; pm2 reload $GOC_APP_NAME"
+workflows:
+   version: 2
+   build-deploy:
+     jobs:
+       - build-job
+       - deploy-job:
+           requires:
+             - build-job
+           filters:
+             branches:
+               only: master

@@ -1,0 +1,138 @@
+﻿<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div id="classes" class="overlay">
+  <h1>Classes</h1>
+</div>
+<div class="container">
+  <% if (!user) { %>
+    <div class="col-md-8 mx-auto px-4 pt-5 mt-3">
+        <h4 class="text-center">Please log in to enroll in classes.</h4>
+    </div>
+  <% } %>
+  <div class="row">
+    <div class="col-md-8 mx-auto px-4 py-4 my-3">
+      <% classes.forEach(function(Class){ %>
+        <div class="card w-100 mb-4">
+          <div class="card-body">
+            <h4 class="card-title">
+              <%= Class.title %>
+                <% if (Class.isEnrolled) { %>
+                  <span class="h6 float-right" style="color:#0ab435">
+                    Enrolled &nbsp;&nbsp;
+                    <i class="icon ion-ios-checkmark"></i>
+                  </span>
+                  <% } %>
+            </h4>
+            <h6 class="card-subtitle my-2 text-muted">Instructor:
+              <%= Class.instructor %>
+            </h6>
+            <h6 class="card-subtitle my-2 text-muted">
+              <%= Class.day %>,
+                <%= Class.classTime %> •
+                  <%= Class.location %> •
+                    <%= Class.dates %>
+            </h6>
+            <h6 class="card-subtitle my-2 text-muted">Spots available:
+              <%= Class.openSpots %>
+            </h6>
+            <h6 class="card-subtitle my-2 text-muted">Enroll by:
+              <%= Class.deadlineString %>
+            </h6>
+            <p class="card-text mt-4">
+              <%- Class.details %>
+            </p>
+            <% if(user && (user.permissions.admin || user.permissions.classes)) { %>
+              <div class="vertical">
+                <a href="/c/edit/<%= Class.id %>">Edit</a><br/>
+              </div>
+            <% } %>
+          <% if (user && (user.permissions.admin || user.permissions.classes)) { %>
+            <a href="/c/view/<%= Class.id %>">View Class Information</a><br/>
+            <% } %>
+            <% if (Class.isEnrolled/*&& (user && !(user.permissions.admin ||user.permissions.classes))*/) { %>
+              <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="unenroll(this)" class="float-right btn-primary col-lg-3 mt-3 red">Unenroll</button>
+              <%} else if (Class.openSpots > 0 && (user/* && !(user.permissions.admin || user.permissions.classes)*/)) { %>
+                <button data-id="<%= Class.id %>" data-spots="<%= Class.openSpots %>" onClick="enroll(this)" class="float-right btn-primary col-lg-3 mt-3">Enroll</button>
+              <% } %>
+              <% if (user && (user.permissions.admin || user.permissions.classes)) { %>
+                <button newBut= "<%= Class.id %>" onClick="deleteButton(this)" class="float-left btn-primary col-lg-3 mt-3">Delete</button>
+                <% } %>
+          </div>
+        </div>
+        <% }) %>
+        <hr class="my-5"/>
+          <% if(user && (user.permissions.admin || user.permissions.classes)){ %>
+            <div class="mt-5 form">
+              <h4 class="text-center mb-5">Add a New Class</h4>
+              <form action="/classes" method="post" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Title</label>
+                    <input class="form-control" type="text" name="title">
+                    <br>
+                    <label>Instructor's name</label>
+                    <input class="form-control" type="text" name="instructorName">
+                    <br>
+                    <label>Location</label>
+                    <input class="form-control" type="text" name="location">
+                    <br>
+                    <label>Day</label>
+                    <input class="form-control" type="text" name="day">
+                    <br>
+                    <label>Time</label>
+                    <input class="form-control" type="text" name="time">
+                    <br>
+                  </div>
+                  <div class="col-md-6">
+                    <label>Start date/time</label>
+                    <input class="form-control" type="datetime-local" name="startDate" />
+                    <br>
+                    <label>End date/time</label>
+                    <input class="form-control" type="datetime-local" name="endDate" />
+                    <br>
+                    <label>Signup deadline</label>
+                    <input class="form-control" type="datetime-local" name="deadline" />
+                    <br>
+                    <label>Capacity</label>
+                    <input class="form-control" type="number" name="capacity">
+                    <br>
+                    <label>Description of class</label>
+                    <textarea class="form-control" name="details"></textarea>
+                    <br>
+                  </div>
+                </div>
+                <input class="btn btn-primary" type="submit">
+              </form>
+            </div>
+            <% } %>
+    </div>
+  </div>
+  </div>
+  <%- include widgets/footer.ejs %>
+  <script>
+    function enroll(claz) {
+      var openSpots = claz.getAttribute("data-spots");
+      var id = claz.getAttribute("data-id");
+      $.post('/classes/enroll', { openSpots: openSpots, id: id }, function(data) {
+          if(data==='success') location.reload()
+      }, 'json');
+    }
+    function unenroll(claz) {
+      var openSpots = claz.getAttribute("data-spots");
+      var id = claz.getAttribute("data-id");
+      $.post('/classes/unenroll', { openSpots: openSpots, id: id }, function(data) {
+          if(data==='success') location.reload()
+      }, 'json');
+    }
+    function deleteButton(claz) {
+      if(confirm("Are you sure you want to delete this class?")){
+      var id = claz.getAttribute("newBut");
+        $.post(`/c/delete/${id}`, {}, function(data) {
+            if(data==='success') location.reload()
+        }, 'json');
+      }
+    }
+</script>
+</html>

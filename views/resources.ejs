@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<link rel="stylesheet" href="css/loader.css"/>
+<script src='https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js'></script>
+<%- include widgets/mainNav.ejs %>
+<div class="overlay" id="resources">
+    <h1>John Study Guide</h1>
+</div>
+<div class="container px-3 px-sm-3 my-5">
+  <div id="resources-body"></div>
+  <% if (user && user.permissions.resources) { %>
+    <div class="edit-resources-container">
+      <btn class="edit-resources btn btn-primary mb-5 col-sm-3" onclick="window.location.href = '/resources/edit'">Edit Resources</btn>
+    </div>
+  <% } %>
+</div>
+<div id='markdown-holder' style='display: none'><%= resources %></div>
+<script>
+let converter = new showdown.Converter();
+document.getElementById('resources-body').innerHTML = converter.makeHtml(document.getElementById('markdown-holder').innerText);
+</script>
+<%- include widgets/footer.ejs %>
+</html>

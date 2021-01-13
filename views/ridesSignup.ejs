@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<link rel="stylesheet" href="/css/loader.css"/>
+<%- include widgets/mainNav.ejs %>
+    <div class="container my-5 py-5">
+	<div class="col-lg-10 mx-auto text-center">
+        <div class="col-lg-5 mb-5 mx-auto">
+            <h1>Sign up for a Ride to Church</h1>
+            <div class="mb-2 alert alert-danger"></div>
+        </div>
+        <form id="form" class="w-100">
+            <div class="row mb-4">
+                <div class="col-lg-6">
+                    <div class="text-left form-group">
+                        <label for="firstname">Name <span class="text-red">*</span></label>
+                        <input id="name" value="<%= user && user.firstName ? (user.firstName + ' ' + user.lastName) : '' %>" type="text" class="form-control" placeholder="John" name="name" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="address">Address <span class="text-red">*</span></label>
+                        <input id="address" value="<%= user && user.address ? user.address : '' %>" type="text" class="form-control" placeholder="123 Bruin Lane" name="address" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="number">Phone Number <span class="text-red">*</span></label>
+                        <input id="number" value="<%= user && user.phoneNumber ? user.phoneNumber : '' %>" type="tel" class="form-control" placeholder="Yo digits" name="phoneNumber" required>
+                    </div>
+                    <div class="text-left form-group">
+                      <div class="form-check">
+                          <label class="form-check-label">
+                              <input class="driver form-check-input" type="checkbox" value=""> &nbsp;Driver
+                          </label>
+                      </div>
+                    </div>
+                    <!-- <div class="text-left form-group">
+                        <label for="comments">Number of Spots (if applicable)</label>
+                        <textarea rows="1" id="spots" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="# of spots" name="spots"></textarea>
+                    </div> -->
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-left form-group">
+                        <label for="email">Email <span class="text-red">*</span></label>
+                        <input id="email" value="<%= user && user.email ? user.email : '' %>" type="text" class="form-control" placeholder="youremail@gmail.com" name="email" required>
+                    </div>
+                    <div class="text-left form-group">
+                        <label for="comments">Comments</label>
+                        <textarea rows="3" id="comments" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="Your Comments" name="comments"></textarea>
+                    </div>
+                    <div class="text-left form-group">
+                        <label>Times <span class="text-red">*</span></label>
+                        <div class="mt-2 form-check">
+                            <label class="form-check-label">
+                                <input class="morning form-check-input" type="checkbox" value=""> &nbsp;Morning (8:30am - 12pm)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="evening form-check-input" type="checkbox" value=""> &nbsp;Evening (6:30pm - 8pm)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="staying form-check-input" type="checkbox" value=""> &nbsp;Staying (8:30am - 8pm)
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 mx-auto">
+                <button type="submit" id="signup" class="btn btn-primary mb-2">Sign Up</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<%- include widgets/footer.ejs %>
+<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-firestore.js"></script>
+
+<script>
+$(document).ready(function() {
+	$('.alert').hide();
+    var config = {
+        apiKey: "AIzaSyC5FN_4EfqAcIoPOOVzTXeze-afOVS_YZo",
+        authDomain: "goc-app-6efe2.firebaseapp.com",
+        databaseURL: "https://goc-app-6efe2.firebaseio.com",
+        projectId: "goc-app-6efe2",
+        storageBucket: "goc-app-6efe2.appspot.com",
+        messagingSenderId: "44635103582"
+    };
+    firebase.initializeApp(config);
+});
+$('#form').submit(function(e){
+    e.preventDefault();
+    $('#signup').html('<div class="loader">Signing Up...</div>')
+    $('.alert').hide()
+    $('.alert').html('')
+    var name = $('#name').val()
+    var address = $('#address').val()
+    var number = $('#number').val()
+    var email = $('#email').val()
+    var comments = $('#comments').val() ? $('#comments').val() : ''
+    var morning = $('.morning').is(':checked') ? true : false
+    var evening = $('.evening').is(':checked') ? true : false
+    var staying = $('.staying').is(':checked') ? true : false
+    var driver = $('.driver').is(':checked') ? true : false
+    // var spots = $('#spots').val() ? $('#spots').val() : ''
+    var uid = ''
+    <% if (user) { %>
+        if ('<%= user.firstName + ' ' + user.lastName %>' === name)
+        uid = '<%= user.uid %>'
+    <% } %>
+    if (!morning && !evening && !staying) {
+        $('#signup').html('Sign Up')
+        $('html, body').animate({
+            scrollTop: $(".alert").offset().top
+        }, 750);
+        $('.alert').show()
+        $('.alert').html('Please select at least one time')
+    } else {
+        var timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
+        var postData = { name, address, number, comments, email, morning, evening, staying, uid, timestamp, driver};
+        firebase.firestore().collection('ridesSignup').add(postData).then(function() {
+            $('#signup').addClass('success')
+            $('#signup').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+        }).catch(function(error){
+            $('html, body').animate({
+                scrollTop: $(".alert").offset().top
+            }, 750);
+            $('.alert').show()
+            $('.alert').html(error.message)
+        });
+    }
+})
+$('nav').toggleClass('static');
+</script>
+</html>

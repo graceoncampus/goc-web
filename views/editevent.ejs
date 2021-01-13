@@ -1,0 +1,68 @@
+﻿<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div class="container py-5 my-5">
+  <div class="row">
+    <div class="col-md-6">
+      <% if(user && (user.permissions.admin || user.permissions.events)){ %>
+        <h1 class="mb-2">Edit event</h1>
+        <form action="/e/edit/<%= event.id %>" class="my-5 w-100" enctype="multipart/form-data" method="post">
+          <div class="row">
+            <input type="hidden" value="<%= event.bannerURI %>" name="banner" />
+            <div class="col-lg-6 mb-2 text-left form-group">
+              <label for="date">Title</label>
+              <input type="text" value="<%= event.title %>" name="title" class="w-100 form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Title" required>
+            </div>
+            <div class="col-lg-6 mb-2 text-left form-group">
+              <label for="date">Location</label>
+              <input type="text" value="<%= event.location %>" name="location" class="w-100 form-control mb-2 mr-sm-2 mb-sm-0" placeholder="Location" required>
+            </div>
+            <div class="col-lg-6 mb-2 text-left form-group">
+                <label for="date">Start Date</label>
+                <input value="<%= event.startDate %>" type="datetime-local" name="startDate" class="form-control date" required>
+            </div>
+            <div class="col-lg-6 mb-2 text-left form-group">
+                <label for="date">End Date</label>
+                <input value="<%= event.endDate %>" type="datetime-local" name="endDate" class="form-control date" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 mb-2 text-left form-group">
+                <label for="summary">Summary</label>
+                <textarea rows="5" style="height: auto; line-height:1.1rem" class="form-control" placeholder="Summary" name="summary" required><%= event.summary %></textarea>
+            </div>
+            <div class="col-lg-12 mb-2 text-left form-group">
+              <label for="background">Banner Image</label>
+              <label class="d-block mt-1 mb-2 mr-sm-4 mb-sm-0 custom-file">Banner Image
+                <input type="file" name="background" class="custom-file-input">
+                <span class="text-left custom-file-control"></span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="mx-auto col-md-6 mt-4 mb-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      <% } %>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <img class="card-img-top" src="<%= event.bannerURI %>">
+        <div class="card-body">
+          <h4 class="card-title"><%= event.title %></h4>
+          <p class="card-text"><%= event.summary.replace("\"","").replace(/\\r/g, "").replace(/\\n/g, "<br/>") %></p>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted"><b>When: </b><%= event.formattedDate %></small><br/>
+          <small class="text-muted"><b>Where: </b><%= event.location %></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<br/>
+</div>
+</html>

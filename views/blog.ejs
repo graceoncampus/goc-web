@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div class="overlay" id="blog">
+    <h1>Blog</h1>
+</div>
+<div class="container pt-5">
+    <div class="post col-md-8 mx-auto col-sm-12 px-0">
+    <% posts.forEach(function(post) { %>
+        <div class="card-body">
+            <div>
+                <a href="/blog/<%- post.ID %>"><h5 class="mb-0"><%- post.title %></h5></a>
+                <label class="mb-3"><%= post.date %></label>
+                <% if (post.image) { %>
+                    <a href="/blog/<%- post.ID %>"><img class="thumbnail" src=<%= post.image %> /></a>
+                <% } %>
+                <p><%- post.excerpt %></p>
+            </div>
+        </div>
+    <% }) %>
+    </div>
+    <nav class="mt-5" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <% if (previousPage!==null) { %>
+                <li class="page-item"><a class="page-link" href="/blog/page/<%= previousPage %>">Previous</a></li>
+            <% } else { %>
+                <li class="page-item disabled" tabindex="-1"><a class="page-link" >Previous</a></li>
+            <% } %>
+            <% if (pages.length) { %>
+                <% pages.forEach(function(page) { %>
+                    <% if (currentPage === page) { %>
+                        <li class="page-item active"><a style="color:#fff!important"  class="page-link" href="/blog/page/<%= page %>"><%= page %></a></li>
+                    <% } else { %>
+                        <li class="page-item"><a class="page-link" href="/blog/page/<%= page %>"><%= page %></a></li>
+                    <% } %>
+                <% }) %>
+            <% } %>
+            <% if (nextPage!==null) { %>
+                <li class="page-item"><a class="page-link" href="/blog/page/<%= nextPage %>">Next</a></li>
+            <% } else { %>
+                <li class="page-item disabled" tabindex="-1"><a class="page-link" >Next</a></li>
+            <% } %>
+        </ul>
+    </nav>
+</div>
+
+<%- include widgets/footer.ejs %>
+</html>

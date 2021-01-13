@@ -1,0 +1,30 @@
+﻿<!doctype html>
+<html lang="en">
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div class="container my-5 py-5">
+  <div class="row">
+    <div class="col-md-4 mb-5 text-center">
+      <h1 class="mb-2">Edit a Carousel Item</h1>
+      <form class="w-100" action="/carousels/edit/<%= carousel.id %>" enctype="multipart/form-data" method="post">
+          <div class="text-left form-group">
+              <label for="uri">Link </label>
+              <input id="uri" value="<%= carousel.uri %>" type="text" class="form-control" placeholder="/" name="uri">
+          </div>
+          <div class="text-left form-group">
+              <label for="rank">Rank </label>
+              <input id="rank" value="<%= carousel.rank %>"type="number" class="form-control" placeholder="0" name="rank">
+          </div>
+          <label class="mb-5 custom-file">
+            <input type="file" name="background" class="custom-file-input">
+            <span class="text-left custom-file-control"></span>
+          </label>
+          <button type="submit" class="btn btn-primary">Edit</button>
+      </form>
+    </div>
+    <div class="col-md-8">
+      <img class="img-fluid" src="<%= carousel.image %>">
+    </div>
+  </div>
+</div>
+</html>
