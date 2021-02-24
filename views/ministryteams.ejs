@@ -11,14 +11,12 @@
 <div class="container">
   <div class="row">
       <div class="col-md-8 mx-auto px-4 py-5 my-3 order-md-1">
-        <h3>List of Ministry Teams</h3>
+        <h3>List of Ministry Teams:</h3>
         <hr>
-        <h5 id = 0>
-        &nbsp&#9830
-        <% teams.forEach(function(Team, index){%>
-          <a href=#<%=index%>><%=Team.name%></a>&nbsp&#9830&nbsp
-        <%})%>
-        </h5>
+        <ul><% teams.forEach(function(Team, index){%>
+          <li><a href=#<%=index%>><%=Team.name%></a></li>
+          <%})%></ul>
+        <br id=0>
         <hr>
         <br>
         <h3>Music Team</h3>
@@ -29,75 +27,16 @@
               <p><%=Team.leader%></p>
               <p><%=Team.contactInfo%></p>  
             <%}else{%>
-              <p id=<%=index+1%>>Please login for contact information.<br><a href=#top>return to the top of the page</a></p>
+              <p id=<%=index+1%>>Please login for more information.<br></p>
             <%}%>
             <br>
           <% if (index < teams.length -1){%>
             <h3><%=teams[index + 1].name%></h3>
           <%}%>
         <%})%>
+        <p><a href=#top>return to the top of the page</a></p>
       </div>
   </div>
 </div>
-<!-- <div class = "row">
-  <div class = "col-md-5 mx-auto px-3 py-3 my-3">
-    <% teams.forEach(function(Team,index){
-        if(index %2 == 0){%>
-          <div class="card mb-4">
-            <div class="card-body">
-              <h4 class = "card-text"><%=Team.name%></h4>
-              <p class = "card-text">
-                <%= Team.description %>
-              </p>
-              <% if(!user){%> 
-              <p class = "card-text">Please login for more information.</p>
-              <%}else{%>
-                <p class = "card-text">Leader(s): <%=Team.leader%> </p>
-                <p class = "card-text">Contact Information: TBD</p>
-              <%}%>
-            </div>
-          </div>
-    <%}})%>
-  </div>
-  <div class = "col-md-5 mx-auto px-3 py-3 my-3 ms-10">
-    <% teams.forEach(function(Team,index){
-        if(index %2 == 1){%>
-          <div class="card mb-4">
-            <div class="card-body">
-              <h4 class = "card-text"><%=Team.name%></h4>
-              <p class = "card-text">
-                <%= Team.description %>
-              </p>
-              <% if(!user){%> 
-                <p class = "card-text">Please login for more information.</p>
-                <%}else{%>
-                  <p class = "card-text">Leader(s): <%=Team.leader%> </p>
-                  <p class = "card-text">Contact Information: TBD</p>
-              <%}%>
-            </div>
-          </div>
-    <%}})%>
-  </div>
-</div>  -->
-<!-- 
-<div class="row">
-  <div class="col-md-8 mx-auto px-4 py-4 my-3">
-    <% teams.forEach(function(Team, index){ %>
-      <div class="card w-100 mb-4">
-        <div class="card-body">
-          <h4 class="card-title">
-            <%= Team.name %>
-          </h4>
-          <p class="card-text mt-4">
-            <%= Team.description %>
-          </p>
-          <p class="card-text mt-4">Leader(s):
-            <%= Team.leader %>
-          </p>
-        </div>
-      </div>
-      <% }); %>
-  </div>
-</div> -->
 
 <%- include widgets/footer.ejs %>
