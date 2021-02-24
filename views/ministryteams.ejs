@@ -24,8 +24,8 @@
           <hr>
           <p><%=Team.description%></p>
             <% if(user){%>
-              <p><%=Team.leader%></p>
-              <p><%=Team.contactInfo%></p>  
+              <p>Leader(s): <%=Team.leader%></p>
+              <p>Contact: <%=Team.contactInfo%></p>  
             <%}else{%>
               <p id=<%=index+1%>>Please login for more information.<br></p>
             <%}%>
