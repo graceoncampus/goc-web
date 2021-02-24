@@ -1,6 +1,4 @@
-import formidable from 'formidable';
 import admin from 'firebase-admin';
-import moment from 'moment';
 
 const { FieldValue } = admin.firestore; // need this in order to use arrayUnion and arrayRemove
 const teamRef = admin.firestore().collection('ministryTeams'); // gets firestore reference to 'classes' subcollection
