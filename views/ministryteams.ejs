@@ -16,8 +16,8 @@
         <ul><% teams.forEach(function(Team, index){%>
           <li><a href=#<%=index%>><%=Team.name%></a></li>
           <%})%></ul>
-        <br id=0>
-        <hr>
+        <hr id=0>
+        <br>
         <br>
         <h3><%=teams[0].name%></h3>
         <% teams.forEach(function(Team, index){%>
@@ -25,7 +25,7 @@
           <p><%=Team.description%></p>
             <% if(user){%>
               <p>Leader(s): <%=Team.leader%></p>
-              <p>Contact: <%=Team.contactInfo%></p>  
+              <p id=<%=index+1%>>Contact: <%=Team.contactInfo%></p>  
             <%}else{%>
               <p id=<%=index+1%>>Please login for more information.<br></p>
             <%}%>
