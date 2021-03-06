@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  
+<%- include widgets/header.ejs %>
+<%- include widgets/mainNav.ejs %>
+<div class="overlay" id="our-beliefs">
+  <h1 id="top">Ministry Teams</h1>
+</div>
+
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-8 mx-auto px-4 py-5 my-3 order-md-1">
+        <h3>List of Ministry Teams:</h3>
+        <hr>
+        <ul><% teams.forEach(function(Team, index){%>
+          <li><a href=#<%=index%>><%=Team.name%></a></li>
+          <%})%></ul>
+        <hr id=0>
+        <br>
+        <br>
+        <h3><%=teams[0].name%></h3>
+        <% teams.forEach(function(Team, index){%>
+          <hr>
+          <p><%=Team.description%></p>
+            <% if(user){%>
+              <p>Leader(s): <%=Team.leader%></p>
+              <p id=<%=index+1%>>Contact: <%=Team.contactInfo%></p>  
+            <%}else{%>
+              <p id=<%=index+1%>>Please login for more information.<br></p>
+            <%}%>
+            <br>
+          <% if (index < teams.length -1){%>
+            <h3><%=teams[index + 1].name%></h3>
+          <%}%>
+        <%})%>
+        <p><a href=#top>return to the top of the page</a></p>
+      </div>
+  </div>
+</div>
+
+<%- include widgets/footer.ejs %>
