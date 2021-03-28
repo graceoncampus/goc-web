@@ -89,3 +89,7 @@ export const postInvite = (req, res) => {
     }
   });
 };
+
+export const getChangePassword = (req, res) => {
+  res.render('changePassword.ejs');
+}
