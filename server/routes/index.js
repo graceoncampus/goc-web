@@ -13,6 +13,7 @@ import {
   postInvite,
   getForgot,
   getLogout,
+  getChangePassword
 } from './auth';
 import {
   getEvents,
@@ -109,6 +110,9 @@ router.get('/forgot', isNotLoggedIn, getForgot);
 // user
 router.get('/profile', isLoggedIn, getProfile);
 router.post('/profile', isLoggedIn, postProfileEdit);
+
+// change password
+router.get('/change_password', isLoggedIn, getChangePassword);
 
 router.get('/roster', isLoggedIn, getRoster);
 
