@@ -4,12 +4,14 @@ import { promisify } from 'util';
 import admin from 'firebase-admin';
 import creds from '../config/goc-form-ca6452f3be85.json';
 import { mailgun } from '../lib';
+import { FIREBASE_CONFIG } from '../config/firebaseConfig';
 
 const ridesRef = admin.firestore().collection('rides');
 
 export const getRidesSignup = (req, res) => {
   res.render('ridesSignup.ejs', {
     title: 'Signup for a Ride',
+    config: FIREBASE_CONFIG,
   });
 };
 const deleteRides = () => ridesRef.doc('current_rides').collection('cars').get().then(ridesSnapshot => !ridesSnapshot.empty && Promise.all(ridesSnapshot.docs.map(doc => doc.ref.delete())));
