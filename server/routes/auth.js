@@ -1,6 +1,7 @@
 import mail from 'mailgun-js';
 import admin from 'firebase-admin';
 import firebaseSignup from '../auth/signup';
+import { FIREBASE_CONFIG } from '../config/firebaseConfig'
 
 const invitedRef = admin.firestore().collection('invitedUsers');
 const usersRef = admin.firestore().collection('users');
@@ -8,7 +9,9 @@ const usersRef = admin.firestore().collection('users');
 const mailgun = mail({ apiKey: 'key-4d9b6eedc8a5b75c6a9e0b7eb49fa76c', domain: 'graceoncampus.org' });
 
 export const getLogin = (req, res) => {
-  res.render('login.ejs');
+  res.render('login.ejs', {
+    config: FIREBASE_CONFIG,
+  });
 };
 
 export const postLogin = (req, res) => {
@@ -20,6 +23,7 @@ export const postLogin = (req, res) => {
 export const getForgot = (req, res) => {
   res.render('forgot.ejs', {
     title: 'Forgot password',
+    config: FIREBASE_CONFIG,
   });
 };
 
@@ -27,6 +31,7 @@ export const getLoginRedirect = (req, res) => {
   const destination = req.originalUrl.split('/login/redir/').pop();
   res.render('login.ejs', {
     redirect: (destination) ? `/redir/${destination}` : '',
+    config: FIREBASE_CONFIG,
   });
 };
 
@@ -91,5 +96,7 @@ export const postInvite = (req, res) => {
 };
 
 export const getChangePassword = (req, res) => {
-  res.render('changePassword.ejs');
+  res.render('changePassword.ejs', {
+    config: FIREBASE_CONFIG,
+  });
 }
