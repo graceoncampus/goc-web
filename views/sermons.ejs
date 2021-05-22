@@ -6,7 +6,6 @@
         <div class="overlay" id="sermons">
             <h1>Sermons</h1>
         </div>
-
         <div class="container px-3 my-5">
             <div id="sermon-list" class="row">
                 <div class="col-lg-4 mb-5">
@@ -25,7 +24,7 @@
                                         </h6>
                                         <div class="row mt-4">
                                             <div class="col-md-10">
-                                                <audio preload="none" class="w-100" controls>
+                                                <audio preload="none" class="w-100 sermon-audio" controls>
                                                     <source src="<%= v.URI %>">
                                                 </audio>
                                             </div>
@@ -104,4 +103,18 @@
                 var hackerList = new List('sermon-list', options);
             })
         </script>
+        <script>
+            let sermonAudios = document.getElementsByClassName("sermon-audio");
+            function sermonPlay(event){
+                console.log(event);
+                for (let s of sermonAudios) {
+                    if(s != event.target)
+                        s.pause();
+                }
+            }
+            for (let s of sermonAudios) {
+                s.addEventListener("play", sermonPlay);
+            }
+        </script>
+
 </html>
