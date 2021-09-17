@@ -1,7 +1,7 @@
 import mail from 'mailgun-js';
 import admin from 'firebase-admin';
 import firebaseSignup from '../auth/signup';
-import { FIREBASE_CONFIG } from '../config/firebaseConfig'
+import { FIREBASE_CONFIG } from '../config/firebaseConfig';
 
 const invitedRef = admin.firestore().collection('invitedUsers');
 const usersRef = admin.firestore().collection('users');
