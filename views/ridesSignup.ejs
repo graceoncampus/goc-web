@@ -31,10 +31,10 @@
                           </label>
                       </div>
                     </div>
-                    <!-- <div class="text-left form-group">
+                    <div class="text-left form-group">
                         <label for="comments">Number of Spots (if applicable)</label>
                         <textarea rows="1" id="spots" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="# of spots" name="spots"></textarea>
-                    </div> -->
+                    </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="text-left form-group">
@@ -49,17 +49,17 @@
                         <label>Times <span class="text-red">*</span></label>
                         <div class="mt-2 form-check">
                             <label class="form-check-label">
-                                <input class="morning form-check-input" type="checkbox" value=""> &nbsp;Morning (8:30am - 12pm)
+                                <input class="morning form-check-input" type="checkbox" value=""> &nbsp;Morning (9am - 12:30pm)
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="evening form-check-input" type="checkbox" value=""> &nbsp;Evening (6:30pm - 8pm)
+                                <input class="evening form-check-input" type="checkbox" value=""> &nbsp;Evening (6pm - 7:30pm)
                             </label>
                         </div>
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="staying form-check-input" type="checkbox" value=""> &nbsp;Staying (8:30am - 8pm)
+                                <input class="staying form-check-input" type="checkbox" value=""> &nbsp;Staying (9am - 7:30pm)
                             </label>
                         </div>
 
@@ -97,7 +97,7 @@ $('#form').submit(function(e){
     var evening = $('.evening').is(':checked') ? true : false
     var staying = $('.staying').is(':checked') ? true : false
     var driver = $('.driver').is(':checked') ? true : false
-    // var spots = $('#spots').val() ? $('#spots').val() : ''
+    var spots = $('#spots').val() ? $('#spots').val() : ''
     var uid = ''
     <% if (user) { %>
         if ('<%= user.firstName + ' ' + user.lastName %>' === name)
