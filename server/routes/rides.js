@@ -1,5 +1,5 @@
 import moment from 'moment';
-import GoogleSpreadsheet from 'google-spreadsheet';
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 import { promisify } from 'util';
 import admin from 'firebase-admin';
 import creds from '../config/goc-form-ca6452f3be85.json';

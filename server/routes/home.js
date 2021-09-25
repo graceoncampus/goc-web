@@ -1,5 +1,5 @@
 import cloudinary from 'cloudinary';
-import GoogleSpreadsheet from 'google-spreadsheet';
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 import formidable from 'formidable';
 import admin from 'firebase-admin';
 import { promisify } from 'util';
