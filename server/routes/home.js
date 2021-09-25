@@ -7,7 +7,7 @@ import creds from '../config/goc-form-ca6452f3be85.json';
 import { mailgun } from '../lib';
 
 
-const newVisitorSheet = new GoogleSpreadsheet(process.env.NEW_VISITOR_SHEET);
+const newVisitorSheetDoc = new GoogleSpreadsheet(process.env.NEW_VISITOR_SHEET);
 const carouselRef = admin.firestore().collection('carousels');
 
 export const getRoot = async (req, res) => {
@@ -33,8 +33,10 @@ export const postNewVisitor = async (req, res) => {
     Email: req.body.email,
   };
   try {
-    await promisify(newVisitorSheet.useServiceAccountAuth)(creds);
-    newVisitorSheet.addRow(1, sheetData);
+    await newVisitorSheetDoc.useServiceAccountAuth(creds);
+    await newVisitorSheetDoc.loadInfo();
+    const newVisitorSheet = newVisitorSheetDoc.sheetsByIndex[0];
+    await newVisitorSheet.addRow(sheetData);
     const data = {
       to: 'gocwelcome@gmail.com',
       from: 'gocwebteam@gmail.com',
