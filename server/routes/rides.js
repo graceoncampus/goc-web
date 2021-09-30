@@ -1,5 +1,6 @@
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+
 import moment from 'moment';
-import GoogleSpreadsheet from 'google-spreadsheet';
 import { promisify } from 'util';
 import admin from 'firebase-admin';
 import creds from '../config/goc-form-ca6452f3be85.json';
@@ -102,8 +103,8 @@ export const updateRides = async (req, res) => {
   const re1 = /https:\/\/docs\.google\.com\/spreadsheets\/d\//g;
   const re2 = /\/.*/g;
   const sheetID = req.body.sheetURL.replace(re1, '').replace(re2, '');
-  const ridesSheet = new GoogleSpreadsheet(sheetID);
-
+  const ridesSheetDoc = new GoogleSpreadsheet(sheetID);
+  
   const {
     emailMessage,
     date,
@@ -115,44 +116,50 @@ export const updateRides = async (req, res) => {
 
   try {
     await deleteRides();
-    await promisify(ridesSheet.useServiceAccountAuth)(creds);
-    const rows = await promisify(ridesSheet.getRows)(1, {});
+    await ridesSheetDoc.useServiceAccountAuth({
+      client_email: creds.client_email,
+      private_key: creds.private_key
+    });
+    await ridesSheetDoc.loadInfo();
+    const ridesSheet = ridesSheetDoc.sheetsByIndex[0];
+
+    const rows = await ridesSheet.getRows({offset: 0});
     let i = 0;
     let len = rows.length;
     for (; i < len; i += 1) {
       const row = rows[i];
-      if (row.ridername && row.drivername) {
-        const car = cars.find(c => c.driver.name === row.drivername);
+      if (row.rider_name && row.driver_name) {
+        const car = cars.find(c => c.driver.name === row.driver_name);
         if (car) {
           car.riders.push({
-            uid: row.rideruid,
-            morning: row.ridermorning,
-            staying: row.riderstaying,
-            evening: row.riderevening,
-            name: row.ridername,
-            email: row.rideremail,
-            phoneNumber: row.riderphone,
-            location: row.riderpickuplocation,
+            uid: row.rider_uid,
+            morning: row.rider_morning,
+            staying: row.rider_staying,
+            evening: row.rider_evening,
+            name: row.rider_name,
+            email: row.rider_email,
+            phoneNumber: row.rider_phone,
+            location: row.rider_pickup_location,
           });
         } else {
           cars.push({
             driver: {
-              uid: row.driveruid,
-              name: row.drivername,
-              email: row.driveremail,
-              phoneNumber: row.driverphone,
-              comment: row.postedcomment,
-              sendEmail: row.sendemail.toLowerCase() === 'yes',
+              uid: row.driver_uid,
+              name: row.driver_name,
+              email: row.driver_email,
+              phoneNumber: row.driver_phone,
+              comment: row.posted_comment,
+              sendEmail: row.send_email.toLowerCase() === 'yes',
             },
             riders: [{
-              uid: row.rideruid,
-              morning: row.ridermorning,
-              staying: row.riderstaying,
-              evening: row.riderevening,
-              name: row.ridername,
-              email: row.rideremail,
-              phoneNumber: row.riderphone,
-              location: row.riderpickuplocation,
+              uid: row.rider_uid,
+              morning: row.rider_morning,
+              staying: row.rider_staying,
+              evening: row.rider_evening,
+              name: row.rider_name,
+              email: row.rider_email,
+              phoneNumber: row.rider_phone,
+              location: row.rider_pickup_location,
             }],
           });
         }
@@ -165,6 +172,7 @@ export const updateRides = async (req, res) => {
     });
     i = 0;
     len = cars.length;
+
     for (; i < len; i += 1) {
       const car = cars[i];
       const newCarRef = ridesRef.doc('current_rides').collection('cars').doc();
@@ -193,32 +201,45 @@ export const updateRides = async (req, res) => {
 
 
 export const notifyRiders = async (req, res) => {
-  // SHOULD ACTUALLY VERIFY UID AGAINST FIREBASE AUTH
-  if (!req.user || !req.user.uid) res.status(500).json('User is not authorized');
+  if (!req.user || !(req.user.permissions.admin || req.user.permissions.rides)) {
+    res.status(500).json('User is not authorized');
+    return;
+  }
+
   const users = [];
   try {
-    const usersWithRides = await admin.firestore().collection('users').where('currentCar', '>', '').get();
-    if (!usersWithRides.empty) {
-      for (const u of usersWithRides.docs) {
-        const data = u.data();
-        if (data.tokens && Array.isArray(data.tokens) && data.tokens.length > 0) {
-          try {
-            const carDoc = await ridesRef.doc('current_rides').collection('cars').doc(data.currentCar).get();
-            if (carDoc.exists) {
-              const car = carDoc.data();
-              const rider = car.riders.find(r => r.uid === u.id);
-              if (rider) {
-                users.push({
-                  driver: car.driver,
-                  location: rider.location,
-                  ...data,
-                });
-              }
-            }
-          } catch (e) {}
-        }
-      }
-    }
+    const carCollection = await ridesRef.doc('current_rides').collection('cars').get();
+    carCollection.docs.forEach((carDoc) => {
+      
+    });
+    // const usersWithRides = await admin.firestore().collection('users').where('currentCar', '>', '').get();
+    // if (!usersWithRides.empty) {
+    //   for (const u of usersWithRides.docs) {
+    //     const data = u.data();
+    //     if (data.tokens && Array.isArray(data.tokens) && data.tokens.length > 0) {
+    //       try {
+    //         const carDoc = await ridesRef.doc('current_rides').collection('cars').doc(data.currentCar).get();
+    //         console.log(data.currentCar);
+    //         if (carDoc.exists) {
+    //           const car = carDoc.data();
+    //           const rider = car.riders.find(r => r.email === u.email);
+    //           if (rider) {
+    //             users.push({
+    //               driver: car.driver,
+    //               location: rider.location,
+    //               ...data,
+    //             }); 
+    //           }
+    //         }
+    //       } catch (e) {
+    //         res.status(500).json('Something went wrong while gathering riders from users.')
+    //       }
+    //     }
+    //   }
+    // }
+
+    console.log(users);
+
     users.forEach((u) => {
       const body = `Your driver to church this Sunday is ${u.driver.name}. Be at ${u.location ? u.location : 'your respective pickup location'} at 8:15 AM. See you at church ⛪️!`;
       u.tokens.forEach((t) => {
