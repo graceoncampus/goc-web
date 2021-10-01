@@ -176,6 +176,7 @@ export const updateRides = async (req, res) => {
     for (; i < len; i += 1) {
       const car = cars[i];
       const newCarRef = ridesRef.doc('current_rides').collection('cars').doc();
+      
       batch.set(newCarRef, {
         driver: car.driver,
       });
@@ -186,6 +187,17 @@ export const updateRides = async (req, res) => {
             currentCar: newCarRef.id,
           });
         }
+        
+        // Fill in missing values to avoid issues with undefined parsing from google spreadsheet
+        rider.uid = rider.uid ? rider.uid : '';
+        rider.morning = rider.morning ? rider.morning : '';
+        rider.staying = rider.staying ? rider.staying : '';
+        rider.evening = rider.evening ? rider.evening : '';
+        rider.name = rider.name ? rider.name : '';
+        rider.email = rider.email ? rider.email : '';
+        rider.phoneNumber = rider.phoneNumber ? rider.phoneNumber : '';
+        rider.location = rider.location ? rider.location : '';
+
         batch.update(newCarRef, {
           riders: admin.firestore.FieldValue.arrayUnion(rider),
         });
@@ -194,6 +206,7 @@ export const updateRides = async (req, res) => {
     await batch.commit();
     res.redirect('/rides');
   } catch (e) {
+    console.log(e);
     res.status(500).json(e);
   }
 };
@@ -237,8 +250,6 @@ export const notifyRiders = async (req, res) => {
     //     }
     //   }
     // }
-
-    console.log(users);
 
     users.forEach((u) => {
       const body = `Your driver to church this Sunday is ${u.driver.name}. Be at ${u.location ? u.location : 'your respective pickup location'} at 8:15 AM. See you at church ⛪️!`;
