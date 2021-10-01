@@ -18,12 +18,12 @@
             <p>See you there!</p>
             <a href="/rides/signup" target="_blank" class="btn btn-primary mb-5 col-sm-3">Sign Up</a>
         </div>
-        <% if (!user) { %>
+        <!-- <% if (!user) { %>
             <div class="col-md-8 mx-auto px-4 pt-5 mt-3">
                 <h4 class="text-center">Please log in to view rides.</h4>
             </div>
-          <% } %>
-        <% if (user && cars && cars.length > 0) { %>
+          <% } %> -->
+        <% if (cars && cars.length > 0) { %>
             <table class="table table-striped">
                     <tr>
                         <td>Driver</td>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="form-group">
                         <label>Custom Email Message</label>
-                        <input type="text" class="form-control" name="emailMessage" value="Please call or text your riders -- dormies should be outside by 8:15AM. If you can't, tell us and we'll call them for you. If you are not driving your riders back, please tell them to find us IMMEDIATELY after Crossroads.">
+                        <input type="text" class="form-control" name="emailMessage" value="Please message your riders BEFORE Sunday. If you can't, let us know and we'll message them for you. Aim to pick up dormies at their respective turnaround  @8:15AM. If you are not driving your riders back, please tell them to find us IMMEDIATELY after Crossroads.">
                     </div>
                     <button type="submit" class="col-md-3 my-3 btn btn-primary btn-lg">Update Rides</button>
                 </form>
