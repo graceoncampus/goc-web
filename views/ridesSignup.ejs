@@ -27,12 +27,12 @@
                     <div class="text-left form-group">
                       <div class="form-check">
                           <label class="form-check-label">
-                              <input class="driver form-check-input" type="checkbox" value=""> &nbsp;Driver
+                              <input id='driver-checkbox' class="driver form-check-input" type="checkbox" value=""> &nbsp;Driver
                           </label>
                       </div>
                     </div>
-                    <div class="text-left form-group">
-                        <label for="comments">Number of Spots (if applicable)</label>
+                    <div id='number-of-spots' class="text-left form-group">
+                        <label for="comments">Number of Spots</label>
                         <textarea rows="1" id="spots" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="# of spots" name="spots"></textarea>
                     </div>
                 </div>
@@ -83,6 +83,16 @@ $(document).ready(function() {
     var config = JSON.parse('<%- JSON.stringify(config) %>');
     firebase.initializeApp(config);
 });
+
+$('#driver-checkbox').onClick((e) => {
+    if ($('$number-of-spots').is(':visible')) {
+        $('#number-of-spots').hide();
+        $('#spots').value = '';
+    } else {
+        $('#number-of-spots').show();
+    }
+});
+
 $('#form').submit(function(e){
     e.preventDefault();
     $('#signup').html('<div class="loader">Signing Up...</div>')
