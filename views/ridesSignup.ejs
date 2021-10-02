@@ -3,6 +3,9 @@
 <%- include widgets/header.ejs %>
 <link rel="stylesheet" href="/css/loader.css"/>
 <%- include widgets/mainNav.ejs %>
+<div class="overlay" id="rides">
+    <h1>Rides</h1>
+</div>
     <div class="container my-5 py-5">
 	<div class="col-lg-10 mx-auto text-center">
         <div class="col-lg-5 mb-5 mx-auto">
@@ -11,63 +14,71 @@
         </div>
         <form id="form" class="w-100">
             <div class="row mb-4">
-                <div class="col-lg-6">
-                    <div class="text-left form-group">
-                        <label for="firstname">Name <span class="text-red">*</span></label>
-                        <input id="name" value="<%= user && user.firstName ? (user.firstName + ' ' + user.lastName) : '' %>" type="text" class="form-control" placeholder="John" name="name" required>
+                <% if (!user) { %>
+                    <div class="col-md-8 mx-auto px-4 pt-5 mt-3">
+                        <h4 class="text-center">Please log in or sign up for an account to register for a ride.</h4>
                     </div>
-                    <div class="text-left form-group">
-                        <label for="address">Address <span class="text-red">*</span></label>
-                        <input id="address" value="<%= user && user.address ? user.address : '' %>" type="text" class="form-control" placeholder="123 Bruin Lane" name="address" required>
-                    </div>
-                    <div class="text-left form-group">
-                        <label for="number">Phone Number <span class="text-red">*</span></label>
-                        <input id="number" value="<%= user && user.phoneNumber ? user.phoneNumber : '' %>" type="tel" class="form-control" placeholder="Yo digits" name="phoneNumber" required>
-                    </div>
-                    <div class="text-left form-group">
-                      <div class="form-check">
-                          <label class="form-check-label">
-                              <input id='driver-checkbox' class="driver form-check-input" type="checkbox" value=""> &nbsp;Driver
-                          </label>
-                      </div>
-                    </div>
-                    <div id='number-of-spots' class="text-left form-group">
-                        <label for="comments">Number of Spots</label>
-                        <textarea rows="1" id="spots" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="# of spots" name="spots"></textarea>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="text-left form-group">
-                        <label for="email">Email <span class="text-red">*</span></label>
-                        <input id="email" value="<%= user && user.email ? user.email : '' %>" type="text" class="form-control" placeholder="youremail@gmail.com" name="email" required>
-                    </div>
-                    <div class="text-left form-group">
-                        <label for="comments">Comments</label>
-                        <textarea rows="3" id="comments" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="Your Comments" name="comments"></textarea>
-                    </div>
-                    <div class="text-left form-group">
-                        <label>Times <span class="text-red">*</span></label>
-                        <div class="mt-2 form-check">
-                            <label class="form-check-label">
-                                <input class="morning form-check-input" type="checkbox" value=""> &nbsp;Morning (9am - 12:30pm)
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="evening form-check-input" type="checkbox" value=""> &nbsp;Evening (6pm - 7:30pm)
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="staying form-check-input" type="checkbox" value=""> &nbsp;Staying (9am - 7:30pm)
-                            </label>
-                        </div>
 
+                <% } else { %>
+                    <div class="col-lg-6">
+                        <div class="text-left form-group">
+                            <label for="firstname">Name <span class="text-red">*</span></label>
+                            <input id="name" value="<%= user && user.firstName ? (user.firstName + ' ' + user.lastName) : '' %>" type="text" class="form-control" placeholder="John" name="name" required>
+                        </div>
+                        <div class="text-left form-group">
+                            <label for="address">Address <span class="text-red">*</span></label>
+                            <input id="address" value="<%= user && user.address ? user.address : '' %>" type="text" class="form-control" placeholder="123 Bruin Lane" name="address" required>
+                        </div>
+                        <div class="text-left form-group">
+                            <label for="number">Phone Number <span class="text-red">*</span></label>
+                            <input id="number" value="<%= user && user.phoneNumber ? user.phoneNumber : '' %>" type="tel" class="form-control" placeholder="Yo digits" name="phoneNumber" required>
+                        </div>
+                        <div class="text-left form-group">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input id='driver-checkbox' class="driver form-check-input" type="checkbox" value=""> &nbsp;Driver
+                            </label>
+                        </div>
+                        </div>
+                        <div id='number-of-spots' class="text-left form-group">
+                            <label for="comments">Number of Spots</label>
+                            <textarea rows="1" id="spots" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="# of spots" name="spots"></textarea>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-5 mx-auto">
-                <button type="submit" id="signup" class="btn btn-primary mb-2">Sign Up</button>
+                    <div class="col-lg-6">
+                        <div class="text-left form-group">
+                            <label for="email">Email <span class="text-red">*</span></label>
+                            <input id="email" value="<%= user && user.email ? user.email : '' %>" type="text" class="form-control" placeholder="youremail@gmail.com" name="email" required>
+                        </div>
+                        <div class="text-left form-group">
+                            <label for="comments">Comments</label>
+                            <textarea rows="3" id="comments" style="height: auto; line-height:1.1rem" id="email" class="form-control" placeholder="Your Comments" name="comments"></textarea>
+                        </div>
+                        <div class="text-left form-group">
+                            <label>Times <span class="text-red">*</span></label>
+                            <div class="mt-2 form-check">
+                                <label class="form-check-label">
+                                    <input class="morning form-check-input" type="checkbox" value=""> &nbsp;Morning (9am - 12:30pm)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="evening form-check-input" type="checkbox" value=""> &nbsp;Evening (6pm - 7:30pm)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="staying form-check-input" type="checkbox" value=""> &nbsp;Staying (9am - 7:30pm)
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5 mx-auto">
+                        <button type="submit" id="signup" class="btn btn-primary mb-2">Sign Up</button>
+                    </div>
+                <% } %>
             </div>
         </form>
 
@@ -80,14 +91,15 @@
 <script>
 $(document).ready(function() {
 	$('.alert').hide();
+    $('#number-of-spots').hide();
     var config = JSON.parse('<%- JSON.stringify(config) %>');
     firebase.initializeApp(config);
 });
 
-$('#driver-checkbox').onClick((e) => {
-    if ($('$number-of-spots').is(':visible')) {
+$('#driver-checkbox').on('click', (e) => {
+    console.log('here');
+    if ($('#number-of-spots').is(':visible')) {
         $('#number-of-spots').hide();
-        $('#spots').value = '';
     } else {
         $('#number-of-spots').show();
     }
@@ -107,7 +119,7 @@ $('#form').submit(function(e){
     var evening = $('.evening').is(':checked') ? true : false
     var staying = $('.staying').is(':checked') ? true : false
     var driver = $('.driver').is(':checked') ? true : false
-    var spots = $('#spots').val() ? $('#spots').val() : ''
+    var spots = $('#spots').val() && $('#driver-checkbox').is(':checked') ? $('#spots').val() : ''
     var uid = ''
     <% if (user) { %>
         if ('<%= user.firstName + ' ' + user.lastName %>' === name)
@@ -122,15 +134,22 @@ $('#form').submit(function(e){
         $('.alert').html('Please select at least one time')
     } else {
         var timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })
-        var postData = { name, address, number, comments, email, morning, evening, staying, uid, timestamp, driver};
+        var postData = {};
+        if (spots != '') {
+            postData = { name, address, number, comments, email, morning, evening, staying, uid, timestamp, driver, spots };
+        } else {
+            postData = { name, address, number, comments, email, morning, evening, staying, uid, timestamp, driver };
+        }
         firebase.firestore().collection('ridesSignup').add(postData).then(function() {
-            $('#signup').addClass('success')
-            $('#signup').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+        $('#signup').addClass('success')
+        $('#signup').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
         }).catch(function(error){
             $('html, body').animate({
                 scrollTop: $(".alert").offset().top
             }, 750);
             $('.alert').show()
+            var errorMessage = error.message;
+
             $('.alert').html(error.message)
         });
     }
