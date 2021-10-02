@@ -51,27 +51,39 @@ passport.use('signup', new CustomStrategy((req, done) => {
     if (!snapshot.empty) {
       return done('That email is already registered.', false);
     }
-    invitedRef.where('email', '==', email).get().then((snapshot2) => {
-      if (!snapshot2.empty) {
-        admin.auth().createUser({
-          email,
-          password,
-        }).then((user) => {
-          usersRef.doc(user.uid).set(usr)
-            .then(() => { // add the new user
-              snapshot2.forEach((doc) => {
-                invitedRef.doc(doc.id).delete().then(() => done(null, user.uid));
-              });
-            });
-        }).catch(error => done(error.message, false));
-      } else {
-        return done(
-          `That email has not been invited.
-              Email gocwebteam@gmail.com to get an invite.`,
-          false,
-        );
-      }
-    });
+    
+    admin.auth().createUser({
+      email,
+      password,
+    }).then((user) => {
+      usersRef.doc(user.uid).set(usr)
+        .then(() => { // add the new user
+          snapshot2.forEach((doc) => {
+            invitedRef.doc(doc.id).delete().then(() => done(null, user.uid));
+          });
+        });
+    }).catch(error => done(error.message, false));
+    // invitedRef.where('email', '==', email).get().then((snapshot2) => {
+    //   if (!snapshot2.empty) {
+    //     admin.auth().createUser({
+    //       email,
+    //       password,
+    //     }).then((user) => {
+    //       usersRef.doc(user.uid).set(usr)
+    //         .then(() => { // add the new user
+    //           snapshot2.forEach((doc) => {
+    //             invitedRef.doc(doc.id).delete().then(() => done(null, user.uid));
+    //           });
+    //         });
+    //     }).catch(error => done(error.message, false));
+    //   } else {
+    //     return done(
+    //       `That email has not been invited.
+    //           Email gocwebteam@gmail.com to get an invite.`,
+    //       false,
+    //     );
+    //   }
+    // });
   });
 }));
 init();
