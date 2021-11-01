@@ -106,10 +106,6 @@ $('#driver-checkbox').on('click', (e) => {
     }
 });
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 $('#form').submit(function(e){
     e.preventDefault();
     $('#signup')[0].disabled = true
