@@ -89,6 +89,7 @@
 <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-firestore.js"></script>
 
 <script>
+var user = <% user %>
 $(document).ready(function() {
 	$('.alert').hide();
     $('#number-of-spots').hide();
@@ -107,6 +108,7 @@ $('#driver-checkbox').on('click', (e) => {
 
 $('#form').submit(function(e){
     e.preventDefault();
+    $('#signup')[0].disabled = true
     $('#signup').html('<div class="loader">Signing Up...</div>')
     $('.alert').hide()
     $('.alert').html('')
@@ -121,12 +123,13 @@ $('#form').submit(function(e){
     var driver = $('.driver').is(':checked') ? true : false
     var spots = $('#spots').val() && $('#driver-checkbox').is(':checked') ? $('#spots').val() : ''
     var uid = ''
-    <% if (user) { %>
-        if ('<%= user.firstName + ' ' + user.lastName %>' === name)
-        uid = '<%= user.uid %>'
-    <% } %>
+    if (user) {
+        if (user.firstName + ' ' + user.lastName === name)
+            uid = user.uid
+    }
     if (!morning && !evening && !staying) {
         $('#signup').html('Sign Up')
+        $('#signup')[0].disabled = false
         $('html, body').animate({
             scrollTop: $(".alert").offset().top
         }, 750);
@@ -140,10 +143,11 @@ $('#form').submit(function(e){
         } else {
             postData = { name, address, number, comments, email, morning, evening, staying, uid, timestamp, driver };
         }
-        firebase.firestore().collection('ridesSignup').add(postData).then(function() {
-        $('#signup').addClass('success')
-        $('#signup').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
+        firebase.firestore().collection('ridesSignup').doc(email).set(postData).then(function() {
+            $('#signup').addClass('success')
+            $('#signup').html('Success&nbsp;&nbsp;<i class="icon ion-ios-checkmark"></i>')
         }).catch(function(error){
+            $('#signup')[0].disabled = false
             $('html, body').animate({
                 scrollTop: $(".alert").offset().top
             }, 750);
