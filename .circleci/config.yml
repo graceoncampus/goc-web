@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-job:
     docker:
-      - image: circleci/node:14.18.0 # primary container
+      - image: circleci/node:14.18.1 # primary container
     steps:
       - checkout
       - restore_cache:
