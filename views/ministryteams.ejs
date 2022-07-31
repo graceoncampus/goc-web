@@ -23,6 +23,11 @@
         <% teams.forEach(function(Team, index){%>
           <hr>
           <p><%=Team.description%></p>
+            <% if(Team.name=="ISF"){%>
+              <p>
+                <a href="https://sites.google.com/view/isfgoc/home" target="_blank">ISF Website</a>
+              </p>
+            <%}else{}%>
             <% if(user){%>
               <p>Leader(s): <%=Team.leader%></p>
               <p id=<%=index+1%>>Contact: <%=Team.contactInfo%></p>  
