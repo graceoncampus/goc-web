@@ -365,6 +365,14 @@ small {
     ), url(../images/resources.jpg);
 }
 
+#welcome-week {
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+    ),
+    url(../images/welcomeweek.jpeg);
+}
+
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f9f9f9
 }
@@ -523,6 +531,7 @@ textarea.resource-descs {
     padding: 0px;
     transition: 0.2s cubic-bezier(0, 0, 0, 1);
     width: calc(33% - 30px);
+    font-family: 'Akkurat';
 }
 .box:hover {
     transform: scale(1.04);
@@ -534,6 +543,13 @@ textarea.resource-descs {
     font-weight: bold;
     margin: 20px 30px 20px 30px;
     color: var(--main_heading_color);
+}
+.box-info {
+    font-size: 18px;
+    /* font-weight: bold; */
+    margin: 0px 30px 0px 30px;
+    color: var(--main_heading_color);
+    /* color: var(--main_text_color); */
 }
 .box-body {
     font-size: 16px;
