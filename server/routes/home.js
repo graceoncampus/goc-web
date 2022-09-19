@@ -73,6 +73,11 @@ export const getAbout = (req, res) => {
     user: req.user,
   });
 };
+export const getWelcomeWeek = (req, res) =>{
+  res.render('welcomeWeek.ejs', {
+    title: 'Welcome Week'
+  })
+}
 export const getCarousels = async (req, res) => {
   let carousels = [];
   const snapshot = await carouselRef.orderBy('rank').get();
