@@ -48,6 +48,7 @@ import {
   postEditCarouselById,
   rmCarouselById,
   get404,
+  getWelcomeWeek,
 } from './home';
 import {
   getSermons
@@ -76,6 +77,7 @@ router.get('/announcements', isLoggedIn, getAnnouncements);
 router.post('/newvisitor', postNewVisitor);
 router.get('/ourbeliefs', getBeliefs);
 router.get('/about', getAbout);
+router.get('/welcomeweek', getWelcomeWeek)
 
 router.get('/smallgroups', getSmallGroups);
 router.post('/sginterest', postSGInterest)
