@@ -546,10 +546,8 @@ textarea.resource-descs {
 }
 .box-info {
     font-size: 18px;
-    /* font-weight: bold; */
     margin: 0px 30px 0px 30px;
     color: var(--main_heading_color);
-    /* color: var(--main_text_color); */
 }
 .box-body {
     font-size: 16px;
