@@ -34,6 +34,9 @@ import {
   getViewClassRosterById,
 } from './class';
 import {
+  getLinkTree
+} from './links';
+import {
   getSmallGroups,
   postSGInterest,
 } from './smallgroups'
@@ -137,6 +140,7 @@ router.post('/c/delete/:classID', postDeleteClassById);
 router.get('/c/edit/:classID', getEditClassById);
 router.post('/c/edit/:classID', postEditClassById);
 router.get('/c/view/:classID', getViewClassRosterById);
+
 // sermons
 router.get('/sermons', getSermons);
 router.get('/sermons/page/:page', getSermons);
@@ -153,6 +157,9 @@ router.post('/resources/edit', postEditResources);
 
 //ministry teams
 router.get('/ministryteams', getTeams);
+
+//linktree
+router.get('/links', getLinkTree)
 
 router.use(get404);
 
