@@ -44,6 +44,7 @@ import {
   getRoot,
   postNewVisitor,
   getBeliefs,
+  getLeadership,
   getAbout,
   getCarousels,
   postCarousel,
@@ -79,6 +80,7 @@ router.get('/announcements', isLoggedIn, getAnnouncements);
 
 router.post('/newvisitor', postNewVisitor);
 router.get('/ourbeliefs', getBeliefs);
+router.get('/leadership', getLeadership);
 router.get('/about', getAbout);
 router.get('/welcomeweek', getWelcomeWeek)
 

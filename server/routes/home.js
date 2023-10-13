@@ -67,6 +67,11 @@ export const getBeliefs = (req, res) => {
     title: 'Our Beliefs',
   });
 };
+export const getLeadership = (req, res) =>{
+  res.render('leadership.ejs', {
+    title: 'Leadership',
+  });
+}
 export const getAbout = (req, res) => {
   res.render('about.ejs', {
     title: 'About',
