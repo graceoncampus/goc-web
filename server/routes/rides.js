@@ -50,20 +50,18 @@ const sendDriverEmail = (car, date, emailMessage) => {
     && date
     && emailMessage
   ) {
-    const formattedPhoneNumbers = carRiders.map(r => r.phoneNumber).join('\n');
-    const fullMessage = `${message}\n\nCopy-paste these numbers to create your group chat:\n${formattedPhoneNumbers}`;
-
-
     const { name, email } = car.driver;
     const carRiders = car.riders;
     const formattedDate = moment(date).format('M/D/YY');
+    const formattedPhoneNumbers = carRiders.map(r => r.phoneNumber).join('\n');
+    const formattedSection = `Copy-paste these numbers to create your group chat:\n${formattedPhoneNumbers}`;
     const message = `Hi ${name
       }! :)\n\n`
       + `Thanks for offering to drive this ${date
       }!\n\n`
       + `Here are your riders:\n\n${carRiders.map(r => `${r.name}: ${r.phoneNumber} | ${r.location}`).join('\n')
       }\n\n
-      + formattedNumbersSection
+      ${formattedSection}
       \n\n${car.comment && car.comment !== '' ? `Comments: ${car.comment}` : ''
       }\n\n${emailMessage ? `${emailMessage}\n\n` : ''
       }Thanks!\n`
