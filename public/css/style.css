@@ -528,7 +528,7 @@ textarea.resource-descs {
 }
 .banner-img {
   /* background-image: linear-gradient(rgb(83, 154, 185, 0.90), rgba(29, 38, 113, 0.76)), url("../images/home.jpg"); */
-  background-image: url("../images/welcome_week_2024.jpeg");
+  /* background-image: url("../images/welcome_week_2024.jpeg"); */
   background-color: #c0d4ec;
   margin-top: 20px;
   color: #c0d4ec;
