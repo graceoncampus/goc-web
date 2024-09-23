@@ -523,21 +523,6 @@ textarea.resource-descs {
   margin: 0px 30px 20px 30px;
   color: var(--main_button_color);
 }
-.jumbotron {
-  background-color: #c0d4ec;
-}
-.banner-img {
-  /* background-image: linear-gradient(rgb(83, 154, 185, 0.90), rgba(29, 38, 113, 0.76)), url("../images/home.jpg"); */
-  /* background-image: url("../images/welcome_week_2024.jpeg"); */
-  background-color: #c0d4ec;
-  margin-top: 20px;
-  color: #c0d4ec;
-  width: 100%;
-  height: 34vw;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
 .hero-text {
   position: relative;
   top: 25%;
